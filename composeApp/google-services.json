@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "948903081708",
+    "project_id": "gym-routine-bonygod",
+    "storage_bucket": "gym-routine-bonygod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948903081708:android:cd7815e3e0a67cd65e57c9",
+        "android_client_info": {
+          "package_name": "org.bonygod.gymroutine"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmSTrQ7a0ve7GNXvHHIntyX410d2xnSfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
