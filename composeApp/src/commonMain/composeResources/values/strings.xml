@@ -1,0 +1,7 @@
+<resources>
+    <!--Pantalla Login-->
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_button_text">Login</string>
+</resources>
