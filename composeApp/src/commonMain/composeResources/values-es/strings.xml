@@ -1,0 +1,7 @@
+<resources>
+    <!--Pantalla Login-->
+    <string name="login_email">Email</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_button_text">Iniciar sesión</string>
+</resources>
