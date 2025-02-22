@@ -12,4 +12,11 @@
     <string name="loginOrSignup_button_signup">Log in</string>
     <string name="loginOrSignup_subtitle">Create your routines.</string>
     <string name="loginOrSignup_second_subtitle">Manage your time.</string>
+
+    <!--Screen Register-->
+    <string name="register_email">Email</string>
+    <string name="register_user">Username</string>
+    <string name="register_password">Password</string>
+    <string name="register_repeat_password">Repeat password</string>
+    <string name="register_button_signup">Create account</string>
 </resources>

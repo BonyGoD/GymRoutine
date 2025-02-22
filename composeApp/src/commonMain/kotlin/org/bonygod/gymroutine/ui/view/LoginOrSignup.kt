@@ -97,7 +97,7 @@ class LoginOrSignup : Screen {
                     .clip(shape = RoundedCornerShape(30.dp))
                     .height(50.dp),
                 onClick = {
-
+                    navigator?.push(Register())
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
