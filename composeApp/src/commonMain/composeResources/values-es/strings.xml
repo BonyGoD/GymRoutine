@@ -3,5 +3,13 @@
     <string name="login_email">Email</string>
     <string name="login_password">Contraseña</string>
     <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
-    <string name="login_button_text">Iniciar sesión</string>
+    <string name="login_button_text_login">Iniciar sesión</string>
+    <string name="login_button_text_google">Acceder con google</string>
+    <string name="login_spacer_login_google">O</string>
+
+    <!--!Pantalla LoginOrSignup-->
+    <string name="loginOrSignup_button_login">Registrate</string>
+    <string name="loginOrSignup_button_signup">Iniciar sesión</string>
+    <string name="loginOrSignup_subtitle">Crea tus rutinas.</string>
+    <string name="loginOrSignup_second_subtitle">Controla tus tiempos.</string>
 </resources>

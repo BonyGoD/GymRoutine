@@ -5,14 +5,13 @@ import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import gymroutine.composeapp.generated.resources.Res
-import gymroutine.composeapp.generated.resources.Urbanist_VariableFont_wght
+import gymroutine.composeapp.generated.resources.Urbanist
 import org.jetbrains.compose.resources.Font
 
 @Composable
 fun CustomTheme(content: @Composable () -> Unit) {
 
-    val typography = Typography().defaultFontFamily(FontFamily(Font(Res.font.Urbanist_VariableFont_wght))
-    )
+    val typography = Typography().defaultFontFamily(FontFamily(Font(Res.font.Urbanist)))
 
     MaterialTheme(typography = typography, content = content)
 }

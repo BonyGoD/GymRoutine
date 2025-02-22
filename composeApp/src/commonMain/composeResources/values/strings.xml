@@ -4,4 +4,12 @@
     <string name="login_password">Password</string>
     <string name="login_forgot_password">Forgot password?</string>
     <string name="login_button_text">Login</string>
+    <string name="login_button_text_google">Continue with Google</string>
+    <string name="login_spacer_login_google">Or</string>
+
+    <!--!Pantalla LoginOrSignup-->
+    <string name="loginOrSignup_button_login">Sign up</string>
+    <string name="loginOrSignup_button_signup">Log in</string>
+    <string name="loginOrSignup_subtitle">Create your routines.</string>
+    <string name="loginOrSignup_second_subtitle">Manage your time.</string>
 </resources>
