@@ -10,7 +10,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     CustomTheme {
-            Navigator(screen = Register()){navigator ->
+            Navigator(screen = LoginOrSignup()){navigator ->
                 SlideTransition(navigator)
             }
     }

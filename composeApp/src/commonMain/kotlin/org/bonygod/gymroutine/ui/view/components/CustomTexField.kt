@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -19,17 +16,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import gymroutine.composeapp.generated.resources.Res
-import gymroutine.composeapp.generated.resources.visibility
-import gymroutine.composeapp.generated.resources.visibilityoff
-import org.bonygod.gymroutine.ui.utils.BiggerPasswordVisualTransformation
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun PasswordTextField(password: String, passwordVisible: Boolean, title: String, onPasswordChange: (String) -> Unit, onPasswordVisibleChange: (Boolean) -> Unit) {
+fun CustomTextField(email: String, title: String, onValueChange: (String) -> Unit) {
     Column {
         Text(
             title,
@@ -39,9 +30,9 @@ fun PasswordTextField(password: String, passwordVisible: Boolean, title: String,
         )
         Spacer(modifier = Modifier.padding(3.dp))
         TextField(
-            value = password,
+            value = email,
             onValueChange = {
-                onPasswordChange(it)
+                onValueChange(it)
             },
             modifier = Modifier
                 .align(Alignment.Start)
@@ -54,21 +45,7 @@ fun PasswordTextField(password: String, passwordVisible: Boolean, title: String,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
-            ),
-            visualTransformation = if (passwordVisible) VisualTransformation.None else BiggerPasswordVisualTransformation(),
-            trailingIcon = {
-                val image = if (passwordVisible)
-                    painterResource(Res.drawable.visibility)
-                else painterResource(Res.drawable.visibilityoff)
-
-                IconButton(onClick = { onPasswordVisibleChange(!passwordVisible) }) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = image,
-                        contentDescription = if (passwordVisible) "Hide password" else "Show password"
-                    )
-                }
-            },
+            )
         )
     }
 }
