@@ -1,0 +1,15 @@
+<resources>
+    <!--Pantalla Login-->
+    <string name="login_email">Correu electrònic</string>
+    <string name="login_password">Contrasenya</string>
+    <string name="login_forgot_password">Has oblidat la teva contrasenya?</string>
+    <string name="login_button_text_login">Inicia sessió</string>
+    <string name="login_button_text_google">Accedir amb Google</string>
+    <string name="login_spacer_login_google">O</string>
+
+    <!--!Pantalla LoginOrSignup-->
+    <string name="loginOrSignup_button_login">Registra't</string>
+    <string name="loginOrSignup_button_signup">Iniciar sessió</string>
+    <string name="loginOrSignup_subtitle">Crea les teves rutines.</string>
+    <string name="loginOrSignup_second_subtitle">Controla els teus temps.</string>
+</resources>
