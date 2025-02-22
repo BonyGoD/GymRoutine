@@ -1,6 +1,5 @@
 package org.bonygod.gymroutine.ui.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,12 +25,11 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import gymroutine.composeapp.generated.resources.Res
-import gymroutine.composeapp.generated.resources.gymroutine_icon
 import gymroutine.composeapp.generated.resources.loginOrSignup_button_login
 import gymroutine.composeapp.generated.resources.loginOrSignup_button_signup
 import gymroutine.composeapp.generated.resources.loginOrSignup_second_subtitle
 import gymroutine.composeapp.generated.resources.loginOrSignup_subtitle
-import org.jetbrains.compose.resources.painterResource
+import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.jetbrains.compose.resources.stringResource
 
 class LoginOrSignup : Screen {
@@ -50,11 +47,9 @@ class LoginOrSignup : Screen {
             Arrangement.Top, Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(50.dp))
-            Image(
-                painter = painterResource(Res.drawable.gymroutine_icon),
-                contentDescription = "Logo",
-                modifier = Modifier.size(300.dp)
-            )
+
+            LogoGymRoutine(size = 300.dp)
+
             Text(
                 stringResource(Res.string.loginOrSignup_subtitle),
                 fontWeight = FontWeight.Bold,
