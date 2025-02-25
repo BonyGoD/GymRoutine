@@ -40,12 +40,14 @@ import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.components.PasswordTextField
 import org.jetbrains.compose.resources.stringResource
 
-class Login : Screen {
-    @Composable
-    override fun Content() {
+@Composable
+fun Login() {
+
         var passwordVisible by remember { mutableStateOf(false) }
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
+
+
 
         Column(
             modifier = Modifier.fillMaxSize()
@@ -105,5 +107,4 @@ class Login : Screen {
 
             GoogleButton()
         }
-    }
 }

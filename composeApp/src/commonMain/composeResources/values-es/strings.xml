@@ -13,7 +13,7 @@
     <string name="loginOrSignup_subtitle">Crea tus rutinas.</string>
     <string name="loginOrSignup_second_subtitle">Controla tus tiempos.</string>
 
-    <!--Pantalla Register-->
+    <!--Pantalla SignUp-->
     <string name="register_email">Email</string>
     <string name="register_user">Usuario</string>
     <string name="register_password">Contraseña</string>

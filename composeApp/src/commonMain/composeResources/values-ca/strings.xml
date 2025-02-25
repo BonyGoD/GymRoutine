@@ -13,7 +13,7 @@
     <string name="loginOrSignup_subtitle">Crea les teves rutines.</string>
     <string name="loginOrSignup_second_subtitle">Controla els teus temps.</string>
 
-    <!--Pantalla Register-->
+    <!--Pantalla SignUp-->
     <string name="register_email">Correu electrònic</string>
     <string name="register_user">Usuari</string>
     <string name="register_password">Contrasenya</string>

@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.core.screen.Screen
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.login_spacer_login_google
 import gymroutine.composeapp.generated.resources.register_button_signup
@@ -40,9 +39,8 @@ import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.components.PasswordTextField
 import org.jetbrains.compose.resources.stringResource
 
-class Register : Screen {
-    @Composable
-    override fun Content() {
+@Composable
+fun SignUp(){
         var email by remember { mutableStateOf("") }
         var user by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(false) }
@@ -110,5 +108,4 @@ class Register : Screen {
 
             GoogleButton()
         }
-    }
 }

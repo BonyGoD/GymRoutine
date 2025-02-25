@@ -32,9 +32,8 @@ import gymroutine.composeapp.generated.resources.loginOrSignup_subtitle
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.jetbrains.compose.resources.stringResource
 
-class LoginOrSignup : Screen {
-    @Composable
-    override fun Content() {
+@Composable
+fun LoginOrSignup(loginClick: () -> Unit, signUpClick: () -> Unit) {
 
         val navigator = LocalNavigator.current
         Column(
@@ -74,7 +73,7 @@ class LoginOrSignup : Screen {
                     .clip(shape = RoundedCornerShape(30.dp))
                     .height(50.dp),
                 onClick = {
-                    navigator?.push(Login())
+                    loginClick()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Yellow,
@@ -92,7 +91,7 @@ class LoginOrSignup : Screen {
                     .clip(shape = RoundedCornerShape(30.dp))
                     .height(50.dp),
                 onClick = {
-                    navigator?.push(Register())
+                    signUpClick()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
@@ -102,5 +101,4 @@ class LoginOrSignup : Screen {
                 Text(stringResource(Res.string.loginOrSignup_button_login), fontWeight = FontWeight.Bold)
             }
         }
-    }
 }

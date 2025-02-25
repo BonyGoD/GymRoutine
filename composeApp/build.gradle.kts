@@ -51,8 +51,14 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+
+            //Navegacion
             implementation(libs.navigator.voyager)
             implementation(libs.navigator.transitions)
+            implementation(libs.androidx.navigation.compose)
+
+            //GitLive Auth
+            implementation(libs.gitlive.auth)
         }
     }
 }
