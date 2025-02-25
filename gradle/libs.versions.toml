@@ -19,9 +19,14 @@ kotlin = "2.1.0"
 google-services = "4.4.2"
 firebase-bom = "33.9.0"
 firebase-crashlytics = "3.0.3"
+firebaseAuthKtx = "23.2.0"
 
 #Navegacion
 voyagerVersion = "1.1.0-beta02"
+navigation-compose = "2.8.0-alpha10"
+
+#GitLive AUTH
+gitLiveAuth = "1.4.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -42,11 +47,15 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx"}
+
+#GitLive AUTH
+gitlive-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "gitLiveAuth" }
 
 #Navegacion
 navigator-voyager = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyagerVersion" }
 navigator-transitions = { group = "cafe.adriel.voyager", name = "voyager-transitions", version.ref = "voyagerVersion"}
+androidx-navigation-compose = { group="org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
