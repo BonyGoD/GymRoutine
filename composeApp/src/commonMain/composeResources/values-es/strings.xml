@@ -12,6 +12,8 @@
     <string name="loginOrSignup_button_signup">Iniciar sesión</string>
     <string name="loginOrSignup_subtitle">Crea tus rutinas.</string>
     <string name="loginOrSignup_second_subtitle">Controla tus tiempos.</string>
+    <string name="loginOrSignup_dialog_title">Solicitud de cambio de contraseña enviada correctamente</string>
+    <string name="loginOrSignup_dialog_subtitle">Por favor, revisa tu correo electrónico para cambiar tu contraseña.</string>
 
     <!--Pantalla SignUp-->
     <string name="register_email">Email</string>
@@ -19,4 +21,13 @@
     <string name="register_password">Contraseña</string>
     <string name="register_repeat_password">Repetir contraseña</string>
     <string name="register_button_signup">Crear cuenta</string>
+
+    <!--CustomDialog-->
+    <string name="custom_dialog_title">Usuario o contraseña incorrectos</string>
+    <string name="custom_dialog_button_text">OK</string>
+
+    <!--Forgot Password-->
+    <string name="forgot_password_button">Change password</string>
+    <string name="forgot_password_error_message_dialog">Dirección de correo electrónico no válida</string>
+
 </resources>
