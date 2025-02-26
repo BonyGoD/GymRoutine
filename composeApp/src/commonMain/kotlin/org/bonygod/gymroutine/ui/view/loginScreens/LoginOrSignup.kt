@@ -1,4 +1,4 @@
-package org.bonygod.gymroutine.ui.view
+package org.bonygod.gymroutine.ui.view.loginScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +14,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,20 +26,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.loginOrSignup_button_login
 import gymroutine.composeapp.generated.resources.loginOrSignup_button_signup
 import gymroutine.composeapp.generated.resources.loginOrSignup_second_subtitle
 import gymroutine.composeapp.generated.resources.loginOrSignup_subtitle
+import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
+import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun LoginOrSignup(loginClick: () -> Unit, signUpClick: () -> Unit) {
+fun LoginOrSignup(
+    loginClick: () -> Unit,
+    signUpClick: () -> Unit,
+    dialogViewModel: DialogViewModel
+) {
 
-        val navigator = LocalNavigator.current
+    var showDialog by remember { mutableStateOf(true) }
+
+    if (dialogViewModel.titleDialog != null && dialogViewModel.subtitleDialog != null && showDialog) {
+        CustomDialog(dialogViewModel, onDismiss = { showDialog = false })
+    }
+
         Column(
             modifier = Modifier.fillMaxSize()
                 .background(

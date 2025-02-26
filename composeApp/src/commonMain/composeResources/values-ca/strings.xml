@@ -12,6 +12,8 @@
     <string name="loginOrSignup_button_signup">Iniciar sessió</string>
     <string name="loginOrSignup_subtitle">Crea les teves rutines.</string>
     <string name="loginOrSignup_second_subtitle">Controla els teus temps.</string>
+    <string name="loginOrSignup_dialog_title">Sol·licitud de canvi de contrasenya enviada correctament</string>
+    <string name="loginOrSignup_dialog_subtitle">Si us plau, revisa el teu correu electrònic per canviar la contrasenya.</string>
 
     <!--Pantalla SignUp-->
     <string name="register_email">Correu electrònic</string>
@@ -19,4 +21,12 @@
     <string name="register_password">Contrasenya</string>
     <string name="register_repeat_password">Repetir contrasenya</string>
     <string name="register_button_signup">Crear compte</string>
+
+    <!--CustomDialog-->
+    <string name="custom_dialog_title">Usuari o contrasenya incorrectes</string>
+    <string name="custom_dialog_button_text">OK</string>
+
+    <!--Forgot Password-->
+    <string name="forgot_password_button">Canvia la contrasenya</string>
+    <string name="forgot_password_error_message_dialog">Adreça de correu electrònic no vàlida</string>
 </resources>

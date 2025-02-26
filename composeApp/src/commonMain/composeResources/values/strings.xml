@@ -12,6 +12,9 @@
     <string name="loginOrSignup_button_signup">Log in</string>
     <string name="loginOrSignup_subtitle">Create your routines.</string>
     <string name="loginOrSignup_second_subtitle">Manage your time.</string>
+    <string name="loginOrSignup_dialog_title">Password reset request sent successfully</string>
+    <string name="loginOrSignup_dialog_subtitle">Please check your email to reset your password.</string>
+
 
     <!--Screen SignUp-->
     <string name="register_email">Email</string>
@@ -19,4 +22,12 @@
     <string name="register_password">Password</string>
     <string name="register_repeat_password">Repeat password</string>
     <string name="register_button_signup">Create account</string>
+
+    <!--CustomDialog-->
+    <string name="custom_dialog_title">Incorrect username or password</string>
+    <string name="custom_dialog_button_text">OK</string>
+
+    <!--Forgot Password-->
+    <string name="forgot_password_button">Change password</string>
+    <string name="forgot_password_error_message_dialog">Invalid email address</string>
 </resources>
