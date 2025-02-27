@@ -29,7 +29,14 @@ import org.bonygod.gymroutine.ui.utils.BiggerPasswordVisualTransformation
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun PasswordTextField(password: String, passwordVisible: Boolean, title: String, onPasswordChange: (String) -> Unit, onPasswordVisibleChange: (Boolean) -> Unit) {
+fun CustomPasswordTextField(
+    password: String,
+    passwordVisible: Boolean,
+    title: String,
+    color: Color,
+    onPasswordChange: (String) -> Unit,
+    onPasswordVisibleChange: (Boolean) -> Unit
+) {
     Column {
         Text(
             title,
@@ -48,7 +55,7 @@ fun PasswordTextField(password: String, passwordVisible: Boolean, title: String,
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
                 .clip(shape = RoundedCornerShape(30.dp))
-                .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(30.dp))
+                .border(width = 1.dp, color = color, shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             textStyle = TextStyle(
                 color = Color.Black,
