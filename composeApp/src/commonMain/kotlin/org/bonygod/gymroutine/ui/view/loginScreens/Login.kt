@@ -39,10 +39,10 @@ import gymroutine.composeapp.generated.resources.login_spacer_login_google
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
+import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.GoogleButton
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
-import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.jetbrains.compose.resources.stringResource
 
