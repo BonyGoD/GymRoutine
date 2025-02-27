@@ -41,6 +41,7 @@ fun CustomTextField(
         Spacer(modifier = Modifier.padding(3.dp))
         TextField(
             value = value,
+            singleLine = true,
             onValueChange = {
                 onValueChange(it)
                 if (checkEmail) {

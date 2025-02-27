@@ -1,6 +1,7 @@
 package org.bonygod.gymroutine.ui.view.loginScreens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,13 +45,17 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SignUp(auth: FirebaseAuth, scope: CoroutineScope, signUpViewModel: SignUpViewModel = viewModel()) {
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier.fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(Color.Yellow, Color.Black)
                 )
-            ),
+            )
+            .clickable {
+                focusManager.clearFocus()
+            },
         Arrangement.Top, Alignment.CenterHorizontally
     ) {
         LogoGymRoutine(size = 200.dp)
