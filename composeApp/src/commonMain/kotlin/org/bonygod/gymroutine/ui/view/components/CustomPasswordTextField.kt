@@ -47,6 +47,7 @@ fun CustomPasswordTextField(
         Spacer(modifier = Modifier.padding(3.dp))
         TextField(
             value = password,
+            singleLine = true,
             onValueChange = {
                 onPasswordChange(it)
             },

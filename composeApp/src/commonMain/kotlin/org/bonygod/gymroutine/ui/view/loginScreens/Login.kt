@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +61,7 @@ fun Login(
     var password by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     val custom_dialog_title = stringResource(Res.string.custom_dialog_title)
+    val focusManager = LocalFocusManager.current
 
     if (showDialog) {
         CustomDialog(dialogViewModel, onDismiss = { showDialog = false })
@@ -71,7 +73,10 @@ fun Login(
                 brush = Brush.verticalGradient(
                     colors = listOf(Color.Yellow, Color.Black)
                 )
-            ),
+            )
+            .clickable {
+                focusManager.clearFocus()
+            },
         Arrangement.Top, Alignment.CenterHorizontally
     ) {
         LogoGymRoutine(size = 300.dp)
@@ -125,7 +130,12 @@ fun Login(
                         //auth.signInWithEmailAndPassword(email, password)
                         navigateToPrimeraPantalla()
                     } catch (e: Exception) {
-                        dialogViewModel.setCustomDialog(custom_dialog_title, null, Res.drawable.exclamation, Color.Red)
+                        dialogViewModel.setCustomDialog(
+                            custom_dialog_title,
+                            null,
+                            Res.drawable.exclamation,
+                            Color.Red
+                        )
                         showDialog = true
                     }
                 }
