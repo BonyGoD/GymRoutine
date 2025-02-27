@@ -34,7 +34,7 @@ fun AppNavigation() {
         composable(
             route = "LoginOrSignup",
             arguments = listOf(navArgument("titleDialog") { nullable = true })
-        ) { backStackEntry ->
+        ) {
             if (auth.currentUser != null) {
                 navController.navigate("PrimeraPantalla") {
                     popUpTo("LoginOrSignup") { inclusive = true }

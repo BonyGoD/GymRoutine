@@ -1,6 +1,7 @@
 package org.bonygod.gymroutine.ui.utils
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,11 +18,11 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CheckPasswordsText(password: String, passwordRepeat: String) {
-    Column {
+    Column(modifier = Modifier.fillMaxWidth()) {
     if (password != passwordRepeat) {
         Text(
             text = stringResource(Res.string.register_password_not_match),
-            modifier = Modifier.align(Alignment.Start).padding(horizontal = 20.dp),
+            modifier = Modifier.align(Alignment.Start).padding(horizontal = 25.dp),
             color = Color.Red,
             fontWeight = FontWeight.Bold,
             fontSize = 12.sp
