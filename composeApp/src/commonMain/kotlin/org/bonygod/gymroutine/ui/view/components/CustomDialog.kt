@@ -44,10 +44,10 @@ fun CustomDialog(dialogViewModel: DialogViewModel, onDismiss: () -> Unit) {
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
-                    painter = painterResource(Res.drawable.exclamation),
+                    painter = painterResource(dialogViewModel.icon!!),
                     contentDescription = "Error",
-                    tint = Color.Red,
-                    modifier = Modifier.size(40.dp)
+                    tint = dialogViewModel.iconColor!!,
+                    modifier = Modifier.size(70.dp)
                 )
                 Spacer(modifier = Modifier.weight(0.3f))
                 Text(

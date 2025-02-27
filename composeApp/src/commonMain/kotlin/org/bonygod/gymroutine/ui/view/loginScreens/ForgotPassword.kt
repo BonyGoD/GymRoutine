@@ -27,11 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.exclamation
 import gymroutine.composeapp.generated.resources.forgot_password_button
 import gymroutine.composeapp.generated.resources.forgot_password_error_message_dialog
 import gymroutine.composeapp.generated.resources.loginOrSignup_dialog_subtitle
 import gymroutine.composeapp.generated.resources.loginOrSignup_dialog_title
 import gymroutine.composeapp.generated.resources.login_email
+import gymroutine.composeapp.generated.resources.ok_icon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
@@ -44,14 +46,13 @@ import org.jetbrains.compose.resources.stringResource
 fun ForgotPassword(dialogViewModel: DialogViewModel, auth: FirebaseAuth, scope: CoroutineScope, onBack: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+    val titleDialogOK = stringResource(Res.string.loginOrSignup_dialog_title)
+    val subtitleDialogOK = stringResource(Res.string.loginOrSignup_dialog_subtitle)
+    val errorMessageDialog = stringResource(Res.string.forgot_password_error_message_dialog)
 
     if (showDialog) {
         CustomDialog(dialogViewModel, onDismiss = { showDialog = false })
     }
-
-    val titleDialogOK = stringResource(Res.string.loginOrSignup_dialog_title)
-    val subtitleDialogOK = stringResource(Res.string.loginOrSignup_dialog_subtitle)
-    val errorMessageDialog = stringResource(Res.string.forgot_password_error_message_dialog)
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -65,8 +66,9 @@ fun ForgotPassword(dialogViewModel: DialogViewModel, auth: FirebaseAuth, scope: 
         LogoGymRoutine(size = 300.dp)
 
         CustomTextField(
-            email,
-            stringResource(Res.string.login_email),
+            value = email,
+            title = stringResource(Res.string.login_email),
+            checkEmail = true,
             onValueChange = { email = it })
 
         Spacer(modifier = Modifier.padding(15.dp))
@@ -80,11 +82,20 @@ fun ForgotPassword(dialogViewModel: DialogViewModel, auth: FirebaseAuth, scope: 
             onClick = {
                 scope.launch {
                     try {
-                        //auth.sendPasswordResetEmail(email)
-                        dialogViewModel.setDialogTitles(titleDialogOK, subtitleDialogOK)
+                        auth.sendPasswordResetEmail(email)
+                        dialogViewModel.setCustomDialog(
+                            titleDialogOK,
+                            subtitleDialogOK,
+                            Res.drawable.ok_icon,
+                            Color.Green
+                        )
                         onBack()
                     } catch (e: Exception) {
-                        dialogViewModel.setDialogTitles(errorMessageDialog, null)
+                        dialogViewModel.setCustomDialog(
+                            errorMessageDialog,
+                            null,
+                            Res.drawable.exclamation,
+                            Color.Red)
                         showDialog = true
                     }
                 }

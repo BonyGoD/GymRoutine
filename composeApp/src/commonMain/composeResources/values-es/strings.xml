@@ -21,6 +21,9 @@
     <string name="register_password">Contraseña</string>
     <string name="register_repeat_password">Repetir contraseña</string>
     <string name="register_button_signup">Crear cuenta</string>
+    <string name="register_password_not_match">Las contraseñas no coinciden</string>
+    <string name="register_password_not_minimum_large">La contraseña debe tener al menos 4 caracteres</string>
+
 
     <!--CustomDialog-->
     <string name="custom_dialog_title">Usuario o contraseña incorrectos</string>
@@ -29,5 +32,8 @@
     <!--Forgot Password-->
     <string name="forgot_password_button">Change password</string>
     <string name="forgot_password_error_message_dialog">Dirección de correo electrónico no válida</string>
+
+    <!--CustomTextField-->
+    <string name="custom_text_field_incorrect_email">Email incorrecto</string>
 
 </resources>

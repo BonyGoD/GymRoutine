@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.custom_dialog_title
+import gymroutine.composeapp.generated.resources.exclamation
 import gymroutine.composeapp.generated.resources.login_button_text_login
 import gymroutine.composeapp.generated.resources.login_email
 import gymroutine.composeapp.generated.resources.login_forgot_password
@@ -41,7 +42,7 @@ import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.GoogleButton
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
-import org.bonygod.gymroutine.ui.view.components.PasswordTextField
+import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.jetbrains.compose.resources.stringResource
 
@@ -76,15 +77,21 @@ fun Login(
         LogoGymRoutine(size = 300.dp)
 
         CustomTextField(
-            email,
-            stringResource(Res.string.login_email),
+            value = email,
+            title = stringResource(Res.string.login_email),
+            checkEmail = false,
             onValueChange = { email = it })
 
         Spacer(modifier = Modifier.padding(5.dp))
 
-        PasswordTextField(password, passwordVisible, stringResource(Res.string.login_password),
+        CustomPasswordTextField(
+            password = password,
+            passwordVisible = passwordVisible,
+            title = stringResource(Res.string.login_password),
+            color = Color.Black,
             onPasswordChange = { password = it },
-            onPasswordVisibleChange = { passwordVisible = it })
+            onPasswordVisibleChange = { passwordVisible = it },
+        )
 
         Text(
             stringResource(Res.string.login_forgot_password),
@@ -118,7 +125,7 @@ fun Login(
                         //auth.signInWithEmailAndPassword(email, password)
                         navigateToPrimeraPantalla()
                     } catch (e: Exception) {
-                        dialogViewModel.setDialogTitles(custom_dialog_title, null)
+                        dialogViewModel.setCustomDialog(custom_dialog_title, null, Res.drawable.exclamation, Color.Red)
                         showDialog = true
                     }
                 }

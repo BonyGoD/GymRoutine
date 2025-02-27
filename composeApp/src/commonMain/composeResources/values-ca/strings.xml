@@ -21,6 +21,9 @@
     <string name="register_password">Contrasenya</string>
     <string name="register_repeat_password">Repetir contrasenya</string>
     <string name="register_button_signup">Crear compte</string>
+    <string name="register_password_not_match">Les contrasenyes no coincideixen</string>
+    <string name="register_password_not_minimum_large">La contrasenya ha de tenir almenys 4 caràcters</string>
+
 
     <!--CustomDialog-->
     <string name="custom_dialog_title">Usuari o contrasenya incorrectes</string>
@@ -29,4 +32,7 @@
     <!--Forgot Password-->
     <string name="forgot_password_button">Canvia la contrasenya</string>
     <string name="forgot_password_error_message_dialog">Adreça de correu electrònic no vàlida</string>
+
+    <!--CustomTextField-->
+    <string name="custom_text_field_incorrect_email">Correu electrònic incorrecte</string>
 </resources>

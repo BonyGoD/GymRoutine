@@ -22,6 +22,8 @@
     <string name="register_password">Password</string>
     <string name="register_repeat_password">Repeat password</string>
     <string name="register_button_signup">Create account</string>
+    <string name="register_password_not_match">Passwords do not match</string>
+    <string name="register_password_not_minimum_large">The password must be at least 4 characters long</string>
 
     <!--CustomDialog-->
     <string name="custom_dialog_title">Incorrect username or password</string>
@@ -30,4 +32,7 @@
     <!--Forgot Password-->
     <string name="forgot_password_button">Change password</string>
     <string name="forgot_password_error_message_dialog">Invalid email address</string>
+
+    <!--CustomTextField-->
+    <string name="custom_text_field_incorrect_email">Incorrect email</string>
 </resources>

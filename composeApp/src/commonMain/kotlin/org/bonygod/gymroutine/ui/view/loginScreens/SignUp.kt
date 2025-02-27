@@ -36,21 +36,23 @@ import gymroutine.composeapp.generated.resources.register_repeat_password
 import gymroutine.composeapp.generated.resources.register_user
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.bonygod.gymroutine.ui.utils.CheckPasswordsText
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.GoogleButton
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
-import org.bonygod.gymroutine.ui.view.components.PasswordTextField
-import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
+import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SignUp(dialogViewModel: DialogViewModel, auth: FirebaseAuth, scope: CoroutineScope) {
+fun SignUp(auth: FirebaseAuth, scope: CoroutineScope) {
     var email by remember { mutableStateOf("") }
     var user by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var password by remember { mutableStateOf("") }
     var passwordVisibleRepeat by remember { mutableStateOf(false) }
     var passwordRepeat by remember { mutableStateOf("") }
+    var colorFirstTextField by remember { mutableStateOf(Color.Black) }
+    var colorSecondTextField by remember { mutableStateOf(Color.Black) }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -64,34 +66,60 @@ fun SignUp(dialogViewModel: DialogViewModel, auth: FirebaseAuth, scope: Coroutin
         LogoGymRoutine(size = 200.dp)
 
         CustomTextField(
-            email,
-            stringResource(Res.string.register_email),
+            value = email,
+            title = stringResource(Res.string.register_email),
+            checkEmail = true,
             onValueChange = { email = it })
 
         Spacer(modifier = Modifier.padding(5.dp))
 
         CustomTextField(
-            user,
-            stringResource(Res.string.register_user),
+            value = user,
+            title = stringResource(Res.string.register_user),
+            checkEmail = false,
             onValueChange = { user = it })
 
         Spacer(modifier = Modifier.padding(5.dp))
 
-        PasswordTextField(
-            password, passwordVisible, stringResource(Res.string.register_password),
-            onPasswordChange = { password = it },
+        CustomPasswordTextField(
+            password = password,
+            passwordVisible = passwordVisible,
+            title = stringResource(Res.string.register_password),
+            color = colorFirstTextField,
+            onPasswordChange = {
+                password = it
+                if (password != passwordRepeat) {
+                    colorFirstTextField = Color.Red
+                    colorSecondTextField = Color.Red
+                } else {
+                    colorFirstTextField = Color.Black
+                    colorSecondTextField = Color.Black
+                }
+            },
             onPasswordVisibleChange = { passwordVisible = it }
         )
+        CheckPasswordsText(password, passwordRepeat)
 
         Spacer(modifier = Modifier.padding(5.dp))
 
-        PasswordTextField(
-            passwordRepeat,
-            passwordVisibleRepeat,
-            stringResource(Res.string.register_repeat_password),
-            onPasswordChange = { passwordRepeat = it },
+        CustomPasswordTextField(
+            password = passwordRepeat,
+            passwordVisible = passwordVisibleRepeat,
+            title = stringResource(Res.string.register_repeat_password),
+            color = colorSecondTextField,
+            onPasswordChange = {
+                passwordRepeat = it
+                if (password != passwordRepeat) {
+                    colorFirstTextField = Color.Red
+                    colorSecondTextField = Color.Red
+                } else {
+                    colorFirstTextField = Color.Black
+                    colorSecondTextField = Color.Black
+                }
+            },
             onPasswordVisibleChange = { passwordVisibleRepeat = it }
         )
+        CheckPasswordsText(password, passwordRepeat)
 
         Spacer(modifier = Modifier.padding(15.dp))
 

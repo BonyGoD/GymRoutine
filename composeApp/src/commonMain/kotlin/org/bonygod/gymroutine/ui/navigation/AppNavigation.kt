@@ -28,7 +28,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "ForgotPassword"
+        startDestination = "LoginOrSignup"
     ) {
 
         composable(
@@ -63,7 +63,7 @@ fun AppNavigation() {
         }
 
         composable("SignUp") {
-            SignUp(dialogViewModel, auth, scope)
+            SignUp(auth, scope)
         }
 
         composable("PrimeraPantalla") {
