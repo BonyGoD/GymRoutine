@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,10 +44,11 @@ fun LoginOrSignup(
     dialogViewModel: DialogViewModel
 ) {
 
-    var showDialog by remember { mutableStateOf(true) }
+    val showDialog by dialogViewModel.showDialog.collectAsState()
 
-    if (dialogViewModel.titleDialog != null && dialogViewModel.subtitleDialog != null && showDialog) {
-        CustomDialog(dialogViewModel, onDismiss = { showDialog = false })
+    if (dialogViewModel.customDialogTitle.value.isNotEmpty() && dialogViewModel.customDialogSubtitle.value.isNotEmpty() && showDialog) {
+        CustomDialog(dialogViewModel, onDismiss = {
+            dialogViewModel.onShowDialogChange(false) })
     }
 
         Column(

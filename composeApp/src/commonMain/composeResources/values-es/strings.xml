@@ -23,6 +23,8 @@
     <string name="register_button_signup">Crear cuenta</string>
     <string name="register_password_not_match">Las contraseñas no coinciden</string>
     <string name="register_password_not_minimum_large">La contraseña debe tener al menos 4 caracteres</string>
+    <string name="register_user_error_message">Error al crear el usuario</string>
+    <string name="register_user_error_subtitle_message">Intentelo de nuevo, mas tarde</string>
 
 
     <!--CustomDialog-->

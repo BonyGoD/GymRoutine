@@ -43,28 +43,26 @@ fun CustomDialog(dialogViewModel: DialogViewModel, onDismiss: () -> Unit) {
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
-                    painter = painterResource(dialogViewModel.icon!!),
+                    painter = painterResource(dialogViewModel.icon.value),
                     contentDescription = "Error",
-                    tint = dialogViewModel.iconColor!!,
+                    tint = dialogViewModel.iconColor.value,
                     modifier = Modifier.size(70.dp)
                 )
                 Spacer(modifier = Modifier.weight(0.3f))
                 Text(
-                    text = dialogViewModel.titleDialog!!,
+                    text = dialogViewModel.customDialogTitle.value,
                     fontSize = 16.sp,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                if (dialogViewModel.subtitleDialog != null) {
-                    Spacer(modifier = Modifier.weight(0.3f))
-                    Text(
-                        text = dialogViewModel.subtitleDialog!!,
-                        fontSize = 15.sp,
-                        color = Color.Gray,
-                        textAlign = TextAlign.Center
-                    )
-                }
+                Spacer(modifier = Modifier.weight(0.3f))
+                Text(
+                    text = dialogViewModel.customDialogSubtitle.value,
+                    fontSize = 15.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.weight(0.7f))
                 Button(
                     onClick = {

@@ -14,10 +14,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +25,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.exclamation
@@ -42,19 +41,33 @@ import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
+import org.bonygod.gymroutine.ui.view.viewModels.ForgotPasswordViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ForgotPassword(dialogViewModel: DialogViewModel, auth: FirebaseAuth, scope: CoroutineScope, onBack: () -> Unit) {
-    var email by remember { mutableStateOf("") }
-    var showDialog by remember { mutableStateOf(false) }
-    val titleDialogOK = stringResource(Res.string.loginOrSignup_dialog_title)
-    val subtitleDialogOK = stringResource(Res.string.loginOrSignup_dialog_subtitle)
-    val errorMessageDialog = stringResource(Res.string.forgot_password_error_message_dialog)
+fun ForgotPassword(
+    auth: FirebaseAuth,
+    dialogViewModel: DialogViewModel,
+    forgotPasswordViewModel: ForgotPasswordViewModel = viewModel(),
+    onBack: () -> Unit
+) {
+
+    val email by forgotPasswordViewModel.email.collectAsState()
+    val showDialog by dialogViewModel.showDialog.collectAsState()
+
+    dialogViewModel.setErrorMessageDialog(
+        stringResource(Res.string.forgot_password_error_message_dialog)
+    )
+
+    forgotPasswordViewModel.setTitlesOkDialog(
+        stringResource(Res.string.loginOrSignup_dialog_title),
+        stringResource(Res.string.loginOrSignup_dialog_subtitle)
+    )
+
     val focusManager = LocalFocusManager.current
 
     if (showDialog) {
-        CustomDialog(dialogViewModel, onDismiss = { showDialog = false })
+        CustomDialog(dialogViewModel, onDismiss = { dialogViewModel.onShowDialogChange(false) })
     }
 
     Column(
@@ -75,7 +88,9 @@ fun ForgotPassword(dialogViewModel: DialogViewModel, auth: FirebaseAuth, scope: 
             value = email,
             title = stringResource(Res.string.login_email),
             checkEmail = true,
-            onValueChange = { email = it })
+            onValueChange = { email ->
+                forgotPasswordViewModel.onEmailChange(email)
+            })
 
         Spacer(modifier = Modifier.padding(15.dp))
 
@@ -86,25 +101,7 @@ fun ForgotPassword(dialogViewModel: DialogViewModel, auth: FirebaseAuth, scope: 
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                scope.launch {
-                    try {
-                        auth.sendPasswordResetEmail(email)
-                        dialogViewModel.setCustomDialog(
-                            titleDialogOK,
-                            subtitleDialogOK,
-                            Res.drawable.ok_icon,
-                            Color.Green
-                        )
-                        onBack()
-                    } catch (e: Exception) {
-                        dialogViewModel.setCustomDialog(
-                            errorMessageDialog,
-                            null,
-                            Res.drawable.exclamation,
-                            Color.Red)
-                        showDialog = true
-                    }
-                }
+                forgotPasswordViewModel.resetEmail(auth, dialogViewModel, onBack)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,

@@ -15,6 +15,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,15 +29,19 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.exclamation
 import gymroutine.composeapp.generated.resources.login_spacer_login_google
 import gymroutine.composeapp.generated.resources.register_button_signup
 import gymroutine.composeapp.generated.resources.register_email
 import gymroutine.composeapp.generated.resources.register_password
 import gymroutine.composeapp.generated.resources.register_repeat_password
 import gymroutine.composeapp.generated.resources.register_user
+import gymroutine.composeapp.generated.resources.register_user_error_message
+import gymroutine.composeapp.generated.resources.register_user_error_subtitle_message
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.ui.utils.CheckPasswordsText
+import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.GoogleButton
@@ -44,8 +50,35 @@ import org.bonygod.gymroutine.ui.view.viewModels.SignUpViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SignUp(auth: FirebaseAuth, scope: CoroutineScope, signUpViewModel: SignUpViewModel = viewModel()) {
+fun SignUp(
+    auth: FirebaseAuth,
+    signUpViewModel: SignUpViewModel = viewModel()
+) {
+    val dialogViewModel by signUpViewModel.dialogViewModel.collectAsState()
+    val email by signUpViewModel.email.collectAsState()
+    val user by signUpViewModel.user.collectAsState()
+    val password by signUpViewModel.password.collectAsState()
+    val passwordRepeat by signUpViewModel.passwordRepeat.collectAsState()
+    val passwordVisible by signUpViewModel.passwordVisible.collectAsState()
+    val passwordVisibleRepeat by signUpViewModel.passwordVisibleRepeat.collectAsState()
+    val colorFirstTextField by signUpViewModel.colorFirstTextField.collectAsState()
+    val colorSecondTextField by signUpViewModel.colorSecondTextField.collectAsState()
+    val showDialog by dialogViewModel.showDialog.collectAsState()
+
+    dialogViewModel.setCustomDialog(
+        customDialogTitle = stringResource(Res.string.register_user_error_message),
+        customDialogSubtitle = stringResource(Res.string.register_user_error_subtitle_message),
+        icon = Res.drawable.exclamation,
+        iconColor = Color.Red
+    )
+
+
     val focusManager = LocalFocusManager.current
+
+    if (showDialog) {
+        CustomDialog(dialogViewModel, onDismiss = { dialogViewModel.onShowDialogChange(false) })
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
             .background(
@@ -61,42 +94,53 @@ fun SignUp(auth: FirebaseAuth, scope: CoroutineScope, signUpViewModel: SignUpVie
         LogoGymRoutine(size = 200.dp)
 
         CustomTextField(
-            value = signUpViewModel.email,
+            value = email,
             title = stringResource(Res.string.register_email),
             checkEmail = true,
-            onValueChange = { signUpViewModel.email = it })
+            onValueChange = { email ->
+                signUpViewModel.onEmailChange(email)
+            }
+        )
 
         Spacer(modifier = Modifier.padding(5.dp))
 
         CustomTextField(
-            value = signUpViewModel.user,
+            value = user,
             title = stringResource(Res.string.register_user),
             checkEmail = false,
-            onValueChange = { signUpViewModel.user = it })
+            onValueChange = { user ->
+                signUpViewModel.onUserChange(user)
+            })
 
         Spacer(modifier = Modifier.padding(5.dp))
 
         CustomPasswordTextField(
-            password = signUpViewModel.password,
-            passwordVisible = signUpViewModel.passwordVisible,
+            password = password,
+            passwordVisible = passwordVisible,
             title = stringResource(Res.string.register_password),
-            color = signUpViewModel.colorFirstTextField,
+            color = colorFirstTextField,
             onPasswordChange = { signUpViewModel.onPasswordChange(it) },
-            onPasswordVisibleChange = { signUpViewModel.passwordVisible = it }
+            onPasswordVisibleChange = { passwordVisible ->
+                signUpViewModel.onPasswordVisibleChange(passwordVisible)
+            }
         )
-        CheckPasswordsText(signUpViewModel.password, signUpViewModel.passwordRepeat)
+        CheckPasswordsText(password, passwordRepeat)
 
         Spacer(modifier = Modifier.padding(5.dp))
 
         CustomPasswordTextField(
-            password = signUpViewModel.passwordRepeat,
-            passwordVisible = signUpViewModel.passwordVisibleRepeat,
+            password = passwordRepeat,
+            passwordVisible = passwordVisibleRepeat,
             title = stringResource(Res.string.register_repeat_password),
-            color = signUpViewModel.colorSecondTextField,
-            onPasswordChange = { signUpViewModel.onPasswordRepeatChange(it) },
-            onPasswordVisibleChange = { signUpViewModel.passwordVisibleRepeat = it }
+            color = colorSecondTextField,
+            onPasswordChange = { passwordRepeat ->
+                signUpViewModel.onPasswordRepeatChange(passwordRepeat)
+            },
+            onPasswordVisibleChange = { passwordVisibleRepeat ->
+                signUpViewModel.onPasswordVisibleRepeatChange(passwordVisibleRepeat)
+            }
         )
-        CheckPasswordsText(signUpViewModel.password, signUpViewModel.passwordRepeat)
+        CheckPasswordsText(password, passwordRepeat)
 
         Spacer(modifier = Modifier.padding(15.dp))
 
@@ -107,13 +151,7 @@ fun SignUp(auth: FirebaseAuth, scope: CoroutineScope, signUpViewModel: SignUpVie
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                scope.launch {
-                    try {
-                        auth.createUserWithEmailAndPassword(signUpViewModel.email, signUpViewModel.password)
-                    } catch (e: Exception) {
-                        // Handle exception
-                    }
-                }
+                signUpViewModel.signUp(auth)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,

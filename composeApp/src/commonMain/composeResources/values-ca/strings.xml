@@ -23,6 +23,8 @@
     <string name="register_button_signup">Crear compte</string>
     <string name="register_password_not_match">Les contrasenyes no coincideixen</string>
     <string name="register_password_not_minimum_large">La contrasenya ha de tenir almenys 4 caràcters</string>
+    <string name="register_user_error_message">Error en crear l'usuari</string>
+    <string name="register_user_error_subtitle_message">Intenta-ho de nou més tard</string>
 
 
     <!--CustomDialog-->

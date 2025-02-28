@@ -15,10 +15,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +26,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.custom_dialog_title
@@ -37,6 +36,7 @@ import gymroutine.composeapp.generated.resources.login_email
 import gymroutine.composeapp.generated.resources.login_forgot_password
 import gymroutine.composeapp.generated.resources.login_password
 import gymroutine.composeapp.generated.resources.login_spacer_login_google
+import gymroutine.composeapp.generated.resources.register_user_error_message
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
@@ -44,27 +44,34 @@ import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.GoogleButton
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
-import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
+import org.bonygod.gymroutine.ui.view.viewModels.LoginViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun Login(
-    dialogViewModel: DialogViewModel,
     auth: FirebaseAuth,
-    scope: CoroutineScope,
+    loginViewModel: LoginViewModel = viewModel(),
     navigateToPrimeraPantalla: () -> Unit,
     navigateToForgotScreen: () -> Unit
 ) {
 
-    var passwordVisible by remember { mutableStateOf(false) }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var showDialog by remember { mutableStateOf(false) }
-    val custom_dialog_title = stringResource(Res.string.custom_dialog_title)
+    val dialogViewModel by loginViewModel.dialogViewModel.collectAsState()
+    val passwordVisible by loginViewModel.passwordVisible.collectAsState()
+    val email by loginViewModel.email.collectAsState()
+    val password by loginViewModel.password.collectAsState()
+    val showDialog by dialogViewModel.showDialog.collectAsState()
+
+    dialogViewModel.setCustomDialog(
+        customDialogTitle = stringResource(Res.string.custom_dialog_title),
+        customDialogSubtitle = "",
+        icon = Res.drawable.exclamation,
+        iconColor = Color.Red
+    )
+
     val focusManager = LocalFocusManager.current
 
     if (showDialog) {
-        CustomDialog(dialogViewModel, onDismiss = { showDialog = false })
+        CustomDialog(dialogViewModel, onDismiss = { dialogViewModel.onShowDialogChange(false) })
     }
 
     Column(
@@ -85,7 +92,9 @@ fun Login(
             value = email,
             title = stringResource(Res.string.login_email),
             checkEmail = false,
-            onValueChange = { email = it })
+            onValueChange = { email ->
+                loginViewModel.onEmailChange(email)
+            })
 
         Spacer(modifier = Modifier.padding(5.dp))
 
@@ -94,8 +103,12 @@ fun Login(
             passwordVisible = passwordVisible,
             title = stringResource(Res.string.login_password),
             color = Color.Black,
-            onPasswordChange = { password = it },
-            onPasswordVisibleChange = { passwordVisible = it },
+            onPasswordChange = { pass ->
+                loginViewModel.onPasswordChange(pass)
+            },
+            onPasswordVisibleChange = { passVisible ->
+                loginViewModel.onPasswordVisibleChange(passVisible)
+            },
         )
 
         Text(
@@ -103,15 +116,7 @@ fun Login(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(horizontal = 10.dp, vertical = 5.dp)
-                .clickable {
-                    scope.launch {
-                        try {
-                            navigateToForgotScreen()
-                        } catch (e: Exception) {
-                            showDialog = true
-                        }
-                    }
-                },
+                .clickable { loginViewModel.onForgotPasswordClick(navigateToForgotScreen) },
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
@@ -125,20 +130,7 @@ fun Login(
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                scope.launch {
-                    try {
-                        //auth.signInWithEmailAndPassword(email, password)
-                        navigateToPrimeraPantalla()
-                    } catch (e: Exception) {
-                        dialogViewModel.setCustomDialog(
-                            custom_dialog_title,
-                            null,
-                            Res.drawable.exclamation,
-                            Color.Red
-                        )
-                        showDialog = true
-                    }
-                }
+                loginViewModel.signIn(auth, navigateToPrimeraPantalla)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,

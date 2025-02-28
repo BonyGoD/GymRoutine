@@ -2,19 +2,49 @@ package org.bonygod.gymroutine.ui.view.viewModels
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.ok_icon
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.jetbrains.compose.resources.DrawableResource
 
 class DialogViewModel: ViewModel() {
 
-    var titleDialog: String? = null
-    var subtitleDialog: String? = null
-    var icon: DrawableResource? = null
-    var iconColor: Color? = null
+    private val _showDialog = MutableStateFlow(false)
+    val showDialog = _showDialog.asStateFlow()
 
-    fun setCustomDialog(titleDialog: String?, subtitleDialog: String?, icon: DrawableResource?, iconColor: Color?) {
-        this.titleDialog = titleDialog
-        this.subtitleDialog = subtitleDialog
-        this.icon = icon
-        this.iconColor = iconColor
+    private val _customDialogTitle = MutableStateFlow("")
+    val customDialogTitle = _customDialogTitle.asStateFlow()
+
+    private val _customDialogSubtitle = MutableStateFlow("")
+    val customDialogSubtitle = _customDialogSubtitle.asStateFlow()
+
+    private val _errorMessageDialog = MutableStateFlow("")
+    val errorMessageDialog = _errorMessageDialog.asStateFlow()
+
+    private val _icon = MutableStateFlow(Res.drawable.ok_icon)
+    val icon = _icon.asStateFlow()
+
+    private val _iconColor = MutableStateFlow(Color.Transparent)
+    val iconColor = _iconColor.asStateFlow()
+
+    fun onShowDialogChange(showDialog: Boolean) {
+        _showDialog.value = showDialog
+    }
+
+    fun setCustomDialog(
+        customDialogTitle: String,
+        customDialogSubtitle: String,
+        icon: DrawableResource,
+        iconColor: Color
+    ) {
+        _customDialogTitle.value = customDialogTitle
+        _customDialogSubtitle.value = customDialogSubtitle
+        _icon.value = icon
+        _iconColor.value = iconColor
+    }
+
+    fun setErrorMessageDialog(errorMessage: String) {
+        _errorMessageDialog.value = errorMessage
     }
 }
