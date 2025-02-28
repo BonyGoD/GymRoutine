@@ -43,16 +43,14 @@ fun AppNavigation() {
                 LoginOrSignup(
                     loginClick = { navController.navigate("Login") },
                     signUpClick = { navController.navigate("SignUp") },
-                    dialogViewModel = dialogViewModel,
+                    dialogViewModel = dialogViewModel
                 )
             }
         }
 
         composable("Login") {
             Login(
-                dialogViewModel,
                 auth,
-                scope,
                 navigateToForgotScreen = { navController.navigate("ForgotPassword") },
                 navigateToPrimeraPantalla = {
                     navController.navigate("PrimeraPantalla") {
@@ -63,7 +61,7 @@ fun AppNavigation() {
         }
 
         composable("SignUp") {
-            SignUp(auth, scope)
+            SignUp(auth)
         }
 
         composable("PrimeraPantalla") {
@@ -71,9 +69,9 @@ fun AppNavigation() {
         }
 
         composable("ForgotPassword") {
-            ForgotPassword(dialogViewModel, auth, scope) {
+            ForgotPassword(auth, dialogViewModel) {
                 navController.navigate("LoginOrSignup") {
-                    popUpTo("ForgotPassword") { inclusive = true }
+                    popUpTo("LoginOrSignup") { inclusive = true }
                 }
             }
         }
