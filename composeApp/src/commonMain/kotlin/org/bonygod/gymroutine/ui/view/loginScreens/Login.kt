@@ -36,9 +36,6 @@ import gymroutine.composeapp.generated.resources.login_email
 import gymroutine.composeapp.generated.resources.login_forgot_password
 import gymroutine.composeapp.generated.resources.login_password
 import gymroutine.composeapp.generated.resources.login_spacer_login_google
-import gymroutine.composeapp.generated.resources.register_user_error_message
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.components.CustomTextField

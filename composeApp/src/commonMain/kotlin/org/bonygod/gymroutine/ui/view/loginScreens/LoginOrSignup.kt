@@ -16,9 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,20 +32,25 @@ import gymroutine.composeapp.generated.resources.loginOrSignup_subtitle
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
+import org.bonygod.gymroutine.ui.view.viewModels.SharedViewModel
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun LoginOrSignup(
     loginClick: () -> Unit,
     signUpClick: () -> Unit,
-    dialogViewModel: DialogViewModel
+    dialogViewModel: DialogViewModel = koinViewModel(),
+    sharedViewModel: SharedViewModel = koinViewModel()
 ) {
 
-    val showDialog by dialogViewModel.showDialog.collectAsState()
+    val showDialog by sharedViewModel.showDialog.collectAsState()
 
-    if (dialogViewModel.customDialogTitle.value.isNotEmpty() && dialogViewModel.customDialogSubtitle.value.isNotEmpty() && showDialog) {
+    if (showDialog) {
         CustomDialog(dialogViewModel, onDismiss = {
-            dialogViewModel.onShowDialogChange(false) })
+            sharedViewModel.onShowDialogChange(false) })
     }
 
         Column(

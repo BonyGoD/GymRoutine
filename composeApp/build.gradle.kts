@@ -41,6 +41,9 @@ kotlin {
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.auth)
             implementation(libs.firebase.crashlytics)
+
+            //Dependency Injection
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -59,6 +62,12 @@ kotlin {
 
             //GitLive Auth
             implementation(libs.gitlive.auth)
+
+            //Dependency Injection
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
     }
 }

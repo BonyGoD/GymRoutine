@@ -42,8 +42,7 @@ fun AppNavigation() {
             } else {
                 LoginOrSignup(
                     loginClick = { navController.navigate("Login") },
-                    signUpClick = { navController.navigate("SignUp") },
-                    dialogViewModel = dialogViewModel
+                    signUpClick = { navController.navigate("SignUp") }
                 )
             }
         }
@@ -69,7 +68,7 @@ fun AppNavigation() {
         }
 
         composable("ForgotPassword") {
-            ForgotPassword(auth, dialogViewModel) {
+            ForgotPassword(auth) {
                 navController.navigate("LoginOrSignup") {
                     popUpTo("LoginOrSignup") { inclusive = true }
                 }
