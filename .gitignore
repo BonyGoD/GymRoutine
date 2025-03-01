@@ -5,7 +5,7 @@
 xcuserdata
 !src/**/build/
 local.properties
-Config.xcconfig
+/iosApp/Configuration/Config.xconfig
 .idea
 .fleet
 .DS_Store
