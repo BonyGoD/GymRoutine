@@ -56,7 +56,6 @@ kotlin {
             implementation(libs.navigator.voyager)
             implementation(libs.navigator.transitions)
             implementation(libs.androidx.navigation.compose)
-            implementation(libs.navigation.transition)
 
             //GitLive Auth
             implementation(libs.gitlive.auth)
