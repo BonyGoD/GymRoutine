@@ -5,6 +5,7 @@
 xcuserdata
 !src/**/build/
 local.properties
+Config.xcconfig
 .idea
 .fleet
 .DS_Store
