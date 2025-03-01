@@ -28,27 +28,28 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
-import gymroutine.composeapp.generated.resources.exclamation
 import gymroutine.composeapp.generated.resources.forgot_password_button
 import gymroutine.composeapp.generated.resources.forgot_password_error_message_dialog
 import gymroutine.composeapp.generated.resources.loginOrSignup_dialog_subtitle
 import gymroutine.composeapp.generated.resources.loginOrSignup_dialog_title
 import gymroutine.composeapp.generated.resources.login_email
-import gymroutine.composeapp.generated.resources.ok_icon
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.ForgotPasswordViewModel
+import org.bonygod.gymroutine.ui.view.viewModels.SharedViewModel
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun ForgotPassword(
     auth: FirebaseAuth,
-    dialogViewModel: DialogViewModel,
+    dialogViewModel: DialogViewModel = koinViewModel(),
     forgotPasswordViewModel: ForgotPasswordViewModel = viewModel(),
+    sharedViewModel: SharedViewModel = koinViewModel(),
     onBack: () -> Unit
 ) {
 
@@ -101,7 +102,7 @@ fun ForgotPassword(
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                forgotPasswordViewModel.resetEmail(auth, dialogViewModel, onBack)
+                forgotPasswordViewModel.resetEmail(auth, dialogViewModel, sharedViewModel, onBack)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,

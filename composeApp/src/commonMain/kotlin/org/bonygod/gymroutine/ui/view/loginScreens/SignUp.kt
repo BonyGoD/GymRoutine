@@ -38,8 +38,6 @@ import gymroutine.composeapp.generated.resources.register_repeat_password
 import gymroutine.composeapp.generated.resources.register_user
 import gymroutine.composeapp.generated.resources.register_user_error_message
 import gymroutine.composeapp.generated.resources.register_user_error_subtitle_message
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.ui.utils.CheckPasswordsText
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField

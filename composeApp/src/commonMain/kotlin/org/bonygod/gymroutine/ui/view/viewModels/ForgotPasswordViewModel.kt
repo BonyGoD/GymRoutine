@@ -34,7 +34,12 @@ class ForgotPasswordViewModel: ViewModel() {
         _email.value = email
     }
 
-    fun resetEmail(auth: FirebaseAuth, dialogViewModel: DialogViewModel, onBack: () -> Unit) {
+    fun resetEmail(
+        auth: FirebaseAuth,
+        dialogViewModel: DialogViewModel,
+        sharedViewModel: SharedViewModel,
+        onBack: () -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 //auth.sendPasswordResetEmail(email.value)
@@ -44,7 +49,7 @@ class ForgotPasswordViewModel: ViewModel() {
                     Res.drawable.ok_icon,
                     Color.Green
                 )
-                dialogViewModel.onShowDialogChange(true)
+                sharedViewModel.onShowDialogChange(true)
                 onBack()
             } catch (e: Exception) {
                 dialogViewModel.setCustomDialog(
