@@ -8,9 +8,9 @@ import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.LoginViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SharedViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SignUpViewModel
-import org.koin.core.module.dsl.*
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
