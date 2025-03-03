@@ -14,8 +14,6 @@ import androidx.compose.ui.unit.dp
 import dev.gitlive.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.bonygod.gymroutine.ui.view.viewModels.SignUpViewModel
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PrimeraPantalla(auth: FirebaseAuth, scope: CoroutineScope, user: String) {

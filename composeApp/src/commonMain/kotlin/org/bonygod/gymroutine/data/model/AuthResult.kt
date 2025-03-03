@@ -1,6 +1,5 @@
 package org.bonygod.gymroutine.data.model
 
-import androidx.compose.material3.DisplayMode
 import kotlinx.serialization.Serializable
 
 @Serializable
