@@ -1,5 +1,6 @@
 package org.bonygod.gymroutine.core.di
 
+import org.bonygod.gymroutine.BuildConfig
 import org.bonygod.gymroutine.data.network.AuthenticationService
 import org.bonygod.gymroutine.data.repositories.AuthRepository
 import org.bonygod.gymroutine.domain.LoginUseCase
@@ -11,6 +12,7 @@ import org.bonygod.gymroutine.ui.view.viewModels.SignUpViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
@@ -21,6 +23,8 @@ val appModule = module {
     single { SignUpViewModel() }
     single { LoginUseCase() }
     single { SignUpUseCase() }
+    single(named("API_KEY")) { BuildConfig.API_KEY }
+    single(named("CLIENT_ID")) { BuildConfig.CLIENT_ID }
 }
 
 val dataModule = module {

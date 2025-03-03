@@ -6,16 +6,17 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import org.bonygod.gymroutine.BuildConfig
 import org.bonygod.gymroutine.core.network.NetworkProvider
 import org.bonygod.gymroutine.data.model.AuthResult
 import org.bonygod.gymroutine.data.model.FirebaseLoginRequest
 import org.bonygod.gymroutine.data.model.FirebaseSignUpRequest
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
 class AuthenticationService() : KoinComponent {
 
-    private val apiKey = BuildConfig.API_KEY
+    private val apiKey: String by inject(named("API_KEY"))
     private val client = NetworkProvider().provideHttpClient()
 
     suspend fun login(email: String, password: String): AuthResult {
