@@ -90,13 +90,6 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.negotiation)
             implementation(libs.kotlin.serialization)
-
-            //Sign In with Google
-            implementation(libs.androidx.credentials)
-            implementation(libs.androidx.credentials.play.services.auth)
-            implementation(libs.googleid)
-            implementation(libs.play.services.auth)
-            implementation(libs.firebase.auth)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -133,6 +126,8 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
 }
 
 buildConfig {
@@ -146,4 +141,3 @@ buildConfig {
     buildConfigField("API_KEY", apiKey)
     buildConfigField("CLIENT_ID", clientId)
 }
-

@@ -35,6 +35,8 @@ import org.jetbrains.compose.resources.stringResource
 fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: (String) -> Unit) {
 
     val name = rememberSaveable { mutableStateOf("") }
+    val uid = rememberSaveable { mutableStateOf("") }
+    val error = rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
     Button(
@@ -47,11 +49,14 @@ fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: 
         onClick = {
             scope.launch {
                 googleAuthHelper.signInWithGoogle(
-                    onSuccess = {
-                        name.value = it
+                    onSuccess = {userName, userUid ->
+                        name.value = userName
+                        uid.value = userUid
                         navigateToPrimeraPantalla(name.value)
                     },
-                    onError = { name.value = it })
+                    onError = { errorMsg ->
+                        error.value = errorMsg
+                    })
             }
         },
         colors = ButtonDefaults.buttonColors(

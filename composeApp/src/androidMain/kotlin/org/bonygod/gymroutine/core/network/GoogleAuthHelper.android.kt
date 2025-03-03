@@ -20,7 +20,7 @@ actual class GoogleAuthHelper(
     private val credentialManager: CredentialManager
 ) : KoinComponent {
     actual suspend fun signInWithGoogle(
-        onSuccess: (String) -> Unit,
+        onSuccess: (String, String) -> Unit,
         onError: (String) -> Unit
     ) {
         val clientId: String by inject(named("CLIENT_ID"))
@@ -43,7 +43,8 @@ actual class GoogleAuthHelper(
                 val authCredential = GoogleAuthProvider.getCredential(idToken, null)
                 val fireBase = FirebaseAuth.getInstance()
                 val user = fireBase.signInWithCredential(authCredential).await().user
-                onSuccess(user?.displayName ?: "user")
+                val UID = user?.uid
+                onSuccess(user?.displayName ?: "user", UID ?: "")
             }
             onError("Something went wrong")
         }catch (e: Exception) {
