@@ -11,19 +11,22 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
-import org.bonygod.gymroutine.BuildConfig
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
 actual class GoogleAuthHelper(
     private val context: Context,
     private val credentialManager: CredentialManager
-) {
+) : KoinComponent {
     actual suspend fun signInWithGoogle(
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
+        val clientId: String by inject(named("CLIENT_ID"))
         try {
             val googleIdOption = GetGoogleIdOption.Builder()
-                .setServerClientId(BuildConfig.CLIENT_ID)
+                .setServerClientId(clientId)
                 .setAutoSelectEnabled(false)
                 .setFilterByAuthorizedAccounts(false)
                 .build()
