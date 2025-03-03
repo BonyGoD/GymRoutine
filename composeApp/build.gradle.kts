@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,6 +10,12 @@ plugins {
     //Firebase
     alias(libs.plugins.google.services.firebase)
     alias(libs.plugins.firebase.crashlytics)
+
+    //ktor
+    alias(libs.plugins.kotlinxSerialization)
+
+    //BuildConfig
+    alias(libs.plugins.gradleBuildConfig)
 }
 
 kotlin {
@@ -17,7 +24,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,9 +35,9 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -44,6 +51,16 @@ kotlin {
 
             //Dependency Injection
             implementation(libs.koin.android)
+
+            //Ktor
+            implementation(libs.ktor.client.okhttp)
+
+            //Sign In with Google
+            implementation(libs.androidx.credentials)
+            implementation(libs.androidx.credentials.play.services.auth)
+            implementation(libs.googleid)
+            implementation(libs.play.services.auth)
+            implementation(libs.firebase.auth)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -68,6 +85,21 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
+            //Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.negotiation)
+            implementation(libs.kotlin.serialization)
+
+            //Sign In with Google
+            implementation(libs.androidx.credentials)
+            implementation(libs.androidx.credentials.play.services.auth)
+            implementation(libs.googleid)
+            implementation(libs.play.services.auth)
+            implementation(libs.firebase.auth)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
@@ -101,5 +133,17 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+}
+
+buildConfig {
+    packageName("org.bonygod.gymroutine")
+
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").reader())
+    val apiKey = properties.getProperty("API_KEY")
+    val clientId = properties.getProperty("CLIENT_ID")
+
+    buildConfigField("API_KEY", apiKey)
+    buildConfigField("CLIENT_ID", clientId)
 }
 

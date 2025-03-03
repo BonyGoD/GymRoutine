@@ -13,6 +13,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,11 +26,17 @@ import androidx.compose.ui.unit.sp
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.google_icon
 import gymroutine.composeapp.generated.resources.login_button_text_google
+import kotlinx.coroutines.launch
+import org.bonygod.gymroutine.core.network.GoogleAuthHelper
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun GoogleButton() {
+fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: (String) -> Unit) {
+
+    val name = rememberSaveable { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,7 +44,16 @@ fun GoogleButton() {
             .border(1.dp, Color.Gray, RoundedCornerShape(30.dp))
             .clip(shape = RoundedCornerShape(30.dp))
             .height(50.dp),
-        onClick = { /*TODO: Ir al registro de Google*/ },
+        onClick = {
+            scope.launch {
+                googleAuthHelper.signInWithGoogle(
+                    onSuccess = {
+                        name.value = it
+                        navigateToPrimeraPantalla(name.value)
+                    },
+                    onError = { name.value = it })
+            }
+        },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             contentColor = Color.Black

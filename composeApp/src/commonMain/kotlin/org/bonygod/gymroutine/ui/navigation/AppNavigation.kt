@@ -3,7 +3,6 @@ package org.bonygod.gymroutine.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,15 +14,12 @@ import org.bonygod.gymroutine.ui.view.loginScreens.ForgotPassword
 import org.bonygod.gymroutine.ui.view.loginScreens.Login
 import org.bonygod.gymroutine.ui.view.loginScreens.LoginOrSignup
 import org.bonygod.gymroutine.ui.view.loginScreens.SignUp
-import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 
 @Composable
 fun AppNavigation() {
 
     val scope = rememberCoroutineScope()
     val auth = remember { Firebase.auth }
-    val dialogViewModel: DialogViewModel = viewModel()
-
     val navController = rememberNavController()
 
     NavHost(
@@ -36,7 +32,7 @@ fun AppNavigation() {
             arguments = listOf(navArgument("titleDialog") { nullable = true })
         ) {
             if (auth.currentUser != null) {
-                navController.navigate("PrimeraPantalla") {
+                navController.navigate("PrimeraPantalla/{user}") {
                     popUpTo("LoginOrSignup") { inclusive = true }
                 }
             } else {
@@ -49,10 +45,9 @@ fun AppNavigation() {
 
         composable("Login") {
             Login(
-                auth,
                 navigateToForgotScreen = { navController.navigate("ForgotPassword") },
-                navigateToPrimeraPantalla = {
-                    navController.navigate("PrimeraPantalla") {
+                navigateToPrimeraPantalla = { user ->
+                    navController.navigate("PrimeraPantalla/$user") {
                         popUpTo("LoginOrSignup") { inclusive = true }
                     }
                 }
@@ -60,11 +55,13 @@ fun AppNavigation() {
         }
 
         composable("SignUp") {
-            SignUp(auth)
-        }
-
-        composable("PrimeraPantalla") {
-            PrimeraPantalla(auth, scope)
+            SignUp(
+                navigateToPrimeraPantalla = { user ->
+                    navController.navigate("PrimeraPantalla/$user") {
+                        popUpTo("LoginOrSignup") { inclusive = true }
+                    }
+                }
+            )
         }
 
         composable("ForgotPassword") {
@@ -73,6 +70,11 @@ fun AppNavigation() {
                     popUpTo("LoginOrSignup") { inclusive = true }
                 }
             }
+        }
+
+        composable("PrimeraPantalla/{user}") {backStackEntry ->
+            val user = backStackEntry.arguments?.getString("user") ?: ""
+            PrimeraPantalla(auth, scope, user)
         }
     }
 }

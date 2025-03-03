@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.custom_dialog_title
@@ -39,16 +38,17 @@ import gymroutine.composeapp.generated.resources.login_spacer_login_google
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
-import org.bonygod.gymroutine.ui.view.components.GoogleButton
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.viewModels.LoginViewModel
+import org.bonygod.gymroutine.view.GoogleSignin
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+
 
 @Composable
 fun Login(
-    auth: FirebaseAuth,
-    loginViewModel: LoginViewModel = viewModel(),
-    navigateToPrimeraPantalla: () -> Unit,
+    loginViewModel: LoginViewModel = koinViewModel(),
+    navigateToPrimeraPantalla: (String) -> Unit,
     navigateToForgotScreen: () -> Unit
 ) {
 
@@ -127,7 +127,11 @@ fun Login(
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                loginViewModel.signIn(auth, navigateToPrimeraPantalla)
+                try {
+                    loginViewModel.signIn(navigateToPrimeraPantalla)
+                }catch (e: Exception){
+                    dialogViewModel.onShowDialogChange(true)
+                }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,
@@ -155,6 +159,6 @@ fun Login(
             Spacer(modifier = Modifier.weight(1f).height(1.dp).background(Color.White))
         }
 
-        GoogleButton()
+        GoogleSignin(navigateToPrimeraPantalla)
     }
 }

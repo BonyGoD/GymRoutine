@@ -2,12 +2,16 @@ package org.bonygod.gymroutine.ui.view.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.gitlive.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.bonygod.gymroutine.domain.LoginUseCase
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel : ViewModel(), KoinComponent {
+
+    private val loginUseCase: LoginUseCase by inject()
 
     private val _dialogViewModel = MutableStateFlow(DialogViewModel())
     val dialogViewModel = _dialogViewModel.asStateFlow()
@@ -33,11 +37,16 @@ class LoginViewModel : ViewModel() {
         _password.value = password
     }
 
-    fun signIn(auth: FirebaseAuth, navigateToPrimeraPantalla: () -> Unit) {
+    fun signIn(navigateToPrimeraPantalla: (String) -> Unit) {
         viewModelScope.launch {
             try {
-                auth.signInWithEmailAndPassword(email.value, password.value)
-                navigateToPrimeraPantalla()
+                val result = loginUseCase(email.value, password.value)
+                if (result.idToken != null) {
+                    Result.success(result.idToken)
+                    navigateToPrimeraPantalla(result.displayName.toString())
+                } else {
+                    Result.failure<Exception>(Exception(result.error?.message ?: "Error desconocido"))
+                }
             } catch (e: Exception) {
                 dialogViewModel.value.setCustomDialog(
                     dialogViewModel.value.customDialogTitle.value,
