@@ -3,12 +3,16 @@ package org.bonygod.gymroutine.ui.view.viewModels
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.gitlive.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.bonygod.gymroutine.domain.SignUpUseCase
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class SignUpViewModel: ViewModel() {
+class SignUpViewModel: ViewModel(), KoinComponent {
+
+    private val signUpUseCase: SignUpUseCase by inject()
 
     private val _dialogViewModel = MutableStateFlow(DialogViewModel())
     val dialogViewModel = _dialogViewModel.asStateFlow()
@@ -73,10 +77,17 @@ class SignUpViewModel: ViewModel() {
         }
     }
 
-    fun signUp(auth: FirebaseAuth) {
+    fun signUp(navigateToPrimeraPantalla: (String) -> Unit) {
         viewModelScope.launch {
             try {
-                auth.createUserWithEmailAndPassword(email.value, password.value)
+                val result = signUpUseCase(email.value, password.value, user.value)
+                if (result.idToken != null) {
+                    Result.success(result.idToken)
+                    _user.value = result.displayName.toString()
+                    navigateToPrimeraPantalla(_user.value)
+                } else {
+                    Result.failure<Exception>(Exception(result.error?.message ?: "Error desconocido"))
+                }
             } catch (e: Exception) {
                 dialogViewModel.value.setCustomDialog(
                     dialogViewModel.value.customDialogTitle.value,

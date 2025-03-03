@@ -26,8 +26,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.exclamation
 import gymroutine.composeapp.generated.resources.login_spacer_login_google
@@ -42,15 +40,16 @@ import org.bonygod.gymroutine.ui.utils.CheckPasswordsText
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
-import org.bonygod.gymroutine.ui.view.components.GoogleButton
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.viewModels.SignUpViewModel
+import org.bonygod.gymroutine.view.GoogleSignin
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SignUp(
-    auth: FirebaseAuth,
-    signUpViewModel: SignUpViewModel = viewModel()
+    signUpViewModel: SignUpViewModel = koinViewModel(),
+    navigateToPrimeraPantalla: (String) -> Unit
 ) {
     val dialogViewModel by signUpViewModel.dialogViewModel.collectAsState()
     val email by signUpViewModel.email.collectAsState()
@@ -149,7 +148,7 @@ fun SignUp(
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                signUpViewModel.signUp(auth)
+                signUpViewModel.signUp(navigateToPrimeraPantalla)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,
@@ -177,6 +176,6 @@ fun SignUp(
             Spacer(modifier = Modifier.weight(1f).height(1.dp).background(Color.White))
         }
 
-        GoogleButton()
+        GoogleSignin(navigateToPrimeraPantalla)
     }
 }
