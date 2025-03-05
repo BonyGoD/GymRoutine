@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.bonygod.gymroutine.data.model.AuthResult
+import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.domain.LoginUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -12,6 +14,8 @@ import org.koin.core.component.inject
 class LoginViewModel : ViewModel(), KoinComponent {
 
     private val loginUseCase: LoginUseCase by inject()
+
+    private val userViewModel: UserViewModel by inject()
 
     private val _dialogViewModel = MutableStateFlow(DialogViewModel())
     val dialogViewModel = _dialogViewModel.asStateFlow()
@@ -25,6 +29,9 @@ class LoginViewModel : ViewModel(), KoinComponent {
     private val _password = MutableStateFlow("")
     val password = _password.asStateFlow()
 
+    private val _user = MutableStateFlow("")
+    val user = _user.asStateFlow()
+
     fun onPasswordVisibleChange(passwordVisible: Boolean) {
         _passwordVisible.value = passwordVisible
     }
@@ -37,16 +44,13 @@ class LoginViewModel : ViewModel(), KoinComponent {
         _password.value = password
     }
 
-    fun signIn(navigateToPrimeraPantalla: (String) -> Unit) {
+    fun signIn(navigateToPrimeraPantalla: () -> Unit) {
         viewModelScope.launch {
             try {
                 val result = loginUseCase(email.value, password.value)
-                if (result.idToken != null) {
-                    Result.success(result.idToken)
-                    navigateToPrimeraPantalla(result.displayName.toString())
-                } else {
-                    Result.failure<Exception>(Exception(result.error?.message ?: "Error desconocido"))
-                }
+                _user.value = result.displayName.toString()
+                userViewModel.insertUser(createUser(result))
+                navigateToPrimeraPantalla()
             } catch (e: Exception) {
                 dialogViewModel.value.setCustomDialog(
                     dialogViewModel.value.customDialogTitle.value,
@@ -61,5 +65,14 @@ class LoginViewModel : ViewModel(), KoinComponent {
 
     fun onForgotPasswordClick(navigateToForgotScreen: () -> Unit) {
         navigateToForgotScreen()
+    }
+
+    private fun createUser(result: AuthResult): User {
+        return User(
+            id = result.uid.toString(),
+            displayName = result.displayName.toString(),
+            email = result.email.toString(),
+            token = result.token.toString()
+        )
     }
 }

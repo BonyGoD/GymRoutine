@@ -1,16 +1,24 @@
 package org.bonygod.gymroutine.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthResult(
-    val idToken: String?,
-    val email: String?,
-    val displayName: String?,
-    val localId: String?,
-    val error: ErrorResponse? = null
-)
 
-@Serializable
-data class ErrorResponse(val message: String?)
+    @SerialName("idToken")
+    val token: String? = null,
+
+    @SerialName("email")
+    val email: String? = null,
+
+    @SerialName("displayName")
+    val displayName: String? = null,
+
+    @SerialName("localId")
+    var uid: String? = null,
+
+    @SerialName("error")
+    val error: FirebaseErrorResponse? = null
+)
 

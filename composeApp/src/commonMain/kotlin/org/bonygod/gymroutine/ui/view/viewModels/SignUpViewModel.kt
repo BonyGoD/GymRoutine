@@ -12,12 +12,11 @@ import org.bonygod.gymroutine.domain.SignUpUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class SignUpViewModel: ViewModel(), KoinComponent {
+class SignUpViewModel : ViewModel(), KoinComponent {
 
     private val signUpUseCase: SignUpUseCase by inject()
 
     private val userViewModel: UserViewModel by inject()
-    //val userDb = userViewModel.getUser()
 
     private val _dialogViewModel = MutableStateFlow(DialogViewModel())
     val dialogViewModel = _dialogViewModel.asStateFlow()
@@ -82,19 +81,14 @@ class SignUpViewModel: ViewModel(), KoinComponent {
         }
     }
 
-    fun signUp(navigateToPrimeraPantalla: (String) -> Unit) {
+    fun signUp(navigateToPrimeraPantalla: () -> Unit) {
         viewModelScope.launch {
             try {
                 val result = signUpUseCase(email.value, password.value, user.value)
-                if (result.idToken != null) {
-                    Result.success(result.idToken)
-                    userViewModel.insertUser(createUser(result))
-                    _user.value = result.displayName.toString()
-                    navigateToPrimeraPantalla(_user.value)
-                } else {
-                    Result.failure<Exception>(Exception(result.error?.message ?: "Error desconocido"))
-                }
+                userViewModel.insertUser(createUser(result))
+                navigateToPrimeraPantalla()
             } catch (e: Exception) {
+                val prueba = e.message
                 dialogViewModel.value.setCustomDialog(
                     dialogViewModel.value.customDialogTitle.value,
                     dialogViewModel.value.customDialogSubtitle.value,
@@ -108,10 +102,10 @@ class SignUpViewModel: ViewModel(), KoinComponent {
 
     private fun createUser(result: AuthResult): User {
         return User(
-            id = result.localId.toString(),
+            id = result.uid.toString(),
             displayName = result.displayName.toString(),
             email = result.email.toString(),
-            token = result.idToken.toString()
+            token = result.token.toString()
         )
     }
 }

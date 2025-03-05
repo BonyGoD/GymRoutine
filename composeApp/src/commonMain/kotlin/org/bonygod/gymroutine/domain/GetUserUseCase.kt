@@ -7,7 +7,7 @@ import org.bonygod.gymroutine.data.repository.UserRepository
 class GetUserUseCase(
     private val userRepository: UserRepository
 ) {
-    operator fun invoke(): Flow<User> {
+    operator fun invoke(): Flow<User?> {
         return userRepository.getUser()
     }
 }

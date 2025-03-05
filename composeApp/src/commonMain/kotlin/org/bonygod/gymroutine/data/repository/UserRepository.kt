@@ -30,7 +30,7 @@ class UserRepository(
         }
     }
 
-    fun getUser(): Flow<User> {
+    fun getUser(): Flow<User?> {
         return database.userDao().getUser()
     }
 }

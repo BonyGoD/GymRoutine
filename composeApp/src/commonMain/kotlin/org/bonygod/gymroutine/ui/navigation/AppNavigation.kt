@@ -12,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +20,7 @@ import androidx.navigation.navArgument
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.ui.view.PrimeraPantalla
@@ -38,36 +40,32 @@ fun AppNavigation() {
 
     val userViewModel = koinViewModel<UserViewModel>()
     var user by remember { mutableStateOf<User?>(null) }
+    var showScreen by remember { mutableStateOf<Boolean>(false) }
 
     LaunchedEffect(Unit) {
         delay(500)
         user = userViewModel.getUser().first()
+        showScreen = true
     }
 
-    if (user == null) {
+    if (!showScreen) {
         LoadingScreen()
         return
     }
 
     NavHost(
         navController = navController,
-        startDestination = "LoginOrSignup"
+        startDestination = if (user != null) "PrimeraPantalla" else "LoginOrSignup"
     ) {
 
         composable(
             route = "LoginOrSignup",
             arguments = listOf(navArgument("titleDialog") { nullable = true })
         ) {
-            if (user?.token?.isNotEmpty() == true) {
-                navController.navigate("PrimeraPantalla") {
-                    popUpTo("LoginOrSignup") { inclusive = true }
-                }
-            } else {
-                LoginOrSignup(
-                    loginClick = { navController.navigate("Login") },
-                    signUpClick = { navController.navigate("SignUp") }
-                )
-            }
+            LoginOrSignup(
+                loginClick = { navController.navigate("Login") },
+                signUpClick = { navController.navigate("SignUp") }
+            )
         }
 
         composable("Login") {
@@ -100,7 +98,7 @@ fun AppNavigation() {
         }
 
         composable("PrimeraPantalla") {
-            PrimeraPantalla(scope,
+            PrimeraPantalla(
                 navigateToLoginOrSignup = {
                     navController.navigate("LoginOrSignup") {
                         popUpTo("PrimeraPantalla") { inclusive = true }

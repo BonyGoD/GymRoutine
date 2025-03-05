@@ -44,18 +44,15 @@ import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.bonygod.gymroutine.view.GoogleSignin
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.component.inject
 
 
 @Composable
 fun Login(
     loginViewModel: LoginViewModel = koinViewModel(),
-    navigateToPrimeraPantalla: (String) -> Unit,
+    navigateToPrimeraPantalla: () -> Unit,
     navigateToForgotScreen: () -> Unit
 ) {
-
-    val userViewModel = koinViewModel<UserViewModel>()
-
-    //val user by userViewModel.getUser().collectAsStateWithLifecycle(initialValue = null)
 
     val dialogViewModel by loginViewModel.dialogViewModel.collectAsState()
     val passwordVisible by loginViewModel.passwordVisible.collectAsState()

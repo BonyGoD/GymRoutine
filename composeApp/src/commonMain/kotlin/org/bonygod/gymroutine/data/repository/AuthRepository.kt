@@ -16,4 +16,8 @@ class AuthRepository(): KoinComponent {
     suspend fun signUp(email: String, password: String, displayName: String): AuthResult {
         return authenticationService.signUp(email, password, displayName)
     }
+
+    suspend fun resetPassword(email: String): String {
+        return authenticationService.resetPassword(email)
+    }
 }
