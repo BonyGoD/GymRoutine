@@ -16,6 +16,10 @@ plugins {
 
     //BuildConfig
     alias(libs.plugins.gradleBuildConfig)
+
+    //Room dependencies
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -90,6 +94,10 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.negotiation)
             implementation(libs.kotlin.serialization)
+
+            //Room dependencies
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -128,6 +136,12 @@ dependencies {
     debugImplementation(compose.uiTooling)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
+
+    //Room target platforms
+    add("kspAndroid",libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
 }
 
 buildConfig {
@@ -140,4 +154,8 @@ buildConfig {
 
     buildConfigField("API_KEY", apiKey)
     buildConfigField("CLIENT_ID", clientId)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }

@@ -1,19 +1,33 @@
 package org.bonygod.gymroutine.ui.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.ui.view.PrimeraPantalla
 import org.bonygod.gymroutine.ui.view.loginScreens.ForgotPassword
 import org.bonygod.gymroutine.ui.view.loginScreens.Login
 import org.bonygod.gymroutine.ui.view.loginScreens.LoginOrSignup
 import org.bonygod.gymroutine.ui.view.loginScreens.SignUp
+import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppNavigation() {
@@ -21,6 +35,19 @@ fun AppNavigation() {
     val scope = rememberCoroutineScope()
     val auth = remember { Firebase.auth }
     val navController = rememberNavController()
+
+    val userViewModel = koinViewModel<UserViewModel>()
+    var user by remember { mutableStateOf<User?>(null) }
+
+    LaunchedEffect(Unit) {
+        delay(500)
+        user = userViewModel.getUser().first()
+    }
+
+    if (user == null) {
+        LoadingScreen()
+        return
+    }
 
     NavHost(
         navController = navController,
@@ -31,8 +58,8 @@ fun AppNavigation() {
             route = "LoginOrSignup",
             arguments = listOf(navArgument("titleDialog") { nullable = true })
         ) {
-            if (auth.currentUser != null) {
-                navController.navigate("PrimeraPantalla/{user}") {
+            if (user?.token?.isNotEmpty() == true) {
+                navController.navigate("PrimeraPantalla") {
                     popUpTo("LoginOrSignup") { inclusive = true }
                 }
             } else {
@@ -46,8 +73,8 @@ fun AppNavigation() {
         composable("Login") {
             Login(
                 navigateToForgotScreen = { navController.navigate("ForgotPassword") },
-                navigateToPrimeraPantalla = { user ->
-                    navController.navigate("PrimeraPantalla/$user") {
+                navigateToPrimeraPantalla = {
+                    navController.navigate("PrimeraPantalla") {
                         popUpTo("LoginOrSignup") { inclusive = true }
                     }
                 }
@@ -56,8 +83,8 @@ fun AppNavigation() {
 
         composable("SignUp") {
             SignUp(
-                navigateToPrimeraPantalla = { user ->
-                    navController.navigate("PrimeraPantalla/$user") {
+                navigateToPrimeraPantalla = {
+                    navController.navigate("PrimeraPantalla") {
                         popUpTo("LoginOrSignup") { inclusive = true }
                     }
                 }
@@ -72,9 +99,24 @@ fun AppNavigation() {
             }
         }
 
-        composable("PrimeraPantalla/{user}") {backStackEntry ->
-            val user = backStackEntry.arguments?.getString("user") ?: ""
-            PrimeraPantalla(auth, scope, user)
+        composable("PrimeraPantalla") {
+            PrimeraPantalla(scope,
+                navigateToLoginOrSignup = {
+                    navController.navigate("LoginOrSignup") {
+                        popUpTo("PrimeraPantalla") { inclusive = true }
+                    }
+                }
+            )
         }
+    }
+}
+
+@Composable
+fun LoadingScreen() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator()
     }
 }

@@ -1,4 +1,4 @@
-package org.bonygod.gymroutine.data.repositories
+package org.bonygod.gymroutine.data.repository
 
 import org.bonygod.gymroutine.data.model.AuthResult
 import org.bonygod.gymroutine.data.network.AuthenticationService

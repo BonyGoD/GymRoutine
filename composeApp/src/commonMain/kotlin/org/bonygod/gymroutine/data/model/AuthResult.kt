@@ -7,6 +7,7 @@ data class AuthResult(
     val idToken: String?,
     val email: String?,
     val displayName: String?,
+    val localId: String?,
     val error: ErrorResponse? = null
 )
 

@@ -21,3 +21,4 @@ captures
 google-services.json
 GoogleService-Info.plist
 Info.plist
+/composeApp/schemas/*

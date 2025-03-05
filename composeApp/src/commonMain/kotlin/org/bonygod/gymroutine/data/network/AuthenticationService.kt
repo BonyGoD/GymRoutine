@@ -4,6 +4,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import org.bonygod.gymroutine.core.network.NetworkProvider
@@ -25,8 +26,9 @@ class AuthenticationService : KoinComponent {
             setBody(FirebaseLoginRequest(email, password))
         }
 
+        val prueba = response.bodyAsText()
         val result: AuthResult = response.body()
-        return AuthResult(result.idToken, result.email, result.displayName, result.error)
+        return AuthResult(result.idToken, result.email, result.displayName, result.localId, result.error)
     }
 
     suspend fun signUp(email: String, password: String, displayName: String): AuthResult {
@@ -36,6 +38,6 @@ class AuthenticationService : KoinComponent {
         }
 
         val result: AuthResult = response.body()
-        return AuthResult(result.idToken, result.email, result.displayName, result.error)
+        return AuthResult(result.idToken, result.email, result.displayName, result.localId, result.error)
     }
 }
