@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.bonygod.gymroutine.data.model.AuthResult
 import org.bonygod.gymroutine.data.model.User
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

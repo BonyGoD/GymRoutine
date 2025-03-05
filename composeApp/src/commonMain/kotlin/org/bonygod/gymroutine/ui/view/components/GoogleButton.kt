@@ -13,7 +13,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,18 +30,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.google_icon
 import gymroutine.composeapp.generated.resources.login_button_text_google
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.core.network.GoogleAuthHelper
-import org.bonygod.gymroutine.data.model.User
-import org.bonygod.gymroutine.ui.navigation.LoadingScreen
 import org.bonygod.gymroutine.ui.utils.createUserDb
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.component.inject
 
 @Composable
 fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: () -> Unit) {

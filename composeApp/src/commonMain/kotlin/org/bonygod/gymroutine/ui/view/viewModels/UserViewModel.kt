@@ -1,11 +1,8 @@
 package org.bonygod.gymroutine.ui.view.viewModels
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.domain.DeleteUserUseCase
