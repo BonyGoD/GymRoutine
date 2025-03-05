@@ -26,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.gitlive.firebase.auth.FirebaseAuth
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.forgot_password_button
 import gymroutine.composeapp.generated.resources.forgot_password_error_message_dialog
@@ -46,7 +45,6 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun ForgotPassword(
-    auth: FirebaseAuth,
     dialogViewModel: DialogViewModel = koinViewModel(),
     forgotPasswordViewModel: ForgotPasswordViewModel = viewModel(),
     sharedViewModel: SharedViewModel = koinViewModel(),

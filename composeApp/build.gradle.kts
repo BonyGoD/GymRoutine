@@ -81,9 +81,6 @@ kotlin {
             implementation(libs.navigator.transitions)
             implementation(libs.androidx.navigation.compose)
 
-            //GitLive Auth
-            implementation(libs.gitlive.auth)
-
             //Dependency Injection
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
