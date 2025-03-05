@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.loginOrSignup_button_login
 import gymroutine.composeapp.generated.resources.loginOrSignup_button_signup
@@ -34,10 +33,8 @@ import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SharedViewModel
-import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @Composable
 fun LoginOrSignup(

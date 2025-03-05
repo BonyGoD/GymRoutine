@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.exclamation
 import gymroutine.composeapp.generated.resources.login_spacer_login_google
@@ -37,14 +36,12 @@ import gymroutine.composeapp.generated.resources.register_repeat_password
 import gymroutine.composeapp.generated.resources.register_user
 import gymroutine.composeapp.generated.resources.register_user_error_message
 import gymroutine.composeapp.generated.resources.register_user_error_subtitle_message
-import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.ui.utils.CheckPasswordsText
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.viewModels.SignUpViewModel
-import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.bonygod.gymroutine.view.GoogleSignin
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

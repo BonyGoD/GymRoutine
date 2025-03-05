@@ -1,7 +1,6 @@
 package org.bonygod.gymroutine.data.network
 
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -9,7 +8,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
-import kotlinx.serialization.json.Json
 import org.bonygod.gymroutine.core.network.NetworkProvider
 import org.bonygod.gymroutine.data.model.AuthResult
 import org.bonygod.gymroutine.data.model.FirebaseErrorResponse

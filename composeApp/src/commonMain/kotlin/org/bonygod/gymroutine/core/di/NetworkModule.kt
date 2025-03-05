@@ -12,7 +12,6 @@ import org.bonygod.gymroutine.domain.InsertUserUseCase
 import org.bonygod.gymroutine.domain.LoginUseCase
 import org.bonygod.gymroutine.domain.SignUpUseCase
 import org.bonygod.gymroutine.domain.UpdateUserUseCase
-import org.bonygod.gymroutine.ui.view.PrimeraPantalla
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.LoginViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.PrimeraPantallaViewModel
