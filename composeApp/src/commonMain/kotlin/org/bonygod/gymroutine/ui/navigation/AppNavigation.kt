@@ -8,7 +8,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +15,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.auth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
@@ -32,8 +29,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AppNavigation() {
 
-    val scope = rememberCoroutineScope()
-    val auth = remember { Firebase.auth }
     val navController = rememberNavController()
 
     val userViewModel = koinViewModel<UserViewModel>()
@@ -88,7 +83,7 @@ fun AppNavigation() {
         }
 
         composable("ForgotPassword") {
-            ForgotPassword(auth) {
+            ForgotPassword {
                 navController.navigate("LoginOrSignup") {
                     popUpTo("LoginOrSignup") { inclusive = true }
                 }
