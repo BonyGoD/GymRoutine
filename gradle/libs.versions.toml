@@ -28,7 +28,7 @@ navigation-compose = "2.8.0-alpha10"
 #GitLive AUTH
 gitLiveAuth = "2.1.0"
 
-#Dependency Injection
+#Koin Dependency Injection
 koin = "4.0.2"
 koin-compose = "4.0.2"
 
@@ -39,6 +39,13 @@ ktor = "2.3.11"
 googleid = "1.1.1"
 playServicesAuth = "21.3.0"
 credentialsPlayServicesAuth = "1.5.0-rc01"
+
+#Room
+room = "2.7.0-alpha12"
+#ksp (Kotlin Symbol Processing)
+ksp = "2.1.0-1.0.29"
+#sqlite database
+sqlite = "2.5.0-alpha12"
 
 #BuildConfig
 buildConfig = "5.5.1"
@@ -92,6 +99,11 @@ androidx-credentials-play-services-auth = { module = "androidx.credentials:crede
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 
+#Room dependencies
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -109,3 +121,7 @@ kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 
 #BuildConfig
 gradleBuildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
+
+#Room dependencies
+room = { id = "androidx.room", version.ref = "room" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

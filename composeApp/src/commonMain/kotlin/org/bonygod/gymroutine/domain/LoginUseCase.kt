@@ -1,7 +1,7 @@
 package org.bonygod.gymroutine.domain
 
 import org.bonygod.gymroutine.data.model.AuthResult
-import org.bonygod.gymroutine.data.repositories.AuthRepository
+import org.bonygod.gymroutine.data.repository.AuthRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

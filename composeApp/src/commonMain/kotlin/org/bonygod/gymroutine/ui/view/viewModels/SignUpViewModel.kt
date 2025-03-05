@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.bonygod.gymroutine.data.model.AuthResult
+import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.domain.SignUpUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -13,6 +15,9 @@ import org.koin.core.component.inject
 class SignUpViewModel: ViewModel(), KoinComponent {
 
     private val signUpUseCase: SignUpUseCase by inject()
+
+    private val userViewModel: UserViewModel by inject()
+    //val userDb = userViewModel.getUser()
 
     private val _dialogViewModel = MutableStateFlow(DialogViewModel())
     val dialogViewModel = _dialogViewModel.asStateFlow()
@@ -83,6 +88,7 @@ class SignUpViewModel: ViewModel(), KoinComponent {
                 val result = signUpUseCase(email.value, password.value, user.value)
                 if (result.idToken != null) {
                     Result.success(result.idToken)
+                    userViewModel.insertUser(createUser(result))
                     _user.value = result.displayName.toString()
                     navigateToPrimeraPantalla(_user.value)
                 } else {
@@ -98,5 +104,14 @@ class SignUpViewModel: ViewModel(), KoinComponent {
                 dialogViewModel.value.onShowDialogChange(true)
             }
         }
+    }
+
+    private fun createUser(result: AuthResult): User {
+        return User(
+            id = result.localId.toString(),
+            displayName = result.displayName.toString(),
+            email = result.email.toString(),
+            token = result.idToken.toString()
+        )
     }
 }
