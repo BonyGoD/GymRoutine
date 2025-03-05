@@ -13,9 +13,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,21 +27,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.google_icon
 import gymroutine.composeapp.generated.resources.login_button_text_google
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.core.network.GoogleAuthHelper
+import org.bonygod.gymroutine.data.model.User
+import org.bonygod.gymroutine.ui.navigation.LoadingScreen
+import org.bonygod.gymroutine.ui.utils.createUserDb
+import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.component.inject
 
 @Composable
-fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: (String) -> Unit) {
+fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: () -> Unit) {
 
-    val name = rememberSaveable { mutableStateOf("") }
-    val uid = rememberSaveable { mutableStateOf("") }
     val error = rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
+    val userViewModel = koinViewModel<UserViewModel>()
+    var showScreen by remember { mutableStateOf<Boolean>(false) }
+
+    val user by userViewModel.getUser().collectAsStateWithLifecycle(initialValue = null)
 
     Button(
         modifier = Modifier
@@ -49,10 +64,10 @@ fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: 
         onClick = {
             scope.launch {
                 googleAuthHelper.signInWithGoogle(
-                    onSuccess = {userName, userUid ->
-                        name.value = userName
-                        uid.value = userUid
-                        navigateToPrimeraPantalla(name.value)
+                    onSuccess = { userName, userUid, tokenId, mail ->
+                        val userDb = createUserDb(userUid, userName, mail, tokenId)
+                        userViewModel.insertUser(userDb)
+                        navigateToPrimeraPantalla()
                     },
                     onError = { errorMsg ->
                         error.value = errorMsg

@@ -12,8 +12,10 @@ import org.bonygod.gymroutine.domain.InsertUserUseCase
 import org.bonygod.gymroutine.domain.LoginUseCase
 import org.bonygod.gymroutine.domain.SignUpUseCase
 import org.bonygod.gymroutine.domain.UpdateUserUseCase
+import org.bonygod.gymroutine.ui.view.PrimeraPantalla
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.LoginViewModel
+import org.bonygod.gymroutine.ui.view.viewModels.PrimeraPantallaViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SharedViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SignUpViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
@@ -28,8 +30,9 @@ import org.koin.dsl.module
 val appModule = module {
     single { DialogViewModel() }
     single { SharedViewModel() }
-    single { LoginViewModel() }
-    single { SignUpViewModel() }
+    factory { LoginViewModel() }
+    factory { SignUpViewModel() }
+    factory { PrimeraPantallaViewModel() }
     single { LoginUseCase() }
     single { SignUpUseCase() }
     single(named("API_KEY")) { BuildConfig.API_KEY }
@@ -53,6 +56,7 @@ val viewModelsModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignUpViewModel)
     viewModelOf(::UserViewModel)
+    viewModelOf(::PrimeraPantallaViewModel)
 }
 
 //expect val nativeModule : Module

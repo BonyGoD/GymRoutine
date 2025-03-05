@@ -52,7 +52,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SignUp(
     signUpViewModel: SignUpViewModel = koinViewModel(),
-    navigateToPrimeraPantalla: (String) -> Unit
+    navigateToPrimeraPantalla: () -> Unit
 ) {
     val dialogViewModel by signUpViewModel.dialogViewModel.collectAsState()
     val email by signUpViewModel.email.collectAsState()

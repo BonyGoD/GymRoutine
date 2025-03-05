@@ -32,7 +32,7 @@ class UserViewModel(
         viewModelScope.launch { deleteUserUseCase(user) }
     }
 
-    fun getUser(): Flow<User> {
+    fun getUser(): Flow<User?> {
         return getUserUseCase()
     }
 }

@@ -102,7 +102,7 @@ fun ForgotPassword(
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                forgotPasswordViewModel.resetEmail(auth, dialogViewModel, sharedViewModel, onBack)
+                forgotPasswordViewModel.resetEmail(dialogViewModel, sharedViewModel, onBack)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,
