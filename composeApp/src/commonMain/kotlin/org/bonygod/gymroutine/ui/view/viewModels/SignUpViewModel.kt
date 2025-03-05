@@ -88,7 +88,6 @@ class SignUpViewModel : ViewModel(), KoinComponent {
                 userViewModel.insertUser(createUser(result))
                 navigateToPrimeraPantalla()
             } catch (e: Exception) {
-                val prueba = e.message
                 dialogViewModel.value.setCustomDialog(
                     dialogViewModel.value.customDialogTitle.value,
                     dialogViewModel.value.customDialogSubtitle.value,
