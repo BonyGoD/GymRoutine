@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.forgot_password_button
 import gymroutine.composeapp.generated.resources.forgot_password_error_message_dialog
@@ -40,19 +39,18 @@ import org.bonygod.gymroutine.ui.view.viewModels.ForgotPasswordViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SharedViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun ForgotPassword(
     dialogViewModel: DialogViewModel = koinViewModel(),
-    forgotPasswordViewModel: ForgotPasswordViewModel = viewModel(),
+    forgotPasswordViewModel: ForgotPasswordViewModel = koinViewModel(),
     sharedViewModel: SharedViewModel = koinViewModel(),
     onBack: () -> Unit
 ) {
 
     val email by forgotPasswordViewModel.email.collectAsState()
     val showDialog by dialogViewModel.showDialog.collectAsState()
+    val buttonVisible by forgotPasswordViewModel.buttonVisible.collectAsState()
 
     dialogViewModel.setErrorMessageDialog(
         stringResource(Res.string.forgot_password_error_message_dialog)
@@ -89,6 +87,9 @@ fun ForgotPassword(
             checkEmail = true,
             onValueChange = { email ->
                 forgotPasswordViewModel.onEmailChange(email)
+            },
+            validEmail = { valid ->
+                forgotPasswordViewModel.validEmail(valid)
             })
 
         Spacer(modifier = Modifier.padding(15.dp))
@@ -105,7 +106,8 @@ fun ForgotPassword(
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,
                 contentColor = Color.Black
-            )
+            ),
+            enabled = buttonVisible
         ) {
             Text(
                 stringResource(Res.string.forgot_password_button),

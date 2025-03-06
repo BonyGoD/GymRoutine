@@ -27,15 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gymroutine.composeapp.generated.resources.Res
-import gymroutine.composeapp.generated.resources.exclamation
+import gymroutine.composeapp.generated.resources.error_email_exist_subtitle
+import gymroutine.composeapp.generated.resources.error_email_exist_title
+import gymroutine.composeapp.generated.resources.loginOrSignup_dialog_subtitle
+import gymroutine.composeapp.generated.resources.loginOrSignup_dialog_title
 import gymroutine.composeapp.generated.resources.login_spacer_login_google
 import gymroutine.composeapp.generated.resources.register_button_signup
 import gymroutine.composeapp.generated.resources.register_email
 import gymroutine.composeapp.generated.resources.register_password
 import gymroutine.composeapp.generated.resources.register_repeat_password
 import gymroutine.composeapp.generated.resources.register_user
-import gymroutine.composeapp.generated.resources.register_user_error_message
-import gymroutine.composeapp.generated.resources.register_user_error_subtitle_message
 import org.bonygod.gymroutine.ui.utils.CheckPasswordsText
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
@@ -61,12 +62,16 @@ fun SignUp(
     val colorFirstTextField by signUpViewModel.colorFirstTextField.collectAsState()
     val colorSecondTextField by signUpViewModel.colorSecondTextField.collectAsState()
     val showDialog by dialogViewModel.showDialog.collectAsState()
+    val buttonVisible by signUpViewModel.buttonVisible.collectAsState()
 
-    dialogViewModel.setCustomDialog(
-        customDialogTitle = stringResource(Res.string.register_user_error_message),
-        customDialogSubtitle = stringResource(Res.string.register_user_error_subtitle_message),
-        icon = Res.drawable.exclamation,
-        iconColor = Color.Red
+    signUpViewModel.setTitlesGenericErrorDialog(
+        stringResource(Res.string.loginOrSignup_dialog_title),
+        stringResource(Res.string.loginOrSignup_dialog_subtitle)
+    )
+
+    signUpViewModel.setTitleErrorEmailExists(
+        stringResource(Res.string.error_email_exist_title),
+        stringResource(Res.string.error_email_exist_subtitle)
     )
 
 
@@ -96,6 +101,10 @@ fun SignUp(
             checkEmail = true,
             onValueChange = { email ->
                 signUpViewModel.onEmailChange(email)
+                signUpViewModel.checkFields()
+            },
+            validEmail = { valid ->
+                signUpViewModel.validEmail(valid)
             }
         )
 
@@ -107,6 +116,7 @@ fun SignUp(
             checkEmail = false,
             onValueChange = { user ->
                 signUpViewModel.onUserChange(user)
+                signUpViewModel.checkFields()
             })
 
         Spacer(modifier = Modifier.padding(5.dp))
@@ -116,7 +126,10 @@ fun SignUp(
             passwordVisible = passwordVisible,
             title = stringResource(Res.string.register_password),
             color = colorFirstTextField,
-            onPasswordChange = { signUpViewModel.onPasswordChange(it) },
+            onPasswordChange = {
+                signUpViewModel.onPasswordChange(it)
+                signUpViewModel.checkFields()
+            },
             onPasswordVisibleChange = { passwordVisible ->
                 signUpViewModel.onPasswordVisibleChange(passwordVisible)
             }
@@ -132,6 +145,7 @@ fun SignUp(
             color = colorSecondTextField,
             onPasswordChange = { passwordRepeat ->
                 signUpViewModel.onPasswordRepeatChange(passwordRepeat)
+                signUpViewModel.checkFields()
             },
             onPasswordVisibleChange = { passwordVisibleRepeat ->
                 signUpViewModel.onPasswordVisibleRepeatChange(passwordVisibleRepeat)
@@ -148,12 +162,13 @@ fun SignUp(
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                signUpViewModel.signUp(navigateToPrimeraPantalla)
+                signUpViewModel.signUp(dialogViewModel, navigateToPrimeraPantalla)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,
                 contentColor = Color.Black
-            )
+            ),
+            enabled = buttonVisible
         ) {
             Text(
                 stringResource(Res.string.register_button_signup),

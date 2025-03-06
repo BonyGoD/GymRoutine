@@ -29,6 +29,13 @@ class ForgotPasswordViewModel: ViewModel(), KoinComponent {
     private val _icon = MutableStateFlow(Res.drawable.ok_icon)
     val icon = _icon.asStateFlow()
 
+    private val _buttonVisible = MutableStateFlow(false)
+    val buttonVisible = _buttonVisible.asStateFlow()
+
+    fun validEmail(validEmail: Boolean) {
+        _buttonVisible.value = validEmail
+    }
+
     fun setTitlesOkDialog(title: String, subtitle: String) {
         _customDialogTitle.value = title
         _customDialogSubtitle.value = subtitle
@@ -56,7 +63,7 @@ class ForgotPasswordViewModel: ViewModel(), KoinComponent {
                 onBack()
             } catch (e: Exception) {
                 dialogViewModel.setCustomDialog(
-                    dialogViewModel.errorMessageDialog.value,
+                    dialogViewModel.customDialogErrorTitle.value,
                     "",
                     Res.drawable.exclamation,
                     Color.Red
