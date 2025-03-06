@@ -28,7 +28,7 @@ fun CheckPasswordsText(password: String, passwordRepeat: String) {
             fontSize = 12.sp
         )
     }
-    if (password.length < 4 && passwordRepeat.isNotEmpty()) {
+    if (password.length < 6 && passwordRepeat.isNotEmpty()) {
         Text(
             text = stringResource(Res.string.register_password_not_minimum_large),
             modifier = Modifier.align(Alignment.Start).padding(horizontal = 20.dp),

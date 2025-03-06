@@ -22,7 +22,7 @@
     <string name="register_repeat_password">Repetir contraseña</string>
     <string name="register_button_signup">Crear cuenta</string>
     <string name="register_password_not_match">Las contraseñas no coinciden</string>
-    <string name="register_password_not_minimum_large">La contraseña debe tener al menos 4 caracteres</string>
+    <string name="register_password_not_minimum_large">La contraseña debe tener al menos 6 caracteres</string>
     <string name="register_user_error_message">Error al crear el usuario</string>
     <string name="register_user_error_subtitle_message">Intentelo de nuevo, mas tarde</string>
 
@@ -37,5 +37,10 @@
 
     <!--CustomTextField-->
     <string name="custom_text_field_incorrect_email">Email incorrecto</string>
+
+    <!--Errors-->
+    <string name="error_400_email_exists">EMAIL_EXISTS</string>
+    <string name="error_email_exist_title">Usuario existente</string>
+    <string name="error_email_exist_subtitle">El usuario ya existe, por favor elige otro</string>
 
 </resources>

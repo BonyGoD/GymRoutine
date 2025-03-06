@@ -23,7 +23,7 @@
     <string name="register_repeat_password">Repeat password</string>
     <string name="register_button_signup">Create account</string>
     <string name="register_password_not_match">Passwords do not match</string>
-    <string name="register_password_not_minimum_large">The password must be at least 4 characters long</string>
+    <string name="register_password_not_minimum_large">The password must be at least 6 characters long</string>
     <string name="register_user_error_message">Error creating the user</string>
     <string name="register_user_error_subtitle_message">Please try again later</string>
 
@@ -37,4 +37,9 @@
 
     <!--CustomTextField-->
     <string name="custom_text_field_incorrect_email">Incorrect email</string>
+
+    <!--Errors-->
+    <string name="error_400_email_exists">EMAIL_EXISTS</string>
+    <string name="error_email_exist_title">Existing user</string>
+    <string name="error_email_exist_subtitle">The user already exists, please choose another one</string>
 </resources>
