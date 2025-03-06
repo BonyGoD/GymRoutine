@@ -12,7 +12,9 @@ import org.bonygod.gymroutine.domain.InsertUserUseCase
 import org.bonygod.gymroutine.domain.LoginUseCase
 import org.bonygod.gymroutine.domain.SignUpUseCase
 import org.bonygod.gymroutine.domain.UpdateUserUseCase
+import org.bonygod.gymroutine.domain.ForgotPasswordUseCase
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
+import org.bonygod.gymroutine.ui.view.viewModels.ForgotPasswordViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.LoginViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.PrimeraPantallaViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SharedViewModel
@@ -34,6 +36,8 @@ val appModule = module {
     factory { PrimeraPantallaViewModel() }
     single { LoginUseCase() }
     single { SignUpUseCase() }
+    factory { ForgotPasswordUseCase() }
+    factory { ForgotPasswordViewModel() }
     single(named("API_KEY")) { BuildConfig.API_KEY }
     single(named("CLIENT_ID")) { BuildConfig.CLIENT_ID }
     single <RoomDb> { CreateDatabase(get()).getDatabase() }
@@ -47,6 +51,7 @@ val dataModule = module {
     singleOf(::UpdateUserUseCase)
     singleOf(::DeleteUserUseCase)
     singleOf(::GetUserUseCase)
+    singleOf(::ForgotPasswordUseCase)
 }
 
 val viewModelsModule = module {
@@ -56,6 +61,7 @@ val viewModelsModule = module {
     viewModelOf(::SignUpViewModel)
     viewModelOf(::UserViewModel)
     viewModelOf(::PrimeraPantallaViewModel)
+    viewModelOf(::ForgotPasswordViewModel)
 }
 
 //expect val nativeModule : Module

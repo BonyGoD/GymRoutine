@@ -53,7 +53,7 @@ class AuthenticationService : KoinComponent {
         val response: HttpResponse =
             client.post("https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=$apiKey") {
                 contentType(ContentType.Application.Json)
-                setBody(FirebaseResetRequest(email))
+                setBody(FirebaseResetRequest(email,"PASSWORD_RESET"))
             }
 
         val result = response.bodyAsText()

@@ -26,6 +26,7 @@ fun CustomTextField(
     value: String,
     title: String,
     checkEmail: Boolean,
+    validEmail: (Boolean) -> Unit = {},
     onValueChange: (String) -> Unit
 ) {
     val borderColor = remember { mutableStateOf(Color.Black) }
@@ -47,6 +48,7 @@ fun CustomTextField(
                 if (checkEmail) {
                     isValidEmail.value = checkValidEmail(it)
                     borderColor.value = if (checkValidEmail(it)) Color.Black else Color.Red
+                    if (isValidEmail.value) validEmail(true) else validEmail(false)
                 }
             },
             modifier = Modifier

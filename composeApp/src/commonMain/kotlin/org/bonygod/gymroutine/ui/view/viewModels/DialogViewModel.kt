@@ -19,8 +19,11 @@ class DialogViewModel: ViewModel() {
     private val _customDialogSubtitle = MutableStateFlow("")
     val customDialogSubtitle = _customDialogSubtitle.asStateFlow()
 
-    private val _errorMessageDialog = MutableStateFlow("")
-    val errorMessageDialog = _errorMessageDialog.asStateFlow()
+    private val _customDialogErrorTitle = MutableStateFlow("")
+    val customDialogErrorTitle = _customDialogErrorTitle.asStateFlow()
+
+    private val _customDialogErrorSubtitle = MutableStateFlow("")
+    val customDialogErrorSubtitle = _customDialogErrorSubtitle.asStateFlow()
 
     private val _icon = MutableStateFlow(Res.drawable.ok_icon)
     val icon = _icon.asStateFlow()
@@ -45,6 +48,6 @@ class DialogViewModel: ViewModel() {
     }
 
     fun setErrorMessageDialog(errorMessage: String) {
-        _errorMessageDialog.value = errorMessage
+        _customDialogErrorTitle.value = errorMessage
     }
 }

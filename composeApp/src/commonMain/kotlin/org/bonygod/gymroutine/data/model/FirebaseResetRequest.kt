@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FirebaseResetRequest(
-    val email: String
+    val email: String,
+    val requestType: String
 )
