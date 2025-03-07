@@ -18,7 +18,7 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
-import org.bonygod.gymroutine.ui.view.PrimeraPantalla
+import org.bonygod.gymroutine.ui.view.userProfileScreens.PrimeraPantalla
 import org.bonygod.gymroutine.ui.view.loginScreens.ForgotPassword
 import org.bonygod.gymroutine.ui.view.loginScreens.Login
 import org.bonygod.gymroutine.ui.view.loginScreens.LoginOrSignup

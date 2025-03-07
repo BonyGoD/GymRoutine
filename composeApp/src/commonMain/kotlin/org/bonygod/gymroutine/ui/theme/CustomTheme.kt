@@ -2,6 +2,7 @@ package org.bonygod.gymroutine.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import gymroutine.composeapp.generated.resources.Res
@@ -13,7 +14,12 @@ fun CustomTheme(content: @Composable () -> Unit) {
 
     val typography = Typography().defaultFontFamily(FontFamily(Font(Res.font.Urbanist)))
 
-    MaterialTheme(typography = typography, content = content)
+    val customColors = lightColorScheme(
+        primary = CustomYellow,
+        secondary = CustomBlack,
+    )
+
+    MaterialTheme(typography = typography, content = content, colorScheme = customColors)
 }
 
 fun Typography.defaultFontFamily(fontFamily: FontFamily): Typography {
