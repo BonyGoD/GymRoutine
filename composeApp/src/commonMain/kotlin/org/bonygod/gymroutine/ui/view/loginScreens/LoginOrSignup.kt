@@ -29,6 +29,10 @@ import gymroutine.composeapp.generated.resources.loginOrSignup_button_login
 import gymroutine.composeapp.generated.resources.loginOrSignup_button_signup
 import gymroutine.composeapp.generated.resources.loginOrSignup_second_subtitle
 import gymroutine.composeapp.generated.resources.loginOrSignup_subtitle
+import org.bonygod.gymroutine.ui.theme.CustomBlack
+import org.bonygod.gymroutine.ui.theme.CustomGray
+import org.bonygod.gymroutine.ui.theme.CustomWhite
+import org.bonygod.gymroutine.ui.theme.CustomYellow
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
@@ -55,7 +59,7 @@ fun LoginOrSignup(
             modifier = Modifier.fillMaxSize()
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(Color.Yellow, Color.Black)
+                        colors = listOf(CustomYellow, CustomBlack)
                     )
                 ),
             Arrangement.Top, Alignment.CenterHorizontally
@@ -84,15 +88,15 @@ fun LoginOrSignup(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
-                    .border(1.dp, Color.Black, RoundedCornerShape(30.dp))
+                    .border(1.dp, CustomBlack, RoundedCornerShape(30.dp))
                     .clip(shape = RoundedCornerShape(30.dp))
                     .height(50.dp),
                 onClick = {
                     loginClick()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Yellow,
-                    contentColor = Color.Black
+                    containerColor = CustomYellow,
+                    contentColor = CustomBlack
                 )
             ) {
                 Text(stringResource(Res.string.loginOrSignup_button_signup), fontWeight = FontWeight.Bold)
@@ -102,7 +106,7 @@ fun LoginOrSignup(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
-                    .border(1.dp, Color.Gray, RoundedCornerShape(30.dp))
+                    .border(1.dp, CustomGray, RoundedCornerShape(30.dp))
                     .clip(shape = RoundedCornerShape(30.dp))
                     .height(50.dp),
                 onClick = {
@@ -110,7 +114,7 @@ fun LoginOrSignup(
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
-                    contentColor = Color.White
+                    contentColor = CustomWhite
                 )
             ) {
                 Text(stringResource(Res.string.loginOrSignup_button_login), fontWeight = FontWeight.Bold)
