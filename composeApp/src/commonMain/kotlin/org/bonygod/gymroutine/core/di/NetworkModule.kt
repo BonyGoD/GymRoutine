@@ -7,18 +7,18 @@ import org.bonygod.gymroutine.data.network.AuthenticationService
 import org.bonygod.gymroutine.data.repository.AuthRepository
 import org.bonygod.gymroutine.data.repository.UserRepository
 import org.bonygod.gymroutine.domain.DeleteUserUseCase
+import org.bonygod.gymroutine.domain.ForgotPasswordUseCase
 import org.bonygod.gymroutine.domain.GetUserUseCase
 import org.bonygod.gymroutine.domain.InsertUserUseCase
 import org.bonygod.gymroutine.domain.LoginUseCase
 import org.bonygod.gymroutine.domain.SignUpUseCase
 import org.bonygod.gymroutine.domain.UpdateUserUseCase
-import org.bonygod.gymroutine.domain.ForgotPasswordUseCase
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.ForgotPasswordViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.LoginViewModel
-import org.bonygod.gymroutine.ui.view.viewModels.PrimeraPantallaViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SharedViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.SignUpViewModel
+import org.bonygod.gymroutine.ui.view.viewModels.UserProfileViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.factoryOf
@@ -33,11 +33,11 @@ val appModule = module {
     single { SharedViewModel() }
     factory { LoginViewModel() }
     factory { SignUpViewModel() }
-    factory { PrimeraPantallaViewModel() }
     single { LoginUseCase() }
     single { SignUpUseCase() }
     factory { ForgotPasswordUseCase() }
     factory { ForgotPasswordViewModel() }
+    factory { UserProfileViewModel() }
     single(named("API_KEY")) { BuildConfig.API_KEY }
     single(named("CLIENT_ID")) { BuildConfig.CLIENT_ID }
     single <RoomDb> { CreateDatabase(get()).getDatabase() }
@@ -60,8 +60,8 @@ val viewModelsModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignUpViewModel)
     viewModelOf(::UserViewModel)
-    viewModelOf(::PrimeraPantallaViewModel)
     viewModelOf(::ForgotPasswordViewModel)
+    viewModelOf(::UserProfileViewModel)
 }
 
 //expect val nativeModule : Module

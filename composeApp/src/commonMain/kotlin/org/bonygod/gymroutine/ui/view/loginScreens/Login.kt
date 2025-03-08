@@ -47,7 +47,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun Login(
     loginViewModel: LoginViewModel = koinViewModel(),
-    navigateToPrimeraPantalla: () -> Unit,
+    navigateToWellcome: () -> Unit,
     navigateToForgotScreen: () -> Unit
 ) {
 
@@ -127,7 +127,7 @@ fun Login(
                 .height(50.dp),
             onClick = {
                 try {
-                    loginViewModel.signIn(navigateToPrimeraPantalla)
+                    loginViewModel.signIn(navigateToWellcome)
                 }catch (e: Exception){
                     dialogViewModel.onShowDialogChange(true)
                 }
@@ -158,6 +158,6 @@ fun Login(
             Spacer(modifier = Modifier.weight(1f).height(1.dp).background(Color.White))
         }
 
-        GoogleSignin(navigateToPrimeraPantalla)
+        GoogleSignin(navigateToWellcome)
     }
 }

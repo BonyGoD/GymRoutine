@@ -42,4 +42,19 @@
     <string name="error_400_email_exists">EMAIL_EXISTS</string>
     <string name="error_email_exist_title">Existing user</string>
     <string name="error_email_exist_subtitle">The user already exists, please choose another one</string>
+
+    <!--Welcome-->
+    <string name="wellcome_title">Welcome to GymRoutine</string>
+    <string name="wellcome_subtitle">To get started, we need a little more information about you</string>
+    <string name="wellcome_button">Start</string>
+
+    <!--UserProfile-->
+    <string name="user_profile_weight">Weight</string>
+    <string name="user_profile_height">Height</string>
+    <string name="user_profile_age">Age</string>
+    <string name="user_profile_man">Man</string>
+    <string name="user_profile_women">Woman</string>
+    <string name="user_profile_button">Finish</string>
+
+
 </resources>

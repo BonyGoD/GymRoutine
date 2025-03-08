@@ -50,7 +50,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SignUp(
     signUpViewModel: SignUpViewModel = koinViewModel(),
-    navigateToPrimeraPantalla: () -> Unit
+    navigateToWellcome: () -> Unit
 ) {
     val dialogViewModel by signUpViewModel.dialogViewModel.collectAsState()
     val email by signUpViewModel.email.collectAsState()
@@ -162,7 +162,7 @@ fun SignUp(
                 .clip(shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             onClick = {
-                signUpViewModel.signUp(dialogViewModel, navigateToPrimeraPantalla)
+                signUpViewModel.signUp(dialogViewModel, navigateToWellcome)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,
@@ -191,6 +191,6 @@ fun SignUp(
             Spacer(modifier = Modifier.weight(1f).height(1.dp).background(Color.White))
         }
 
-        GoogleSignin(navigateToPrimeraPantalla)
+        GoogleSignin(navigateToWellcome)
     }
 }
