@@ -44,13 +44,13 @@ class LoginViewModel : ViewModel(), KoinComponent {
         _password.value = password
     }
 
-    fun signIn(navigateToPrimeraPantalla: () -> Unit) {
+    fun signIn(navigateToWellcome: () -> Unit) {
         viewModelScope.launch {
             try {
                 val result = loginUseCase(email.value, password.value)
                 _user.value = result.displayName.toString()
                 userViewModel.insertUser(createUser(result))
-                navigateToPrimeraPantalla()
+                navigateToWellcome()
             } catch (e: Exception) {
                 dialogViewModel.value.setCustomDialog(
                     dialogViewModel.value.customDialogTitle.value,

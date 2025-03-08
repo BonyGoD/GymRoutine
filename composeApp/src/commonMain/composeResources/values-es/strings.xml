@@ -43,4 +43,17 @@
     <string name="error_email_exist_title">Usuario existente</string>
     <string name="error_email_exist_subtitle">El usuario ya existe, por favor elige otro</string>
 
+    <!--Wellcome-->
+    <string name="wellcome_title">Bienvenido a GymRoutine</string>
+    <string name="wellcome_subtitle">Para comenzar, necesitamos un poco mas de información sobre ti</string>
+    <string name="wellcome_button">Empezar</string>
+
+    <!--UserProfile-->
+    <string name="user_profile_weight">Peso</string>
+    <string name="user_profile_height">Altura</string>
+    <string name="user_profile_age">Edad</string>
+    <string name="user_profile_man">Hombre</string>
+    <string name="user_profile_women">Mujer</string>
+    <string name="user_profile_button">Finalizar</string>
+
 </resources>
