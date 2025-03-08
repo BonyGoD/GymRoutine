@@ -18,11 +18,12 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
-import org.bonygod.gymroutine.ui.view.userProfileScreens.PrimeraPantalla
 import org.bonygod.gymroutine.ui.view.loginScreens.ForgotPassword
 import org.bonygod.gymroutine.ui.view.loginScreens.Login
 import org.bonygod.gymroutine.ui.view.loginScreens.LoginOrSignup
 import org.bonygod.gymroutine.ui.view.loginScreens.SignUp
+import org.bonygod.gymroutine.ui.view.userProfileScreens.UserProfile
+import org.bonygod.gymroutine.ui.view.userProfileScreens.Wellcome
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -48,7 +49,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = if (user != null) "PrimeraPantalla" else "LoginOrSignup"
+        startDestination = if (user != null) "Wellcome" else "LoginOrSignup"
     ) {
 
         composable(
@@ -64,8 +65,8 @@ fun AppNavigation() {
         composable("Login") {
             Login(
                 navigateToForgotScreen = { navController.navigate("ForgotPassword") },
-                navigateToPrimeraPantalla = {
-                    navController.navigate("PrimeraPantalla") {
+                navigateToWellcome = {
+                    navController.navigate("Wellcome") {
                         popUpTo("LoginOrSignup") { inclusive = true }
                     }
                 }
@@ -74,8 +75,8 @@ fun AppNavigation() {
 
         composable("SignUp") {
             SignUp(
-                navigateToPrimeraPantalla = {
-                    navController.navigate("PrimeraPantalla") {
+                navigateToWellcome = {
+                    navController.navigate("Wellcome") {
                         popUpTo("LoginOrSignup") { inclusive = true }
                     }
                 }
@@ -90,13 +91,19 @@ fun AppNavigation() {
             }
         }
 
-        composable("PrimeraPantalla") {
-            PrimeraPantalla(
-                navigateToLoginOrSignup = {
-                    navController.navigate("LoginOrSignup") {
-                        popUpTo("PrimeraPantalla") { inclusive = true }
+        composable("Wellcome") {
+            Wellcome(
+                navigateToUserProfile = {
+                    navController.navigate("UserProfile") {
+                        popUpTo("Wellcome") { inclusive = false }
                     }
                 }
+            )
+        }
+
+        composable("UserProfile") {
+            UserProfile(
+
             )
         }
     }

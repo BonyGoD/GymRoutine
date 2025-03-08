@@ -42,4 +42,18 @@
     <string name="error_400_email_exists">EMAIL_EXISTS</string>
     <string name="error_email_exist_title">Usuari existent</string>
     <string name="error_email_exist_subtitle">L'usuari ja existeix, si us plau, tria un altre</string>
+
+    <!--Wellcome-->
+    <string name="wellcome_title">Benvingut a GymRoutine</string>
+    <string name="wellcome_subtitle">Per començar, necessitem una mica més d'informació sobre tu</string>
+    <string name="wellcome_button">Començar</string>
+
+    <!--UserProfile-->
+    <string name="user_profile_weight">Pes</string>
+    <string name="user_profile_height">Alçada</string>
+    <string name="user_profile_age">Edat</string>
+    <string name="user_profile_man">Home</string>
+    <string name="user_profile_women">Dona</string>
+    <string name="user_profile_button">Finalitzar</string>
+
 </resources>

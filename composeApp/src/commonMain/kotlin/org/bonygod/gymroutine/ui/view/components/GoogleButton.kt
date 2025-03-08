@@ -39,7 +39,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: () -> Unit) {
+fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToWellcome: () -> Unit) {
 
     val error = rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -61,7 +61,7 @@ fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToPrimeraPantalla: 
                     onSuccess = { userName, userUid, tokenId, mail ->
                         val userDb = createUserDb(userUid, userName, mail, tokenId)
                         userViewModel.insertUser(userDb)
-                        navigateToPrimeraPantalla()
+                        navigateToWellcome()
                     },
                     onError = { errorMsg ->
                         error.value = errorMsg
