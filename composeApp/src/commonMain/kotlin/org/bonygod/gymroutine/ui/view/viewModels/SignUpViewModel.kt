@@ -123,13 +123,13 @@ class SignUpViewModel : ViewModel(), KoinComponent {
         _customDialogSubtitle.value = subtitle
     }
 
-    fun signUp(dialogViewModel: DialogViewModel, navigateToPrimeraPantalla: () -> Unit) {
+    fun signUp(dialogViewModel: DialogViewModel, navigateToWellcome: () -> Unit) {
         viewModelScope.launch {
             try {
                 val result = signUpUseCase(email.value, password.value, user.value)
                 if (result.error != null) throw Exception(result.error.error.message)
                 userViewModel.insertUser(createUser(result))
-                navigateToPrimeraPantalla()
+                navigateToWellcome()
             } catch (e: Exception) {
                 dialogViewModel.setCustomDialog(
                     if (e.message == "EMAIL_EXISTS") customDialogErrorTitle.value else dialogViewModel.customDialogTitle.value,
