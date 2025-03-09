@@ -38,7 +38,7 @@ private const val MAN = "Hombre"
 private const val WOMEN = "Mujer"
 
 @Composable
-fun UserProfile(userProfileViewModel: UserProfileViewModel = koinViewModel()) {
+fun UserProfile(userProfileViewModel: UserProfileViewModel = koinViewModel(), navigateToDashboard: () -> Unit) {
 
     val selectedWeight = userProfileViewModel.selectedWeight.collectAsState()
     val selectedHeight = userProfileViewModel.selectedHeight.collectAsState()
@@ -96,10 +96,7 @@ fun UserProfile(userProfileViewModel: UserProfileViewModel = koinViewModel()) {
                 .padding(horizontal = 15.dp)
                 .height(50.dp),
             onClick = {
-                userProfileViewModel.selectedGender
-                userProfileViewModel.selectedHeight
-                userProfileViewModel.selectedWeight
-                userProfileViewModel.selectedAge
+                navigateToDashboard()
             },
             colors = ButtonDefaults.buttonColors(
                 CustomYellow
