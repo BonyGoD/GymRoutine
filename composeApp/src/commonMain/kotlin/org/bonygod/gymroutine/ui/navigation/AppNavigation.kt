@@ -3,6 +3,7 @@ package org.bonygod.gymroutine.ui.navigation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -11,13 +12,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import cafe.adriel.voyager.transitions.SlideTransition
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
+import org.bonygod.gymroutine.ui.view.components.BottomNavigationBarContent
+import org.bonygod.gymroutine.ui.view.homeScreens.DashboardScreen
 import org.bonygod.gymroutine.ui.view.loginScreens.ForgotPassword
 import org.bonygod.gymroutine.ui.view.loginScreens.Login
 import org.bonygod.gymroutine.ui.view.loginScreens.LoginOrSignup
@@ -31,7 +36,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AppNavigation() {
 
     val navController = rememberNavController()
-
+    val navHostController = rememberNavController()
     val userViewModel = koinViewModel<UserViewModel>()
     var user by remember { mutableStateOf<User?>(null) }
     var showScreen by remember { mutableStateOf<Boolean>(false) }
@@ -103,8 +108,16 @@ fun AppNavigation() {
 
         composable("UserProfile") {
             UserProfile(
-
+                navigateToDashboard = {
+                    navController.navigate("RootNavigation") {
+                        popUpTo("UserProfile") { inclusive = true }
+                    }
+                }
             )
+        }
+
+        composable("RootNavigation") {
+            RootNavigation(navHostController)
         }
     }
 }
