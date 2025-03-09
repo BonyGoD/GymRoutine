@@ -45,6 +45,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.accompanist.systemuicontroller)
 
             //Firebase
             implementation(project.dependencies.platform(libs.firebase.bom))
