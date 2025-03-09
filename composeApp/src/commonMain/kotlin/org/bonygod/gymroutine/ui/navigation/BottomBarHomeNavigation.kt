@@ -18,14 +18,14 @@ import org.bonygod.gymroutine.ui.view.homeScreens.DashboardScreen
 import org.bonygod.gymroutine.ui.view.homeScreens.ProfileScreen
 import org.bonygod.gymroutine.ui.view.homeScreens.RoutinesScreen
 
-sealed class RootScreen(val route: String, val icon: ImageVector?, val title: String) {
-    data object TabDashboard : RootScreen("dashboard", Icons.Rounded.Home, "Dashboard")
-    data object TabRoutines : RootScreen("routines", Icons.AutoMirrored.Rounded.List, "Routines")
-    data object TabUserProfile : RootScreen("userProfile", Icons.Rounded.Person, "User Profile")
+sealed class Tabs(val route: String, val icon: ImageVector?, val title: String) {
+    data object TabDashboard : Tabs("dashboard", Icons.Rounded.Home, "Dashboard")
+    data object TabRoutines : Tabs("routines", Icons.AutoMirrored.Rounded.List, "Routines")
+    data object TabUserProfile : Tabs("userProfile", Icons.Rounded.Person, "User Profile")
 }
 
 @Composable
-fun RootNavigation(
+fun BottomBarHomeNavigation(
     navController: NavHostController
 ) {
     Scaffold(
@@ -35,7 +35,7 @@ fun RootNavigation(
             )
         }
     ) { innerPadding ->
-        NavHost(navController, startDestination = RootScreen.TabDashboard.route) {
+        NavHost(navController, startDestination = Tabs.TabDashboard.route) {
             addDashboardScreen(Modifier.padding(innerPadding))
             addRoutinesScreen(Modifier.padding(innerPadding))
             addUserProfileScreen(Modifier.padding(innerPadding))
@@ -44,19 +44,19 @@ fun RootNavigation(
 }
 
 private fun NavGraphBuilder.addDashboardScreen(modifier: Modifier = Modifier) {
-    composable(RootScreen.TabDashboard.route) {
+    composable(Tabs.TabDashboard.route) {
         DashboardScreen(modifier)
     }
 }
 
 private fun NavGraphBuilder.addRoutinesScreen(modifier: Modifier = Modifier) {
-    composable(RootScreen.TabRoutines.route) {
+    composable(Tabs.TabRoutines.route) {
         RoutinesScreen(modifier)
     }
 }
 
 private fun NavGraphBuilder.addUserProfileScreen(modifier: Modifier = Modifier) {
-    composable(RootScreen.TabUserProfile.route) {
+    composable(Tabs.TabUserProfile.route) {
         ProfileScreen(modifier)
     }
 }
