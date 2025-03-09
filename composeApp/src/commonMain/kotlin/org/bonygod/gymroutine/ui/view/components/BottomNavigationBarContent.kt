@@ -4,6 +4,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,7 +13,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import org.bonygod.gymroutine.ui.navigation.RootScreen
+import org.bonygod.gymroutine.ui.navigation.Tabs
+import org.bonygod.gymroutine.ui.theme.CustomBlack
+import org.bonygod.gymroutine.ui.theme.CustomGray
+import org.bonygod.gymroutine.ui.theme.CustomWhite
+import org.bonygod.gymroutine.ui.theme.CustomYellow
 
 @Composable
 fun BottomNavigationBarContent(
@@ -33,19 +38,21 @@ fun BottomNavigationBarContent(
 
 @Composable
 fun BottomNavigationBarContent(
-    onItemClicked: (RootScreen) -> Unit
+    onItemClicked: (Tabs) -> Unit
 ) {
     BottomAppBar(
-        modifier = Modifier
+        modifier = Modifier,
+        containerColor = CustomBlack,
+        contentColor = CustomYellow
     ) {
         val items = listOf(
-            RootScreen.TabDashboard,
-            RootScreen.TabRoutines,
-            RootScreen.TabUserProfile
+            Tabs.TabDashboard,
+            Tabs.TabRoutines,
+            Tabs.TabUserProfile
         )
 
         var selectedItem by remember { mutableStateOf(0) }
-        var currentRoute by remember { mutableStateOf(RootScreen.TabDashboard.route) }
+        var currentRoute by remember { mutableStateOf(Tabs.TabDashboard.route) }
 
         items.forEachIndexed { index, navigationItem ->
             if (navigationItem.route == currentRoute) {
@@ -53,9 +60,21 @@ fun BottomNavigationBarContent(
             }
         }
 
-        NavigationBar {
+        NavigationBar(
+            containerColor = CustomBlack,
+            contentColor = CustomYellow,
+        ) {
             items.forEachIndexed { index, item ->
                 NavigationBarItem(
+                    colors = NavigationBarItemColors(
+                        unselectedIconColor = CustomWhite,
+                        selectedIconColor = CustomGray,
+                        unselectedTextColor = CustomWhite,
+                        selectedTextColor = CustomYellow,
+                        selectedIndicatorColor = CustomYellow,
+                        disabledIconColor = CustomBlack,
+                        disabledTextColor = CustomWhite
+                    ),
                     alwaysShowLabel = true,
                     icon = { Icon(item.icon!!, contentDescription = "") },
                     label = { Text(item.title) },
