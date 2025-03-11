@@ -105,7 +105,7 @@ fun AppNavigation() {
             UserProfile(
                 navigateToDashboard = {
                     navController.navigate("BottomBarHomeNavigation") {
-                        popUpTo("UserProfile") { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )

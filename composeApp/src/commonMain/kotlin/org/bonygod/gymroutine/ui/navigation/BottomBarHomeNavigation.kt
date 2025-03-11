@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import org.bonygod.gymroutine.ui.view.components.BottomNavigationBarContent
+import org.bonygod.gymroutine.ui.view.components.TopBarContent
 import org.bonygod.gymroutine.ui.view.homeScreens.DashboardScreen
 import org.bonygod.gymroutine.ui.view.homeScreens.ProfileScreen
 import org.bonygod.gymroutine.ui.view.homeScreens.RoutinesScreen
@@ -28,11 +29,15 @@ sealed class Tabs(val route: String, val icon: ImageVector?, val title: String) 
 fun BottomBarHomeNavigation(
     navController: NavHostController
 ) {
+
     Scaffold(
         bottomBar = {
             BottomNavigationBarContent(
                 navController = navController
             )
+        },
+        topBar = {
+            TopBarContent()
         }
     ) { innerPadding ->
         NavHost(navController, startDestination = Tabs.TabDashboard.route) {
