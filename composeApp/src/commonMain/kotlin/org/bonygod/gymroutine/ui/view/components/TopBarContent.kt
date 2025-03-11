@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.compose_multiplatform
 import org.bonygod.gymroutine.ui.theme.CustomLightGray
+import org.bonygod.gymroutine.ui.theme.CustomWhite
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

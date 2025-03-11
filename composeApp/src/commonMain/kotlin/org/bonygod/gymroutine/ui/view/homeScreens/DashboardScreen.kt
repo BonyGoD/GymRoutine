@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,9 +17,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -37,11 +43,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.Urbanist
+import gymroutine.composeapp.generated.resources.activity
 import gymroutine.composeapp.generated.resources.flame
+import gymroutine.composeapp.generated.resources.timer
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -85,6 +94,16 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
             horizontalAlignment = CenterHorizontally
         ) {
             item {
+                Text(
+                    text = "Sesión de hoy",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 10.dp),
+                    textAlign = TextAlign.Start,
+                    color = CustomBlack,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
                 Row {
                     Card(
                         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp),
@@ -98,13 +117,85 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
                             disabledContentColor = CustomBlack
                         )
                     ) {
-                        Image(
-                            painter = painterResource(Res.drawable.flame),
-                            modifier = Modifier.size(150.dp),
-                            contentDescription = ""
-                        )
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(CustomYellow)
+                                    .padding(4.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .background(CustomYellow),
+                                    text = "Day 11",
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = CustomBlack
+                                )
+                            }
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            Text(
+                                text = "Fuerza",
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = CustomWhite
+                            )
+                            Row(
+                                modifier = Modifier.padding(top = 5.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painterResource(Res.drawable.timer),
+                                    contentDescription = "Timer",
+                                    tint = CustomYellow,
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .padding(end = 5.dp)
+                                )
+                                Text(
+                                    text = "30 min",
+                                    color = CustomWhite,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.padding(10.dp))
+                                Icon(
+                                    painterResource(Res.drawable.flame),
+                                    contentDescription = "Flame",
+                                    tint = CustomYellow,
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .padding(end = 5.dp)
+                                )
+                                Text(
+                                    text = "350 Kcal",
+                                    color = CustomWhite,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                Icon(
+                                    Icons.Rounded.PlayArrow,
+                                    contentDescription = "Play",
+                                    tint = CustomBlack,
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .clip(CircleShape)
+                                        .background(CustomYellow)
+                                )
+                            }
+                        }
                     }
                 }
+                Text(
+                    text = "Estadísticas",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 10.dp),
+                    textAlign = TextAlign.Start,
+                    color = CustomBlack,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
                 Row(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -123,7 +214,9 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
                         Column(
                             horizontalAlignment = CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.height(210.dp).align(CenterHorizontally)
+                            modifier = Modifier
+                                .height(210.dp)
+                                .align(CenterHorizontally)
                         ) {
                             Image(
                                 painter = painterResource(Res.drawable.flame),
@@ -161,15 +254,25 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
                         Column(
                             horizontalAlignment = CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.height(210.dp).align(CenterHorizontally)
+                            modifier = Modifier
+                                .height(210.dp)
+                                .align(CenterHorizontally)
                         ) {
-                            Image(
-                                painter = painterResource(Res.drawable.flame),
-                                modifier = Modifier.size(150.dp),
-                                contentDescription = ""
-                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Box(
+                                modifier = Modifier.align(CenterHorizontally)
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.activity),
+                                    modifier = Modifier.size(100.dp),
+                                    contentDescription = "",
+                                    tint = CustomYellow
+                                )
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
                             Text(
-                                text = "350 Kcal",
+                                modifier = Modifier.padding(bottom = 5.dp),
+                                text = "120 h",
                                 fontSize = 40.sp,
                                 fontWeight = FontWeight.Bold,
                                 style = TextStyle(
@@ -182,26 +285,6 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
                                 )
                             )
                         }
-                    }
-                }
-                Row {
-                    Card(
-                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 10.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = CustomGray,
-                            contentColor = CustomBlack,
-                            disabledContainerColor = CustomLightGray,
-                            disabledContentColor = CustomBlack
-                        )
-                    ) {
-                        Image(
-                            painter = painterResource(Res.drawable.flame),
-                            modifier = Modifier.size(150.dp),
-                            contentDescription = ""
-                        )
                     }
                 }
             }
@@ -223,62 +306,62 @@ object DayOfWeekHelper {
     }
 }
 
-    @Composable
-    fun HorizontalCalendar(
-        selectedDate: LocalDate,
-        onDateSelected: (LocalDate) -> Unit
+@Composable
+fun HorizontalCalendar(
+    selectedDate: LocalDate,
+    onDateSelected: (LocalDate) -> Unit
+) {
+    val dates = remember { generateDates() }
+    val todayIndex =
+        dates.indexOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
+    val listState = rememberLazyListState()
+    val locale = Locale.current
+
+
+    LaunchedEffect(todayIndex) {
+        listState.scrollToItem(todayIndex)
+    }
+
+    LazyRow(
+        state = listState,
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val dates = remember { generateDates() }
-        val todayIndex =
-            dates.indexOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
-        val listState = rememberLazyListState()
-        val locale = Locale.current
-
-
-        LaunchedEffect(todayIndex) {
-            listState.scrollToItem(todayIndex)
-        }
-
-        LazyRow(
-            state = listState,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(dates) { date ->
-                val dayName = DayOfWeekHelper.getShortDayName(date.dayOfWeek, locale.language)
-                val dayNumber = date.dayOfMonth.toString()
-                Surface(
-                    color = Color.Transparent,
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp)
-                        .clickable { onDateSelected(date) }
+        items(dates) { date ->
+            val dayName = DayOfWeekHelper.getShortDayName(date.dayOfWeek, locale.language)
+            val dayNumber = date.dayOfMonth.toString()
+            Surface(
+                color = Color.Transparent,
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .clickable { onDateSelected(date) }
+            ) {
+                Column(
+                    horizontalAlignment = CenterHorizontally,
+                    modifier = Modifier.padding(8.dp)
                 ) {
-                    Column(
-                        horizontalAlignment = CenterHorizontally,
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Text(
-                            text = dayName,
-                            color = if (date == selectedDate) CustomYellow else CustomBlack,
-                            fontSize = 16.sp
-                        )
-                        Text(
-                            text = dayNumber,
-                            color = if (date == selectedDate) CustomYellow else CustomBlack,
-                            fontSize = 24.sp
-                        )
-                    }
+                    Text(
+                        text = dayName,
+                        color = if (date == selectedDate) CustomYellow else CustomBlack,
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = dayNumber,
+                        color = if (date == selectedDate) CustomYellow else CustomBlack,
+                        fontSize = 24.sp
+                    )
                 }
             }
         }
     }
+}
 
-    fun generateDates(): List<LocalDate> {
-        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.minus(
-            30,
-            DateTimeUnit.DAY
-        )
-        return (0..61).map { today.plus(it, DateTimeUnit.DAY) }
-    }
+fun generateDates(): List<LocalDate> {
+    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.minus(
+        30,
+        DateTimeUnit.DAY
+    )
+    return (0..61).map { today.plus(it, DateTimeUnit.DAY) }
+}
