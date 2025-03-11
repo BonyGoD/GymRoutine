@@ -44,9 +44,6 @@ fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToWellcome: () -> U
     val error = rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val userViewModel = koinViewModel<UserViewModel>()
-    var showScreen by remember { mutableStateOf<Boolean>(false) }
-
-    val user by userViewModel.getUser().collectAsStateWithLifecycle(initialValue = null)
 
     Button(
         modifier = Modifier
@@ -58,7 +55,7 @@ fun GoogleButton(googleAuthHelper: GoogleAuthHelper, navigateToWellcome: () -> U
         onClick = {
             scope.launch {
                 googleAuthHelper.signInWithGoogle(
-                    onSuccess = { userName, userUid, tokenId, mail ->
+                    onSuccess = { userName, userUid, tokenId, mail, photo ->
                         val userDb = createUserDb(userUid, userName, mail, tokenId)
                         userViewModel.insertUser(userDb)
                         navigateToWellcome()
