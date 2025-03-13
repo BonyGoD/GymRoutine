@@ -56,4 +56,8 @@
     <string name="user_profile_women">Dona</string>
     <string name="user_profile_button">Finalitzar</string>
 
+    <!--DashboardScreen-->
+    <string name="dashboard_today_sesion_title">Sessió d'avui</string>
+    <string name="dashboard_statistics_title">Estadístiques</string>
+
 </resources>

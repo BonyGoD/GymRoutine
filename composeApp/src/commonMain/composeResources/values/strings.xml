@@ -56,5 +56,8 @@
     <string name="user_profile_women">Woman</string>
     <string name="user_profile_button">Finish</string>
 
+    <!--DashboardScreen-->
+    <string name="dashboard_today_sesion_title">Today's session</string>
+    <string name="dashboard_statistics_title">Statistics</string>
 
 </resources>

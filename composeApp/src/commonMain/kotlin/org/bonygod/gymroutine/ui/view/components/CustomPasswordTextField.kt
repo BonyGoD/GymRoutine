@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.visibility
 import gymroutine.composeapp.generated.resources.visibilityoff
+import org.bonygod.gymroutine.ui.theme.CustomBlack
 import org.bonygod.gymroutine.ui.utils.BiggerPasswordVisualTransformation
 import org.jetbrains.compose.resources.painterResource
 
@@ -59,7 +60,7 @@ fun CustomPasswordTextField(
                 .border(width = 1.dp, color = color, shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             textStyle = TextStyle(
-                color = Color.Black,
+                color = CustomBlack,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             ),

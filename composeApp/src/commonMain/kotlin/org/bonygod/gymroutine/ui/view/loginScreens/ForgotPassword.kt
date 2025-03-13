@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,6 +30,9 @@ import gymroutine.composeapp.generated.resources.forgot_password_error_message_d
 import gymroutine.composeapp.generated.resources.loginOrSignup_dialog_subtitle
 import gymroutine.composeapp.generated.resources.loginOrSignup_dialog_title
 import gymroutine.composeapp.generated.resources.login_email
+import org.bonygod.gymroutine.ui.theme.CustomBlack
+import org.bonygod.gymroutine.ui.theme.CustomLightGray
+import org.bonygod.gymroutine.ui.theme.CustomYellow
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
 import org.bonygod.gymroutine.ui.view.components.LogoGymRoutine
@@ -71,7 +73,7 @@ fun ForgotPassword(
         modifier = Modifier.fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Yellow, Color.Black)
+                    colors = listOf(CustomYellow, CustomBlack)
                 )
             )
             .clickable {
@@ -104,8 +106,10 @@ fun ForgotPassword(
                 forgotPasswordViewModel.resetEmail(dialogViewModel, sharedViewModel, onBack)
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Yellow,
-                contentColor = Color.Black
+                containerColor = CustomYellow,
+                contentColor = CustomBlack,
+                disabledContainerColor = CustomLightGray,
+                disabledContentColor = CustomBlack
             ),
             enabled = buttonVisible
         ) {

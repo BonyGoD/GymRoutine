@@ -28,6 +28,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.bonygod.gymroutine.ui.theme.CustomBlack
+import org.bonygod.gymroutine.ui.theme.CustomGray
 import org.bonygod.gymroutine.ui.theme.CustomYellow
 
 @Composable
@@ -89,7 +91,7 @@ fun CustomScrollSelector(initalValue: Int, firstElement: Int, lastElement: Int, 
             ) {
                 Text(
                     text = round.toString(),
-                    color = if (isCenter.value) Color.Black else Color.Gray,
+                    color = if (isCenter.value) CustomBlack else CustomGray,
                     fontSize = if (isCenter.value) 28.sp else 15.sp,
                     fontWeight = if (isCenter.value) FontWeight.Bold else FontWeight.Normal
                 )

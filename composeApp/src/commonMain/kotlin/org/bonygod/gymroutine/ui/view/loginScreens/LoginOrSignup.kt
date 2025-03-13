@@ -30,7 +30,6 @@ import gymroutine.composeapp.generated.resources.loginOrSignup_button_signup
 import gymroutine.composeapp.generated.resources.loginOrSignup_second_subtitle
 import gymroutine.composeapp.generated.resources.loginOrSignup_subtitle
 import org.bonygod.gymroutine.ui.theme.CustomBlack
-import org.bonygod.gymroutine.ui.theme.CustomGray
 import org.bonygod.gymroutine.ui.theme.CustomWhite
 import org.bonygod.gymroutine.ui.theme.CustomYellow
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
@@ -106,7 +105,7 @@ fun LoginOrSignup(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
-                    .border(1.dp, CustomGray, RoundedCornerShape(30.dp))
+                    .border(1.dp, CustomBlack, RoundedCornerShape(30.dp))
                     .clip(shape = RoundedCornerShape(30.dp))
                     .height(50.dp),
                 onClick = {
