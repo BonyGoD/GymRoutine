@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,23 +28,24 @@ sealed class Tabs(val route: String, val icon: ImageVector?, val title: String) 
 
 @Composable
 fun BottomBarHomeNavigation(
-    navController: NavHostController
+    navController: NavController,
+    navHostController: NavHostController
 ) {
 
     Scaffold(
         bottomBar = {
             BottomNavigationBarContent(
-                navController = navController
+                navController = navHostController
             )
         },
         topBar = {
             TopBarContent()
         }
     ) { innerPadding ->
-        NavHost(navController, startDestination = Tabs.TabDashboard.route) {
+        NavHost(navHostController, startDestination = Tabs.TabDashboard.route) {
             addDashboardScreen(Modifier.padding(innerPadding))
             addRoutinesScreen(Modifier.padding(innerPadding))
-            addUserProfileScreen(Modifier.padding(innerPadding))
+            addUserProfileScreen(Modifier.padding(innerPadding), navController)
         }
     }
 }
@@ -60,8 +62,18 @@ private fun NavGraphBuilder.addRoutinesScreen(modifier: Modifier = Modifier) {
     }
 }
 
-private fun NavGraphBuilder.addUserProfileScreen(modifier: Modifier = Modifier) {
+private fun NavGraphBuilder.addUserProfileScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
     composable(Tabs.TabUserProfile.route) {
-        ProfileScreen(modifier)
+        ProfileScreen(
+            modifier,
+            navigateToLoginOrSignup = {
+                navController.navigate("LoginOrSignup") {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
+        )
     }
 }

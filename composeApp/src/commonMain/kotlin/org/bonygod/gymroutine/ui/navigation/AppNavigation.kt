@@ -112,7 +112,7 @@ fun AppNavigation() {
         }
 
         composable("BottomBarHomeNavigation") {
-            BottomBarHomeNavigation(navHostController)
+            BottomBarHomeNavigation(navController, navHostController)
         }
     }
 }

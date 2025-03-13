@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.data.model.AuthResult
 import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.domain.SignUpUseCase
+import org.bonygod.gymroutine.ui.theme.CustomBlack
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -56,10 +57,10 @@ class SignUpViewModel : ViewModel(), KoinComponent {
     private val _passwordRepeat = MutableStateFlow("")
     val passwordRepeat = _passwordRepeat.asStateFlow()
 
-    private val _colorFirstTextField = MutableStateFlow(Color.Black)
+    private val _colorFirstTextField = MutableStateFlow(CustomBlack)
     val colorFirstTextField = _colorFirstTextField.asStateFlow()
 
-    private val _colorSecondTextField = MutableStateFlow(Color.Black)
+    private val _colorSecondTextField = MutableStateFlow(CustomBlack)
     val colorSecondTextField = _colorSecondTextField.asStateFlow()
 
     private val _buttonVisible = MutableStateFlow(false)
@@ -108,8 +109,8 @@ class SignUpViewModel : ViewModel(), KoinComponent {
             _colorFirstTextField.value = Color.Red
             _colorSecondTextField.value = Color.Red
         } else {
-            _colorFirstTextField.value = Color.Black
-            _colorSecondTextField.value = Color.Black
+            _colorFirstTextField.value = CustomBlack
+            _colorSecondTextField.value = CustomBlack
         }
     }
 
