@@ -5,31 +5,33 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.bonygod.gymroutine.data.model.User
-import org.bonygod.gymroutine.domain.DeleteUserUseCase
-import org.bonygod.gymroutine.domain.GetUserUseCase
-import org.bonygod.gymroutine.domain.InsertUserUseCase
-import org.bonygod.gymroutine.domain.UpdateUserUseCase
+import org.bonygod.gymroutine.domain.DeleteUserDaoUseCase
+import org.bonygod.gymroutine.domain.GetUserDaoUseCase
+import org.bonygod.gymroutine.domain.InsertUserDaoUseCase
+import org.bonygod.gymroutine.domain.UpdateUserDaoUseCase
 
 class UserViewModel(
-    private val insertUserUseCase: InsertUserUseCase,
-    private val updateUserUseCase: UpdateUserUseCase,
-    private val deleteUserUseCase: DeleteUserUseCase,
-    private val getUserUseCase: GetUserUseCase
+    private val insertUserDaoUseCase: InsertUserDaoUseCase,
+    private val updateUserDaoUseCase: UpdateUserDaoUseCase,
+    private val deleteUserDaoUseCase: DeleteUserDaoUseCase,
+    private val getUserDaoUseCase: GetUserDaoUseCase
 ):ViewModel() {
 
     val insertUser = fun(user: User) {
-        viewModelScope.launch { insertUserUseCase(user) }
+        viewModelScope.launch { insertUserDaoUseCase(user) }
     }
 
     val updateUser = fun(user: User) {
-        viewModelScope.launch { updateUserUseCase(user) }
+        viewModelScope.launch {
+            updateUserDaoUseCase(user)
+        }
     }
 
     fun deleteUser(user: User) {
-        viewModelScope.launch { deleteUserUseCase(user) }
+        viewModelScope.launch { deleteUserDaoUseCase(user) }
     }
 
     fun getUser(): Flow<User?> {
-        return getUserUseCase()
+        return getUserDaoUseCase()
     }
 }

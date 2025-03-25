@@ -8,14 +8,15 @@ import org.bonygod.gymroutine.data.network.UserDataService
 import org.bonygod.gymroutine.data.repository.AuthRepository
 import org.bonygod.gymroutine.data.repository.UserDataRepository
 import org.bonygod.gymroutine.data.repository.UserRepository
-import org.bonygod.gymroutine.domain.DeleteUserUseCase
+import org.bonygod.gymroutine.domain.DeleteUserDaoUseCase
 import org.bonygod.gymroutine.domain.ForgotPasswordUseCase
+import org.bonygod.gymroutine.domain.GetUserDaoUseCase
 import org.bonygod.gymroutine.domain.GetUserUseCase
-import org.bonygod.gymroutine.domain.InsertUserUseCase
+import org.bonygod.gymroutine.domain.InsertUserDaoUseCase
 import org.bonygod.gymroutine.domain.LoginUseCase
 import org.bonygod.gymroutine.domain.SaveUserDataUseCase
 import org.bonygod.gymroutine.domain.SignUpUseCase
-import org.bonygod.gymroutine.domain.UpdateUserUseCase
+import org.bonygod.gymroutine.domain.UpdateUserDaoUseCase
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.ForgotPasswordViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.LoginViewModel
@@ -38,6 +39,7 @@ val appModule = module {
     factory { SignUpViewModel() }
     single { LoginUseCase() }
     single { SignUpUseCase() }
+    single { GetUserUseCase() }
     factory { ForgotPasswordUseCase() }
     factory { SaveUserDataUseCase() }
     factory { ForgotPasswordViewModel() }
@@ -53,9 +55,10 @@ val dataModule = module {
     factoryOf(::AuthRepository)
     singleOf(::UserRepository)
     singleOf(::UserDataRepository)
-    singleOf(::InsertUserUseCase)
-    singleOf(::UpdateUserUseCase)
-    singleOf(::DeleteUserUseCase)
+    singleOf(::InsertUserDaoUseCase)
+    singleOf(::UpdateUserDaoUseCase)
+    singleOf(::DeleteUserDaoUseCase)
+    singleOf(::GetUserDaoUseCase)
     singleOf(::GetUserUseCase)
     singleOf(::ForgotPasswordUseCase)
 }

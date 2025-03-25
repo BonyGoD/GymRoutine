@@ -1,16 +1,11 @@
 package org.bonygod.gymroutine.ui.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -35,7 +30,7 @@ fun AppNavigation() {
     val navHostController = rememberNavController()
     val userViewModel = koinViewModel<UserViewModel>()
     var user by remember { mutableStateOf<User?>(null) }
-    var showScreen by remember { mutableStateOf<Boolean>(false) }
+    var showScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         delay(500)
@@ -97,6 +92,11 @@ fun AppNavigation() {
                 navigateToUserProfile = {
                     navController.navigate("UserProfile") {
                         popUpTo("Wellcome") { inclusive = false }
+                    }
+                },
+                navigateToDashboard = {
+                    navController.navigate("BottomBarHomeNavigation") {
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )

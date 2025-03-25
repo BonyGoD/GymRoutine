@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,12 +34,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.ui.theme.CustomBlack
 import org.bonygod.gymroutine.ui.theme.CustomGray
 import org.bonygod.gymroutine.ui.theme.CustomLightGray
 import org.bonygod.gymroutine.ui.theme.CustomWhite
 import org.bonygod.gymroutine.ui.theme.CustomYellow
+import org.bonygod.gymroutine.ui.view.components.LoadingScreen
 import org.bonygod.gymroutine.ui.view.viewModels.UserProfileViewModel
+import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -46,7 +54,17 @@ fun ProfileScreen(
     userProfileViewModel: UserProfileViewModel = koinViewModel(),
     navigateToLoginOrSignup: () -> Unit
 ) {
-    var isButtonEnabled by remember { mutableStateOf(true) }
+    var isButtonEnabled by remember { mutableStateOf(false) }
+    val userData by userProfileViewModel.userData.collectAsState()
+    val userDao: UserViewModel = koinViewModel()
+    var user by remember { mutableStateOf<User?>(null) }
+    var userName by remember { mutableStateOf("") }
+    var weight by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit){
+        user = userDao.getUser().first()
+    }
 
     LazyColumn(
         modifier = modifier
@@ -76,14 +94,20 @@ fun ProfileScreen(
                 )
             }
             TextField(
-                value = "",
+                value = userName,
                 placeholder = {
-                    Text(
-                        text = "Ivan Boniquet Rodriguez",
-                        fontSize = 16.sp
-                    )
+                        Text(
+                            text = userData?.userName ?: "",
+                            fontSize = 16.sp
+                        )
                 },
-                onValueChange = {},
+                onValueChange = {
+                    isButtonEnabled = it != userData?.userName
+                    userName = it
+                    if(userName != "") {
+                        userProfileViewModel.userData.value?.userName = userName
+                    }
+                },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -93,7 +117,9 @@ fun ProfileScreen(
                     unfocusedContainerColor = CustomGray,
                     unfocusedPlaceholderColor = CustomYellow,
                     focusedContainerColor = CustomGray,
-                    focusedPlaceholderColor = CustomYellow
+                    focusedPlaceholderColor = CustomYellow,
+                    focusedTextColor = CustomYellow,
+                    unfocusedTextColor = CustomYellow
                 )
             )
             Box(
@@ -114,7 +140,7 @@ fun ProfileScreen(
                     .padding(start = 20.dp, top = 15.dp, bottom = 10.dp)
             ) {
                 Text(
-                    text = "i.boniquet@gmail.com",
+                    text = userData?.email ?: "",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -156,20 +182,26 @@ fun ProfileScreen(
                             fontWeight = FontWeight.Bold
                         )
                         TextField(
-                            value = "",
+                            value = weight,
                             placeholder = {
                                 Text(
-                                    text = "75",
+                                    text = userData?.weight.toString(),
                                     fontSize = 16.sp
                                 )
                             },
                             suffix = {
                                 Text(
-                                    text = " kg",
+                                    text = "kg",
                                     fontSize = 16.sp
                                 )
                             },
-                            onValueChange = {},
+                            onValueChange = {
+                                isButtonEnabled = it != userData?.weight.toString()
+                                weight = it
+                                if(weight != "") {
+                                    userProfileViewModel.selectedHeight.value = weight.toInt()
+                                }
+                            },
                             singleLine = true,
                             modifier = Modifier
                                 .padding(horizontal = 20.dp)
@@ -181,7 +213,9 @@ fun ProfileScreen(
                                 focusedContainerColor = CustomGray,
                                 focusedPlaceholderColor = CustomYellow,
                                 unfocusedSuffixColor = CustomYellow,
-                                focusedSuffixColor = CustomYellow
+                                focusedSuffixColor = CustomYellow,
+                                focusedTextColor = CustomYellow,
+                                unfocusedTextColor = CustomYellow
                             )
                         )
                     }
@@ -195,20 +229,26 @@ fun ProfileScreen(
                             fontWeight = FontWeight.Bold
                         )
                         TextField(
-                            value = "",
+                            value = age,
                             placeholder = {
                                 Text(
-                                    text = "39",
+                                    text = userData?.age.toString(),
                                     fontSize = 16.sp
                                 )
                             },
                             suffix = {
                                 Text(
-                                    text = " years",
+                                    text = "years",
                                     fontSize = 16.sp
                                 )
                             },
-                            onValueChange = {},
+                            onValueChange = {
+                                isButtonEnabled = it != userData?.age.toString()
+                                age = it
+                                if(age != "") {
+                                    userProfileViewModel.selectedAge.value = age.toInt()
+                                }
+                            },
                             singleLine = true,
                             modifier = Modifier
                                 .padding(horizontal = 20.dp)
@@ -220,14 +260,35 @@ fun ProfileScreen(
                                 focusedContainerColor = CustomGray,
                                 focusedPlaceholderColor = CustomYellow,
                                 unfocusedSuffixColor = CustomYellow,
-                                focusedSuffixColor = CustomYellow
+                                focusedSuffixColor = CustomYellow,
+                                focusedTextColor = CustomYellow,
+                                unfocusedTextColor = CustomYellow
                             )
                         )
                     }
                 }
             }
             Button(
-                onClick = { },
+                onClick = {
+                        try {
+                            if(user != null){
+                                val upDateUser = User(
+                                    user!!.id,
+                                    user!!.email,
+                                    userProfileViewModel.userData.value?.userName ?: "",
+                                    user!!.token
+                                )
+                                userDao.updateUser(upDateUser)
+                            }
+                        } catch (e: Exception){
+                            e.printStackTrace()
+                        }
+                    userProfileViewModel.userData.value?.userName = if (userName == "") userData?.userName ?: "" else userName
+                    userProfileViewModel.selectedWeight.value = if (weight == "") userData?.weight ?: 0 else weight.toInt()
+                    userProfileViewModel.selectedAge.value = if (age == "") userData?.age ?: 0 else age.toInt()
+                    userProfileViewModel.selectedHeight.value = userData?.height ?: 0
+                    userProfileViewModel.saveUserData()
+                },
                 enabled = isButtonEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
