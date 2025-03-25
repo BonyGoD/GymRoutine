@@ -42,7 +42,7 @@ fun RoutinesScreen(modifier: Modifier) {
     ) {
         item {
             Text(
-                "Fuerza", modifier = Modifier
+                text = "Fuerza", modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp, vertical = 20.dp),
                 fontSize = 30.sp,

@@ -250,7 +250,9 @@ fun ProfileScreen(
             }
 
             Button(
-                onClick = { },
+                onClick = {
+                    userProfileViewModel.logOut(navigateToLoginOrSignup)
+                },
                 modifier = Modifier
                     .padding(horizontal = 20.dp, vertical = 20.dp)
                     .border(1.dp, CustomBlack, RoundedCornerShape(30.dp))

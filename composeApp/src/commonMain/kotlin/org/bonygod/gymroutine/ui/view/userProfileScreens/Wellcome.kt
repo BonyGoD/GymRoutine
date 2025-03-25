@@ -31,9 +31,9 @@ import gymroutine.composeapp.generated.resources.wellcome_title
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
-import org.bonygod.gymroutine.ui.navigation.LoadingScreen
 import org.bonygod.gymroutine.ui.theme.CustomBlack
 import org.bonygod.gymroutine.ui.theme.CustomYellow
+import org.bonygod.gymroutine.ui.view.components.LoadingScreen
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
