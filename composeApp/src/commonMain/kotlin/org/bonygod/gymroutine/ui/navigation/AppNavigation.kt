@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
+import org.bonygod.gymroutine.ui.view.components.LoadingScreen
 import org.bonygod.gymroutine.ui.view.loginScreens.ForgotPassword
 import org.bonygod.gymroutine.ui.view.loginScreens.Login
 import org.bonygod.gymroutine.ui.view.loginScreens.LoginOrSignup
@@ -114,15 +115,5 @@ fun AppNavigation() {
         composable("BottomBarHomeNavigation") {
             BottomBarHomeNavigation(navController, navHostController)
         }
-    }
-}
-
-@Composable
-fun LoadingScreen() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator()
     }
 }

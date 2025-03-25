@@ -2,17 +2,24 @@ package org.bonygod.gymroutine.ui.view.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bonygod.gymroutine.data.model.User
+import org.bonygod.gymroutine.domain.DeleteUserUseCase
+import org.bonygod.gymroutine.domain.GetUserUseCase
+import org.bonygod.gymroutine.domain.SaveUserDataUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class UserProfileViewModel: ViewModel(), KoinComponent {
+class UserProfileViewModel : ViewModel(), KoinComponent {
 
-    private val userViewModel: UserViewModel by inject()
+    private val getUserDaoUseCase: GetUserUseCase by inject()
+    private val deleteUserDaoUseCase: DeleteUserUseCase by inject()
+    private val userDataUseCase: SaveUserDataUseCase by inject()
 
     private val _selectedWeight = MutableStateFlow(58)
     val selectedWeight = _selectedWeight
@@ -29,17 +36,55 @@ class UserProfileViewModel: ViewModel(), KoinComponent {
     private val _inisitalValue = MutableStateFlow(true)
     val inisitalValue = _inisitalValue
 
-    private val _user = MutableStateFlow(null as User?)
-    val user = _user.asStateFlow()
+    private val _userDaoModel = MutableStateFlow(null as User?)
+    val user = _userDaoModel.asStateFlow()
+
+    private val _shouldNavigate = MutableStateFlow(false)
+    val shouldNavigate = _shouldNavigate
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading
 
     fun logOut(navigateToLoginOrSignup: () -> Unit) {
         viewModelScope.launch {
-            val userDb = userViewModel.getUser().first()
+            val userDb = getUserDaoUseCase().first()
             //Guardar datos en el viewModel
-            _user.value = userDb
-            userViewModel.deleteUser(userDb!!)
+            _userDaoModel.value = userDb
+            deleteUserDaoUseCase(userDb!!)
             navigateToLoginOrSignup()
         }
+    }
+
+    fun saveUserData() {
+        _isLoading.value = true
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.Main) {
+                    val userDb = getUserDaoUseCase().first()
+                    // Guardar datos en el viewModel
+                    _userDaoModel.value = userDb
+                    if (userDb != null) {
+                        userDataUseCase(
+                            user.value!!.id,
+                            user.value!!.displayName,
+                            selectedWeight.value,
+                            selectedHeight.value,
+                            selectedAge.value,
+                            selectedGender.value,
+                            userDb.email
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _shouldNavigate.value = true
+            }
+        }
+    }
+
+    fun resetNavigationFlag() {
+        _shouldNavigate.value = false
     }
 
     fun selectedWeight(selected: Int) {

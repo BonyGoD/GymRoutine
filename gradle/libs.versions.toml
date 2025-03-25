@@ -73,7 +73,7 @@ androidx-material3-android = { group = "androidx.compose.material3", name = "mat
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx"}
 
 #Navegacion
