@@ -1,13 +1,15 @@
 package org.bonygod.gymroutine.domain
 
-import kotlinx.coroutines.flow.Flow
-import org.bonygod.gymroutine.data.model.User
-import org.bonygod.gymroutine.data.repository.UserRepository
+import org.bonygod.gymroutine.data.model.UserDataFirestore
+import org.bonygod.gymroutine.data.repository.UserDataRepository
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class GetUserUseCase(
-    private val userRepository: UserRepository
-) {
-    operator fun invoke(): Flow<User?> {
-        return userRepository.getUser()
+class GetUserUseCase: KoinComponent {
+
+    private val userDataRepository: UserDataRepository by inject()
+
+    suspend operator fun invoke(userId: String): UserDataFirestore {
+        return userDataRepository.getUserData(userId)
     }
 }

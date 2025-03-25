@@ -6,7 +6,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
 @Serializable
-data class UserData(
+data class UserRequest(
     val id: String,
     val userName: String,
     val weight: Int,

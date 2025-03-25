@@ -19,6 +19,8 @@ import org.bonygod.gymroutine.ui.view.components.TopBarContent
 import org.bonygod.gymroutine.ui.view.homeScreens.DashboardScreen
 import org.bonygod.gymroutine.ui.view.homeScreens.ProfileScreen
 import org.bonygod.gymroutine.ui.view.homeScreens.RoutinesScreen
+import org.bonygod.gymroutine.ui.view.viewModels.UserProfileViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 sealed class Tabs(val route: String, val icon: ImageVector?, val title: String) {
     data object TabDashboard : Tabs("dashboard", Icons.Rounded.Home, "Dashboard")
@@ -31,6 +33,7 @@ fun BottomBarHomeNavigation(
     navController: NavController,
     navHostController: NavHostController
 ) {
+    val userProfileViewModel: UserProfileViewModel = koinViewModel()
 
     Scaffold(
         bottomBar = {
@@ -43,16 +46,16 @@ fun BottomBarHomeNavigation(
         }
     ) { innerPadding ->
         NavHost(navHostController, startDestination = Tabs.TabDashboard.route) {
-            addDashboardScreen(Modifier.padding(innerPadding))
+            addDashboardScreen(Modifier.padding(innerPadding), userProfileViewModel)
             addRoutinesScreen(Modifier.padding(innerPadding))
-            addUserProfileScreen(Modifier.padding(innerPadding), navController)
+            addUserProfileScreen(Modifier.padding(innerPadding), navController, userProfileViewModel)
         }
     }
 }
 
-private fun NavGraphBuilder.addDashboardScreen(modifier: Modifier = Modifier) {
+private fun NavGraphBuilder.addDashboardScreen(modifier: Modifier = Modifier, userProfileViewModel: UserProfileViewModel) {
     composable(Tabs.TabDashboard.route) {
-        DashboardScreen(modifier)
+        DashboardScreen(modifier, userProfileViewModel)
     }
 }
 
@@ -64,11 +67,13 @@ private fun NavGraphBuilder.addRoutinesScreen(modifier: Modifier = Modifier) {
 
 private fun NavGraphBuilder.addUserProfileScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    userProfileViewModel: UserProfileViewModel
 ) {
     composable(Tabs.TabUserProfile.route) {
         ProfileScreen(
             modifier,
+            userProfileViewModel,
             navigateToLoginOrSignup = {
                 navController.navigate("LoginOrSignup") {
                     popUpTo(0) { inclusive = true }
