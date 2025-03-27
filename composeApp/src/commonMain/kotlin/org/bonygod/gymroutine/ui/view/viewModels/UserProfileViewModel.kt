@@ -50,11 +50,10 @@ class UserProfileViewModel : ViewModel(), KoinComponent {
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading
 
-    fun logOut(navigateToLoginOrSignup: () -> Unit) {
+    fun logOut() {
         viewModelScope.launch {
             val userDb = getUserDaoUseCase().first()
             deleteUserDaoUseCase(userDb!!)
-            navigateToLoginOrSignup()
         }
     }
 
