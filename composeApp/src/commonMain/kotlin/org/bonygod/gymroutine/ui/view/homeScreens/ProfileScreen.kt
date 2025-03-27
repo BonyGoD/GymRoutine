@@ -34,8 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.ui.theme.CustomBlack
@@ -43,7 +41,6 @@ import org.bonygod.gymroutine.ui.theme.CustomGray
 import org.bonygod.gymroutine.ui.theme.CustomLightGray
 import org.bonygod.gymroutine.ui.theme.CustomWhite
 import org.bonygod.gymroutine.ui.theme.CustomYellow
-import org.bonygod.gymroutine.ui.view.components.LoadingScreen
 import org.bonygod.gymroutine.ui.view.viewModels.UserProfileViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -312,7 +309,8 @@ fun ProfileScreen(
 
             Button(
                 onClick = {
-                    userProfileViewModel.logOut(navigateToLoginOrSignup)
+                    userProfileViewModel.logOut()
+                    navigateToLoginOrSignup()
                 },
                 modifier = Modifier
                     .padding(horizontal = 20.dp, vertical = 20.dp)
