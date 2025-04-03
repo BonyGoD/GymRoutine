@@ -25,6 +25,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.custom_dialog_button_text
+import org.bonygod.gymroutine.ui.theme.CustomBlack
+import org.bonygod.gymroutine.ui.theme.CustomGray
 import org.bonygod.gymroutine.ui.view.viewModels.DialogViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -52,7 +54,7 @@ fun CustomDialog(dialogViewModel: DialogViewModel, onDismiss: () -> Unit) {
                 Text(
                     text = dialogViewModel.customDialogTitle.value,
                     fontSize = 16.sp,
-                    color = Color.Black,
+                    color = CustomBlack,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
@@ -60,7 +62,7 @@ fun CustomDialog(dialogViewModel: DialogViewModel, onDismiss: () -> Unit) {
                 Text(
                     text = dialogViewModel.customDialogSubtitle.value,
                     fontSize = 15.sp,
-                    color = Color.Gray,
+                    color = CustomGray,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.weight(0.7f))

@@ -96,6 +96,9 @@ kotlin {
             //Room dependencies
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            //Calendar
+            implementation(libs.kotlinx.datetime)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -131,6 +134,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.places)
+    implementation(libs.androidx.material3.android)
     debugImplementation(compose.uiTooling)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)

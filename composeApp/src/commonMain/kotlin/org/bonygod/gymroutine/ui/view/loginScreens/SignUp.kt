@@ -37,6 +37,8 @@ import gymroutine.composeapp.generated.resources.register_email
 import gymroutine.composeapp.generated.resources.register_password
 import gymroutine.composeapp.generated.resources.register_repeat_password
 import gymroutine.composeapp.generated.resources.register_user
+import org.bonygod.gymroutine.ui.theme.CustomBlack
+import org.bonygod.gymroutine.ui.theme.CustomYellow
 import org.bonygod.gymroutine.ui.utils.CheckPasswordsText
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
@@ -85,7 +87,7 @@ fun SignUp(
         modifier = Modifier.fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Yellow, Color.Black)
+                    colors = listOf(CustomYellow, CustomBlack)
                 )
             )
             .clickable {
@@ -165,8 +167,8 @@ fun SignUp(
                 signUpViewModel.signUp(dialogViewModel, navigateToWellcome)
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Yellow,
-                contentColor = Color.Black
+                containerColor = CustomYellow,
+                contentColor = CustomBlack
             ),
             enabled = buttonVisible
         ) {

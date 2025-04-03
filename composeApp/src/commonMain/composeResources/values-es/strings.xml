@@ -56,4 +56,8 @@
     <string name="user_profile_women">Mujer</string>
     <string name="user_profile_button">Finalizar</string>
 
+    <!--DashboardScreen-->
+    <string name="dashboard_today_sesion_title">Sesión de hoy</string>
+    <string name="dashboard_statistics_title">Estadísticas</string>
+
 </resources>

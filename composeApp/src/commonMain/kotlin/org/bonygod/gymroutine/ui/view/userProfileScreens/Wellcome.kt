@@ -31,26 +31,34 @@ import gymroutine.composeapp.generated.resources.wellcome_title
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
-import org.bonygod.gymroutine.ui.navigation.LoadingScreen
 import org.bonygod.gymroutine.ui.theme.CustomBlack
 import org.bonygod.gymroutine.ui.theme.CustomYellow
+import org.bonygod.gymroutine.ui.view.components.LoadingScreen
+import org.bonygod.gymroutine.ui.view.viewModels.UserProfileViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Wellcome(
-    navigateToUserProfile: () -> Unit
+    navigateToUserProfile: () -> Unit,
+    navigateToDashboard: () -> Unit
 ) {
 
     val userViewModel = koinViewModel<UserViewModel>()
+    val userProfileViewModel = koinViewModel<UserProfileViewModel>()
     var user by remember { mutableStateOf<User?>(null) }
-    var showScreen by remember { mutableStateOf<Boolean>(false) }
+    var showScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         delay(500)
         user = userViewModel.getUser().first()
-        showScreen = true
+        userProfileViewModel.getUserData(user?.id ?: "")
+        if(userProfileViewModel.userData.value != null){
+            navigateToDashboard()
+        } else {
+            showScreen = true
+        }
     }
 
     if (!showScreen) {

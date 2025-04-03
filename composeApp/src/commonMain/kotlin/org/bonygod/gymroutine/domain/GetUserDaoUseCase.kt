@@ -1,12 +1,13 @@
 package org.bonygod.gymroutine.domain
 
+import kotlinx.coroutines.flow.Flow
 import org.bonygod.gymroutine.data.model.User
 import org.bonygod.gymroutine.data.repository.UserRepository
 
-class UpdateUserUseCase(
+class GetUserDaoUseCase(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(user: User){
-        userRepository.updateUser(user)
+    operator fun invoke(): Flow<User?> {
+        return userRepository.getUser()
     }
 }
