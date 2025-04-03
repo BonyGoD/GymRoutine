@@ -34,6 +34,8 @@ import gymroutine.composeapp.generated.resources.login_email
 import gymroutine.composeapp.generated.resources.login_forgot_password
 import gymroutine.composeapp.generated.resources.login_password
 import gymroutine.composeapp.generated.resources.login_spacer_login_google
+import org.bonygod.gymroutine.ui.theme.CustomBlack
+import org.bonygod.gymroutine.ui.theme.CustomYellow
 import org.bonygod.gymroutine.ui.view.components.CustomDialog
 import org.bonygod.gymroutine.ui.view.components.CustomPasswordTextField
 import org.bonygod.gymroutine.ui.view.components.CustomTextField
@@ -74,7 +76,7 @@ fun Login(
         modifier = Modifier.fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color.Yellow, Color.Black)
+                    colors = listOf(CustomYellow, CustomBlack)
                 )
             )
             .clickable {
@@ -98,7 +100,7 @@ fun Login(
             password = password,
             passwordVisible = passwordVisible,
             title = stringResource(Res.string.login_password),
-            color = Color.Black,
+            color = CustomBlack,
             onPasswordChange = { pass ->
                 loginViewModel.onPasswordChange(pass)
             },
@@ -133,8 +135,8 @@ fun Login(
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Yellow,
-                contentColor = Color.Black
+                containerColor = CustomYellow,
+                contentColor = CustomBlack
             )
         ) {
             Text(

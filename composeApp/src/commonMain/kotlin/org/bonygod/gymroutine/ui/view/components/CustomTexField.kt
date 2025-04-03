@@ -20,6 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.bonygod.gymroutine.ui.theme.CustomBlack
 
 @Composable
 fun CustomTextField(
@@ -29,7 +30,7 @@ fun CustomTextField(
     validEmail: (Boolean) -> Unit = {},
     onValueChange: (String) -> Unit
 ) {
-    val borderColor = remember { mutableStateOf(Color.Black) }
+    val borderColor = remember { mutableStateOf(CustomBlack) }
     val isValidEmail = remember { mutableStateOf(true) }
 
     Column {
@@ -47,7 +48,7 @@ fun CustomTextField(
                 onValueChange(it)
                 if (checkEmail) {
                     isValidEmail.value = checkValidEmail(it)
-                    borderColor.value = if (checkValidEmail(it)) Color.Black else Color.Red
+                    borderColor.value = if (checkValidEmail(it)) CustomBlack else Color.Red
                     if (isValidEmail.value) validEmail(true) else validEmail(false)
                 }
             },
@@ -59,7 +60,7 @@ fun CustomTextField(
                 .border(width = 1.dp, color = borderColor.value, shape = RoundedCornerShape(30.dp))
                 .height(50.dp),
             textStyle = TextStyle(
-                color = Color.Black,
+                color = CustomBlack,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )

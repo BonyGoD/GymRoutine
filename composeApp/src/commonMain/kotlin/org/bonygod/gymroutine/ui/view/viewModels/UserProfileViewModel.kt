@@ -2,17 +2,26 @@ package org.bonygod.gymroutine.ui.view.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bonygod.gymroutine.data.model.User
+import org.bonygod.gymroutine.data.model.UserDataFirestore
+import org.bonygod.gymroutine.domain.DeleteUserDaoUseCase
+import org.bonygod.gymroutine.domain.GetUserDaoUseCase
+import org.bonygod.gymroutine.domain.GetUserUseCase
+import org.bonygod.gymroutine.domain.SaveUserDataUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class UserProfileViewModel: ViewModel(), KoinComponent {
+class UserProfileViewModel : ViewModel(), KoinComponent {
 
-    private val userViewModel: UserViewModel by inject()
+    private val getUserDaoUseCase: GetUserDaoUseCase by inject()
+    private val deleteUserDaoUseCase: DeleteUserDaoUseCase by inject()
+    private val userDataUseCase: SaveUserDataUseCase by inject()
+    private val getUserDataUseCase: GetUserUseCase by inject()
 
     private val _selectedWeight = MutableStateFlow(58)
     val selectedWeight = _selectedWeight
@@ -29,17 +38,66 @@ class UserProfileViewModel: ViewModel(), KoinComponent {
     private val _inisitalValue = MutableStateFlow(true)
     val inisitalValue = _inisitalValue
 
-    private val _user = MutableStateFlow(null as User?)
-    val user = _user.asStateFlow()
+    private val _userDao = MutableStateFlow(null as User?)
+    val userDao = _userDao
 
-    fun logOut(navigateToLoginOrSignup: () -> Unit) {
+    private val _userData = MutableStateFlow(null as UserDataFirestore?)
+    val userData = _userData
+
+    private val _shouldNavigate = MutableStateFlow(false)
+    val shouldNavigate = _shouldNavigate
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading
+
+    fun logOut() {
         viewModelScope.launch {
-            val userDb = userViewModel.getUser().first()
-            //Guardar datos en el viewModel
-            _user.value = userDb
-            userViewModel.deleteUser(userDb!!)
-            navigateToLoginOrSignup()
+            val userDb = getUserDaoUseCase().first()
+            deleteUserDaoUseCase(userDb!!)
         }
+    }
+
+    fun saveUserData() {
+        _isLoading.value = true
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.Main) {
+                    val userDb = getUserDaoUseCase().first()
+                    // Guardar datos en el viewModel
+                    _userDao.value = userDb
+                    if (userDb != null) {
+                        userDataUseCase(
+                            userDb.id,
+                            userDb.displayName,
+                            selectedWeight.value,
+                            selectedHeight.value,
+                            selectedAge.value,
+                            selectedGender.value,
+                            userDb.email
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _shouldNavigate.value = true
+            }
+        }
+    }
+
+    suspend fun getUserData(userId: String) {
+        try {
+            withContext(Dispatchers.Main) {
+                val userDataFirestore = getUserDataUseCase(userId)
+                _userData.value = userDataFirestore
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun resetNavigationFlag() {
+        _shouldNavigate.value = false
     }
 
     fun selectedWeight(selected: Int) {

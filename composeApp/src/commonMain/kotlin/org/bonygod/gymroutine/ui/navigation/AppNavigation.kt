@@ -1,16 +1,11 @@
 package org.bonygod.gymroutine.ui.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,6 +13,7 @@ import androidx.navigation.navArgument
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.bonygod.gymroutine.data.model.User
+import org.bonygod.gymroutine.ui.view.components.LoadingScreen
 import org.bonygod.gymroutine.ui.view.loginScreens.ForgotPassword
 import org.bonygod.gymroutine.ui.view.loginScreens.Login
 import org.bonygod.gymroutine.ui.view.loginScreens.LoginOrSignup
@@ -31,10 +27,10 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AppNavigation() {
 
     val navController = rememberNavController()
-
+    val navHostController = rememberNavController()
     val userViewModel = koinViewModel<UserViewModel>()
     var user by remember { mutableStateOf<User?>(null) }
-    var showScreen by remember { mutableStateOf<Boolean>(false) }
+    var showScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         delay(500)
@@ -97,24 +93,27 @@ fun AppNavigation() {
                     navController.navigate("UserProfile") {
                         popUpTo("Wellcome") { inclusive = false }
                     }
+                },
+                navigateToDashboard = {
+                    navController.navigate("BottomBarHomeNavigation") {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }
 
         composable("UserProfile") {
             UserProfile(
-
+                navigateToDashboard = {
+                    navController.navigate("BottomBarHomeNavigation") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
-    }
-}
 
-@Composable
-fun LoadingScreen() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator()
+        composable("BottomBarHomeNavigation") {
+            BottomBarHomeNavigation(navController, navHostController)
+        }
     }
 }
