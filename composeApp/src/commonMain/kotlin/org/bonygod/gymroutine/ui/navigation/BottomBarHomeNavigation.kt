@@ -46,16 +46,23 @@ fun BottomBarHomeNavigation(
         }
     ) { innerPadding ->
         NavHost(navHostController, startDestination = Tabs.TabDashboard.route) {
-            addDashboardScreen(Modifier.padding(innerPadding), userProfileViewModel)
+            addDashboardScreen(Modifier.padding(innerPadding), userProfileViewModel, navController)
             addRoutinesScreen(Modifier.padding(innerPadding))
             addUserProfileScreen(Modifier.padding(innerPadding), navController, userProfileViewModel)
         }
     }
 }
 
-private fun NavGraphBuilder.addDashboardScreen(modifier: Modifier = Modifier, userProfileViewModel: UserProfileViewModel) {
+private fun NavGraphBuilder.addDashboardScreen(modifier: Modifier = Modifier, userProfileViewModel: UserProfileViewModel, navController: NavController) {
     composable(Tabs.TabDashboard.route) {
-        DashboardScreen(modifier, userProfileViewModel)
+        DashboardScreen(
+            modifier,
+            userProfileViewModel,
+            navigateToRoutineScreen = {
+                navController.navigate("RoutineScreen") {
+                }
+            }
+        )
     }
 }
 

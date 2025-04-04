@@ -18,6 +18,7 @@ import org.bonygod.gymroutine.ui.view.loginScreens.ForgotPassword
 import org.bonygod.gymroutine.ui.view.loginScreens.Login
 import org.bonygod.gymroutine.ui.view.loginScreens.LoginOrSignup
 import org.bonygod.gymroutine.ui.view.loginScreens.SignUp
+import org.bonygod.gymroutine.ui.view.routine.screen.RoutineScreen
 import org.bonygod.gymroutine.ui.view.userProfileScreens.UserProfile
 import org.bonygod.gymroutine.ui.view.userProfileScreens.Wellcome
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
@@ -110,6 +111,10 @@ fun AppNavigation() {
                     }
                 }
             )
+        }
+
+        composable("RoutineScreen") {
+            RoutineScreen()
         }
 
         composable("BottomBarHomeNavigation") {
