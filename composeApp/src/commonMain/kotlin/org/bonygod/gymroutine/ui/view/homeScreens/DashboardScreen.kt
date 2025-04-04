@@ -11,7 +11,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.dashboard_statistics_title
 import gymroutine.composeapp.generated.resources.dashboard_today_sesion_title
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -37,7 +35,6 @@ import org.bonygod.gymroutine.ui.theme.CustomLightGray
 import org.bonygod.gymroutine.ui.view.components.CustomHorizontalCalendar
 import org.bonygod.gymroutine.ui.view.components.CustomStatisticsCard
 import org.bonygod.gymroutine.ui.view.components.CustomTodaySessionCard
-import org.bonygod.gymroutine.ui.view.components.LoadingScreen
 import org.bonygod.gymroutine.ui.view.viewModels.UserProfileViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.jetbrains.compose.resources.stringResource
@@ -47,7 +44,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun DashboardScreen(
     modifier: Modifier,
     userProfileViewModel: UserProfileViewModel = koinViewModel(),
-    userViewModel: UserViewModel = koinViewModel()
+    userViewModel: UserViewModel = koinViewModel(),
+    navigateToRoutineScreen: () -> Unit
 ) {
     val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     var selectedDate by remember { mutableStateOf(today) }
@@ -90,7 +88,9 @@ fun DashboardScreen(
                     fontSize = 25.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
-                CustomTodaySessionCard()
+                CustomTodaySessionCard {
+                    navigateToRoutineScreen()
+                }
                 Text(
                     text = stringResource(Res.string.dashboard_statistics_title),
                     modifier = Modifier

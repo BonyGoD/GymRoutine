@@ -1,6 +1,7 @@
 package org.bonygod.gymroutine.ui.view.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,13 +34,16 @@ import org.bonygod.gymroutine.ui.theme.CustomYellow
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun CustomTodaySessionCard() {
+fun CustomTodaySessionCard(onCardClick: () -> Unit) {
     Row {
         Card(
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 10.dp),
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+                .clickable {
+                    onCardClick()
+                },
             colors = CardDefaults.cardColors(
                 containerColor = CustomGray,
                 contentColor = CustomBlack,
