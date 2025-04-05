@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bonygod.gymroutine.ui.theme.CustomBlack
 import org.bonygod.gymroutine.ui.theme.CustomWhite
-import org.bonygod.gymroutine.ui.theme.CustomYellow
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

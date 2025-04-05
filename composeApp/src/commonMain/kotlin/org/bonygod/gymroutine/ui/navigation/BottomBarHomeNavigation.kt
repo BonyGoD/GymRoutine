@@ -7,6 +7,8 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
@@ -14,6 +16,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import org.bonygod.gymroutine.ui.view.components.BottomNavigationBarContent
 import org.bonygod.gymroutine.ui.view.components.TopBarContent
 import org.bonygod.gymroutine.ui.view.homeScreens.DashboardScreen
@@ -30,36 +33,38 @@ sealed class Tabs(val route: String, val icon: ImageVector?, val title: String) 
 
 @Composable
 fun BottomBarHomeNavigation(
-    navController: NavController,
-    navHostController: NavHostController
+    userProfileViewModel: UserProfileViewModel = koinViewModel(),
+    mainNavController: NavHostController
 ) {
-    val userProfileViewModel: UserProfileViewModel = koinViewModel()
+
+    val navController = rememberNavController()
+    val userData by userProfileViewModel.userData.collectAsState()
 
     Scaffold(
         bottomBar = {
             BottomNavigationBarContent(
-                navController = navHostController
+                navController = navController
             )
         },
         topBar = {
-            TopBarContent()
+            TopBarContent(userData?.userName.orEmpty())
         }
     ) { innerPadding ->
-        NavHost(navHostController, startDestination = Tabs.TabDashboard.route) {
-            addDashboardScreen(Modifier.padding(innerPadding), userProfileViewModel, navController)
+        NavHost(navController, startDestination = Tabs.TabDashboard.route) {
+            addDashboardScreen(Modifier.padding(innerPadding), mainNavController, userProfileViewModel)
             addRoutinesScreen(Modifier.padding(innerPadding))
-            addUserProfileScreen(Modifier.padding(innerPadding), navController, userProfileViewModel)
+            addUserProfileScreen(Modifier.padding(innerPadding), mainNavController, userProfileViewModel)
         }
     }
 }
 
-private fun NavGraphBuilder.addDashboardScreen(modifier: Modifier = Modifier, userProfileViewModel: UserProfileViewModel, navController: NavController) {
+private fun NavGraphBuilder.addDashboardScreen(modifier: Modifier = Modifier, mainNavController: NavController, userProfileViewModel: UserProfileViewModel) {
     composable(Tabs.TabDashboard.route) {
         DashboardScreen(
             modifier,
             userProfileViewModel,
             navigateToRoutineScreen = {
-                navController.navigate("RoutineScreen") {
+                mainNavController.navigate("RoutineScreen") {
                 }
             }
         )
@@ -74,7 +79,7 @@ private fun NavGraphBuilder.addRoutinesScreen(modifier: Modifier = Modifier) {
 
 private fun NavGraphBuilder.addUserProfileScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    mainNavController: NavHostController,
     userProfileViewModel: UserProfileViewModel
 ) {
     composable(Tabs.TabUserProfile.route) {
@@ -82,7 +87,7 @@ private fun NavGraphBuilder.addUserProfileScreen(
             modifier,
             userProfileViewModel,
             navigateToLoginOrSignup = {
-                navController.navigate("LoginOrSignup") {
+                mainNavController.navigate("LoginOrSignup") {
                     popUpTo(0) { inclusive = true }
                 }
             }

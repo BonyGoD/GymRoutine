@@ -21,6 +21,7 @@ import org.bonygod.gymroutine.ui.view.loginScreens.SignUp
 import org.bonygod.gymroutine.ui.view.routine.screen.RoutineScreen
 import org.bonygod.gymroutine.ui.view.userProfileScreens.UserProfile
 import org.bonygod.gymroutine.ui.view.userProfileScreens.Wellcome
+import org.bonygod.gymroutine.ui.view.viewModels.UserProfileViewModel
 import org.bonygod.gymroutine.ui.view.viewModels.UserViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -28,8 +29,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AppNavigation() {
 
     val navController = rememberNavController()
-    val navHostController = rememberNavController()
     val userViewModel = koinViewModel<UserViewModel>()
+    val userProfileViewModel = koinViewModel<UserProfileViewModel>()
     var user by remember { mutableStateOf<User?>(null) }
     var showScreen by remember { mutableStateOf(false) }
 
@@ -118,7 +119,7 @@ fun AppNavigation() {
         }
 
         composable("BottomBarHomeNavigation") {
-            BottomBarHomeNavigation(navController, navHostController)
+            BottomBarHomeNavigation(userProfileViewModel, navController)
         }
     }
 }

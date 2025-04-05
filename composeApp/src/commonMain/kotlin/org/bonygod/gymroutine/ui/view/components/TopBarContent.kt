@@ -24,7 +24,7 @@ import org.bonygod.gymroutine.ui.theme.CustomLightGray
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun TopBarContent() {
+fun TopBarContent(userName: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +34,7 @@ fun TopBarContent() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Ivan Boniquet Rodriguez",
+            text = userName,
             modifier = Modifier
                 .padding(start = 10.dp)
                 .weight(1f),
