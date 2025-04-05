@@ -3,6 +3,7 @@ package org.bonygod.gymroutine.ui.view.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import org.bonygod.gymroutine.domain.DeleteUserDaoUseCase
 import org.bonygod.gymroutine.domain.GetUserDaoUseCase
 import org.bonygod.gymroutine.domain.GetUserUseCase
 import org.bonygod.gymroutine.domain.SaveUserDataUseCase
+import org.bonygod.gymroutine.domain.UpdateUserDaoUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -20,8 +22,9 @@ class UserProfileViewModel : ViewModel(), KoinComponent {
 
     private val getUserDaoUseCase: GetUserDaoUseCase by inject()
     private val deleteUserDaoUseCase: DeleteUserDaoUseCase by inject()
-    private val userDataUseCase: SaveUserDataUseCase by inject()
+    private val saveUserDataUseCase: SaveUserDataUseCase by inject()
     private val getUserDataUseCase: GetUserUseCase by inject()
+    private val updateUserDaoUseCase: UpdateUserDaoUseCase by inject()
 
     private val _selectedWeight = MutableStateFlow(58)
     val selectedWeight = _selectedWeight
@@ -66,7 +69,7 @@ class UserProfileViewModel : ViewModel(), KoinComponent {
                     // Guardar datos en el viewModel
                     _userDao.value = userDb
                     if (userDb != null) {
-                        userDataUseCase(
+                        saveUserDataUseCase(
                             userDb.id,
                             userDb.displayName,
                             selectedWeight.value,
@@ -93,6 +96,27 @@ class UserProfileViewModel : ViewModel(), KoinComponent {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun updateUserDaoData() {
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val userDb = getUserDaoUseCase().first()
+                    if (userDb != null) {
+                        val upDateUser = User(
+                            userDb.id,
+                            userDb.email,
+                            _userData.value?.userName ?: "",
+                            userDb.token
+                        )
+                        updateUserDaoUseCase(upDateUser)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

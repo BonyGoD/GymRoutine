@@ -1,4 +1,4 @@
-package org.bonygod.gymroutine.ui.view.homeScreens
+package org.bonygod.gymroutine.ui.view.home.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

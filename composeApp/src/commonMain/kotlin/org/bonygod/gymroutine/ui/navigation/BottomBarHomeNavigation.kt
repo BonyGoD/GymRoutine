@@ -19,9 +19,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.bonygod.gymroutine.ui.view.components.BottomNavigationBarContent
 import org.bonygod.gymroutine.ui.view.components.TopBarContent
-import org.bonygod.gymroutine.ui.view.homeScreens.DashboardScreen
-import org.bonygod.gymroutine.ui.view.homeScreens.ProfileScreen
-import org.bonygod.gymroutine.ui.view.homeScreens.RoutinesScreen
+import org.bonygod.gymroutine.ui.view.home.screens.DashboardScreen
+import org.bonygod.gymroutine.ui.view.home.screens.ProfileScreen
+import org.bonygod.gymroutine.ui.view.home.screens.RoutinesScreen
 import org.bonygod.gymroutine.ui.view.viewModels.UserProfileViewModel
 import org.koin.compose.viewmodel.koinViewModel
 

@@ -60,4 +60,18 @@
     <string name="dashboard_today_sesion_title">Sessió d'avui</string>
     <string name="dashboard_statistics_title">Estadístiques</string>
 
+    <!--ProfileScreen-->
+    <string name="profile_screen_title_user_data">Dades</string>
+    <string name="profile_screen_subtitle_user">Usuari</string>
+    <string name="profile_screen_subtitle_email">Correu electrònic</string>
+    <string name="profile_screen_change_password">Canvia la contrasenya</string>
+    <string name="profile_screen_subtitle_fisic_state">Estat físic</string>
+    <string name="profile_screen_title_weight">Pes</string>
+    <string name="profile_screen_title_age">Edat</string>
+    <string name="profile_screen_text_years">anys</string>
+    <string name="profile_screen_text_save">Desa</string>
+    <string name="profile_screen_text_logout">Tanca la sessió</string>
+    <string name="profile_screen_text_delete_account">Elimina el meu compte</string>
+
+
 </resources>
