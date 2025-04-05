@@ -60,4 +60,17 @@
     <string name="dashboard_today_sesion_title">Sesión de hoy</string>
     <string name="dashboard_statistics_title">Estadísticas</string>
 
+    <!--ProfileScreen-->
+    <string name="profile_screen_title_user_data">Datos</string>
+    <string name="profile_screen_subtitle_user">Usuario</string>
+    <string name="profile_screen_subtitle_email">Email</string>
+    <string name="profile_screen_change_password">Cambiar de contraseña</string>
+    <string name="profile_screen_subtitle_fisic_state">Estado físico</string>
+    <string name="profile_screen_title_weight">Peso</string>
+    <string name="profile_screen_title_age">Edad</string>
+    <string name="profile_screen_text_years">años</string>
+    <string name="profile_screen_text_save">Guardar</string>
+    <string name="profile_screen_text_logout">Cerrar sesión</string>
+    <string name="profile_screen_text_delete_account">Eliminar mi cuenta</string>
+
 </resources>
