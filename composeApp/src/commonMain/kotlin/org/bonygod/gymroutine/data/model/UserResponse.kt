@@ -10,6 +10,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -31,7 +32,10 @@ data class UserResponse(
     val age: Int? = null,
 
     @SerialName("gender")
-    val gender: String? = null
+    val gender: String? = null,
+
+    @SerialName("routines")
+    val routines: List<Routine>? = null
 ) {
     companion object {
         fun fromFirestoreFormat(fields: JsonObject?): UserResponse {
@@ -41,7 +45,17 @@ data class UserResponse(
                 age = fields?.get("age")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
                 height = fields?.get("height")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
                 weight = fields?.get("weight")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
-                gender = fields?.get("gender")?.jsonObject?.get("stringValue")?.jsonPrimitive?.contentOrNull ?: ""
+                gender = fields?.get("gender")?.jsonObject?.get("stringValue")?.jsonPrimitive?.contentOrNull ?: "",
+                routines = fields?.get("routines")?.jsonObject?.get("mapValue")?.jsonObject?.get("fields")?.jsonObject?.map { (key, routineElement) ->
+                    val routineFields = routineElement.jsonObject["mapValue"]?.jsonObject?.get("fields")?.jsonObject
+                    Routine(
+                        id = key,
+                        type = routineFields?.get("type")?.jsonObject?.get("stringValue")?.jsonPrimitive?.contentOrNull ?: "",
+                        repetitions = routineFields?.get("repetitions")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
+                        sets = routineFields?.get("sets")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
+                        rest = routineFields?.get("rest")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0
+                    )
+                }?.toList()
             )
         }
     }

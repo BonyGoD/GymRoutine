@@ -91,8 +91,10 @@ class UserProfileViewModel : ViewModel(), KoinComponent {
     suspend fun getUserData(userId: String) {
         try {
             withContext(Dispatchers.Main) {
-                val userDataFirestore = getUserDataUseCase(userId)
-                _userData.value = userDataFirestore
+                if (_userData.value == null) {
+                    val userDataFirestore = getUserDataUseCase(userId)
+                    _userData.value = userDataFirestore
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

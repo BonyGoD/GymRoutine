@@ -10,6 +10,7 @@ fun UserResponse.toDomainModel(): UserDataFirestore {
         weight = this.weight ?: 0,
         height = this.height ?: 0,
         age = this.age ?: 0,
-        gender = this.gender ?: ""
+        gender = this.gender ?: "",
+        routines = this.routines ?: emptyList()
     )
 }

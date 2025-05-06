@@ -6,5 +6,6 @@ data class UserDataFirestore (
     var weight: Int,
     var height: Int,
     var age: Int,
-    var gender: String
+    var gender: String,
+    var routines: List<Routine>
 )
