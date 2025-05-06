@@ -14,6 +14,7 @@ import org.bonygod.gymroutine.domain.GetUserDaoUseCase
 import org.bonygod.gymroutine.domain.GetUserUseCase
 import org.bonygod.gymroutine.domain.InsertUserDaoUseCase
 import org.bonygod.gymroutine.domain.LoginUseCase
+import org.bonygod.gymroutine.domain.SaveRoutineUseCase
 import org.bonygod.gymroutine.domain.SaveUserDataUseCase
 import org.bonygod.gymroutine.domain.SignUpUseCase
 import org.bonygod.gymroutine.domain.UpdateUserDaoUseCase
@@ -40,10 +41,10 @@ val appModule = module {
     single { LoginUseCase() }
     single { SignUpUseCase() }
     single { GetUserUseCase() }
+    single { SaveRoutineUseCase() }
     factory { ForgotPasswordUseCase() }
     factory { SaveUserDataUseCase() }
     factory { ForgotPasswordViewModel() }
-    factory { UserProfileViewModel() }
     single(named("API_KEY")) { BuildConfig.API_KEY }
     single(named("CLIENT_ID")) { BuildConfig.CLIENT_ID }
     single <RoomDb> { CreateDatabase(get()).getDatabase() }

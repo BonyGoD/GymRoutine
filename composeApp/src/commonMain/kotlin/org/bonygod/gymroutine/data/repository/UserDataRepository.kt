@@ -1,6 +1,7 @@
 package org.bonygod.gymroutine.data.repository
 
 import org.bonygod.gymroutine.data.mapper.toDomainModel
+import org.bonygod.gymroutine.data.model.Routine
 import org.bonygod.gymroutine.data.model.UserDataFirestore
 import org.bonygod.gymroutine.data.model.UserRequest
 import org.bonygod.gymroutine.data.model.UserResponse
@@ -18,5 +19,9 @@ class UserDataRepository : KoinComponent {
 
     suspend fun getUserData(userId: String): UserDataFirestore {
         return userDataService.getUser(userId).toDomainModel()
+    }
+
+    suspend fun addRoutines(userRequest: UserRequest, routines: List<Routine>) {
+        return userDataService.addRoutines(userRequest, routines)
     }
 }

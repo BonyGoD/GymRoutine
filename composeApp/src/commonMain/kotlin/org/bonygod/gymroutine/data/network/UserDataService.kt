@@ -11,8 +11,10 @@ import io.ktor.http.isSuccess
 import kotlinx.serialization.json.Json.Default.parseToJsonElement
 import kotlinx.serialization.json.jsonObject
 import org.bonygod.gymroutine.core.network.NetworkProvider
+import org.bonygod.gymroutine.data.model.Routine
 import org.bonygod.gymroutine.data.model.UserRequest
 import org.bonygod.gymroutine.data.model.UserResponse
+import org.bonygod.gymroutine.data.model.routinesToFirestoreFormat
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -45,5 +47,16 @@ class UserDataService : KoinComponent {
         val fields = json["fields"]?.jsonObject
 
         return UserResponse.fromFirestoreFormat(fields)
+    }
+
+    suspend fun addRoutines(userRequest: UserRequest, routines: List<Routine>) {
+        val response: HttpResponse =
+            client.patch("https://firestore.googleapis.com/v1/projects/gym-routine-bonygod/databases/(default)/documents/users/${userRequest.id}?key=$apiKey") {
+                contentType(ContentType.Application.Json)
+                setBody(routines.routinesToFirestoreFormat())
+            }
+        if (!response.status.isSuccess()) {
+            throw Exception("Failed to save routine: ${response.status}")
+        }
     }
 }
