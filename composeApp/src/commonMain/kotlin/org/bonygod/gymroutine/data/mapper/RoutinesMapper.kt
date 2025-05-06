@@ -1,9 +1,10 @@
-package org.bonygod.gymroutine.data.model
+package org.bonygod.gymroutine.data.mapper
 
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import org.bonygod.gymroutine.data.model.Routine
 
 fun List<Routine>.routinesToFirestoreFormat(): JsonObject {
 

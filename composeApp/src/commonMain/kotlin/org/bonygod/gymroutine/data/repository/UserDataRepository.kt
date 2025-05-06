@@ -4,7 +4,6 @@ import org.bonygod.gymroutine.data.mapper.toDomainModel
 import org.bonygod.gymroutine.data.model.Routine
 import org.bonygod.gymroutine.data.model.UserDataFirestore
 import org.bonygod.gymroutine.data.model.UserRequest
-import org.bonygod.gymroutine.data.model.UserResponse
 import org.bonygod.gymroutine.data.network.UserDataService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
