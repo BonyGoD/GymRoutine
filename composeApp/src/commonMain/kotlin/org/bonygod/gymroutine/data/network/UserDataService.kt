@@ -11,10 +11,10 @@ import io.ktor.http.isSuccess
 import kotlinx.serialization.json.Json.Default.parseToJsonElement
 import kotlinx.serialization.json.jsonObject
 import org.bonygod.gymroutine.core.network.NetworkProvider
+import org.bonygod.gymroutine.data.mapper.routinesToFirestoreFormat
 import org.bonygod.gymroutine.data.model.Routine
 import org.bonygod.gymroutine.data.model.UserRequest
 import org.bonygod.gymroutine.data.model.UserResponse
-import org.bonygod.gymroutine.data.model.routinesToFirestoreFormat
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named

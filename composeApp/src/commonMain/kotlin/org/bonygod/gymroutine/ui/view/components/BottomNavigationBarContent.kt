@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import org.bonygod.gymroutine.ui.navigation.Tabs
 import org.bonygod.gymroutine.ui.theme.CustomBlack

@@ -1,6 +1,5 @@
 package org.bonygod.gymroutine.domain
 
-import org.bonygod.gymroutine.data.model.Routine
 import org.bonygod.gymroutine.data.model.UserRequest
 import org.bonygod.gymroutine.data.repository.UserDataRepository
 import org.koin.core.component.KoinComponent
