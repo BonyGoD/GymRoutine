@@ -4,9 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Routine(
-    val id: String ,
+    val id: String,
     val type: String,
-    val repetitions: Int,
-    val sets: Int,
-    val rest: Int
+    val day: String,
+    val exercises: List<Exercice>,
 )
