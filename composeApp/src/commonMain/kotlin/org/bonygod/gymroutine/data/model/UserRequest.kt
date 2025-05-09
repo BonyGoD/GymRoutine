@@ -3,6 +3,7 @@ package org.bonygod.gymroutine.data.model
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 
 @Serializable
@@ -17,9 +18,15 @@ data class UserRequest(
     val routines: List<Routine>
 ) {
     fun toFirestoreFormat(): JsonObject {
+        var exercices = listOf(
+            Exercice("Triceps con polea de levantamiento de peso en ruso rumano",1,4,60),
+            Exercice("xczvzxcv",1,4,60),
+            Exercice("assdfasdf",1,4,60),
+            Exercice("asdretf",1,4,60)
+        )
         val defaultRoutine = listOf(
-            Routine("default1", "Fuerza", 12, 4, 60),
-            Routine("default2", "Cardio", 15, 3, 30)
+            Routine("Fuerza", "Fuerza", "Monday", exercices),
+            Routine("Cardio", "Cardio", "Friday", exercices)
         )
         return buildJsonObject {
             put("fields", buildJsonObject {
@@ -36,10 +43,26 @@ data class UserRequest(
                                 put(routine.id, buildJsonObject {
                                     put("mapValue", buildJsonObject {
                                         put("fields", buildJsonObject {
-                                            put("type", buildJsonObject { put("stringValue", JsonPrimitive("Fuerza")) })
-                                            put("repetitions", buildJsonObject { put("integerValue", JsonPrimitive(12)) })
-                                            put("sets", buildJsonObject { put("integerValue", JsonPrimitive(4)) })
-                                            put("rest", buildJsonObject { put("integerValue", JsonPrimitive(60)) })
+                                            put("type", buildJsonObject { put("stringValue", JsonPrimitive(routine.type)) })
+                                            put("day", buildJsonObject { put("stringValue", JsonPrimitive(routine.type)) })
+                                            put("exercises", buildJsonObject {
+                                                put("arrayValue", buildJsonObject {
+                                                    put("values", buildJsonArray {
+                                                        routine.exercises.forEach { exercise ->
+                                                            add(buildJsonObject {
+                                                                put("mapValue", buildJsonObject {
+                                                                    put("fields", buildJsonObject {
+                                                                        put("name", buildJsonObject { put("stringValue", JsonPrimitive(exercise.name)) })
+                                                                        put("repetitions", buildJsonObject { put("integerValue", JsonPrimitive(exercise.repetitions)) })
+                                                                        put("sets", buildJsonObject { put("integerValue", JsonPrimitive(exercise.sets)) })
+                                                                        put("rest", buildJsonObject { put("integerValue", JsonPrimitive(exercise.rest)) })
+                                                                    })
+                                                                })
+                                                            })
+                                                        }
+                                                    })
+                                                })
+                                            })
                                         })
                                     })
                                 })

@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -44,9 +45,16 @@ data class UserResponse(
                     Routine(
                         id = key,
                         type = routineFields?.get("type")?.jsonObject?.get("stringValue")?.jsonPrimitive?.contentOrNull ?: "",
-                        repetitions = routineFields?.get("repetitions")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
-                        sets = routineFields?.get("sets")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
-                        rest = routineFields?.get("rest")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0
+                        day = routineFields?.get("day")?.jsonObject?.get("stringValue")?.jsonPrimitive?.contentOrNull ?: "",
+                        exercises = routineFields?.get("exercises")?.jsonObject?.get("arrayValue")?.jsonObject?.get("values")?.jsonArray?.map { exerciseElement ->
+                            val exerciseFields = exerciseElement.jsonObject["mapValue"]?.jsonObject?.get("fields")?.jsonObject
+                            Exercice(
+                                name = exerciseFields?.get("name")?.jsonObject?.get("stringValue")?.jsonPrimitive?.contentOrNull ?: "",
+                                repetitions = exerciseFields?.get("repetitions")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
+                                sets = exerciseFields?.get("sets")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0,
+                                rest = exerciseFields?.get("rest")?.jsonObject?.get("integerValue")?.jsonPrimitive?.contentOrNull?.toInt() ?: 0
+                            )
+                        } ?: emptyList()
                     )
                 }?.toList()
             )
