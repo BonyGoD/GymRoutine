@@ -24,6 +24,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun RoutinesScreen(
     modifier: Modifier,
     userProfileViewModel: UserProfileViewModel = koinViewModel(),
+    navigateToAddRoutinesScreen: () -> Unit
 ) {
     val userData by userProfileViewModel.userData.collectAsState()
 
@@ -41,6 +42,6 @@ fun RoutinesScreen(
         }
     }
     AddRoutineButton(modifier) {
-        TODO("navigate to add routine screen")
+        navigateToAddRoutinesScreen()
     }
 }
