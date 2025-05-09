@@ -80,7 +80,9 @@ fun ExerciceTexts(exercice: Exercice) {
 fun AddRoutineButton(modifier: Modifier, onButtonClick: () -> Unit) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
         FloatingActionButton(
-            onClick = { onButtonClick() },
+            onClick = {
+                onButtonClick()
+            },
             modifier = Modifier.padding(16.dp),
             containerColor = CustomYellow,
             contentColor = CustomBlack,
