@@ -42,6 +42,7 @@ val appModule = module {
     single { SignUpUseCase() }
     single { GetUserUseCase() }
     single { SaveRoutineUseCase() }
+    factory { UserProfileViewModel() }
     factory { ForgotPasswordUseCase() }
     factory { SaveUserDataUseCase() }
     factory { ForgotPasswordViewModel() }
