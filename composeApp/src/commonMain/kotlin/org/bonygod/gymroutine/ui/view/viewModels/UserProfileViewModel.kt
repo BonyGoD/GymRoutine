@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bonygod.gymroutine.data.model.User
@@ -66,9 +67,8 @@ class UserProfileViewModel : ViewModel(), KoinComponent {
             try {
                 withContext(Dispatchers.Main) {
                     val userDb = getUserDaoUseCase().first()
-                    // Guardar datos en el viewModel
-                    _userDao.value = userDb
                     if (userDb != null) {
+                        _userDao.value = userDb
                         saveUserDataUseCase(
                             userDb.id,
                             userDb.displayName,
@@ -128,18 +128,22 @@ class UserProfileViewModel : ViewModel(), KoinComponent {
 
     fun selectedWeight(selected: Int) {
         _selectedWeight.value = selected
+        _userData.value?.weight = selected
     }
 
     fun selectedHeight(selected: Int) {
         _selectedHeight.value = selected
+        _userData.value?.height = selected
     }
 
     fun selectedAge(selected: Int) {
         _selectedAge.value = selected
+        _userData.value?.age = selected
     }
 
     fun selectedGender(selected: String) {
         _selectedGender.value = selected
+        _userData.value?.gender = selected
     }
 
     fun inisitalValue(selected: Boolean) {
