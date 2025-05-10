@@ -60,7 +60,7 @@ fun ProfileScreen(
                     isButtonEnabled = it != userData?.weight.toString()
                     weight = it
                     if (weight != "") {
-                        userProfileViewModel.selectedHeight.value = weight.toInt()
+                        userProfileViewModel.selectedWeight.value = weight.toInt()
                     }
                 },
                 onAgeValueChange = {
