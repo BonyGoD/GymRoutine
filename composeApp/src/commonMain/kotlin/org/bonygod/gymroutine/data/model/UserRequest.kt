@@ -44,7 +44,7 @@ data class UserRequest(
                                     put("mapValue", buildJsonObject {
                                         put("fields", buildJsonObject {
                                             put("type", buildJsonObject { put("stringValue", JsonPrimitive(routine.type)) })
-                                            put("day", buildJsonObject { put("stringValue", JsonPrimitive(routine.type)) })
+                                            put("day", buildJsonObject { put("stringValue", JsonPrimitive(routine.day)) })
                                             put("exercises", buildJsonObject {
                                                 put("arrayValue", buildJsonObject {
                                                     put("values", buildJsonArray {
