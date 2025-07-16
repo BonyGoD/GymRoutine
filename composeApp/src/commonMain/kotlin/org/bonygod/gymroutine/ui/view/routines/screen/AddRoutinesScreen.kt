@@ -5,13 +5,11 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,16 +35,22 @@ import androidx.compose.ui.unit.sp
 import org.bonygod.gymroutine.ui.theme.CustomBlack
 import org.bonygod.gymroutine.ui.theme.CustomLightGray
 import org.bonygod.gymroutine.ui.theme.CustomYellow
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.bonygod.gymroutine.ui.view.components.CustomTextField
+import org.bonygod.gymroutine.ui.view.home.composables.SaveButton
 
 @Composable
 fun AddRoutinesScreen() {
     val expanded = remember { mutableStateOf(false) }
     val selectores = remember { mutableStateListOf<String>() }
+    val tipoEjercicio = remember { mutableStateOf("Selecciona Tipo de Ejercicio") }
+    val nombreEjercicio = remember { mutableStateListOf("", "", "", "") }
+    val tipos = listOf("Ejercicio", "Series", "Repeticiones", "Descanso")
 
-    selectores.add("Selector 1")
-    selectores.add("Selector 2")
-    selectores.add("Selector 3")
+    selectores.add("Fuerza o hipertrofia") // MET 0.12–0.17 kcal/seg
+    selectores.add("Alta Intensidad (HIIT)") // MET 0.17–0.25 kcal/seg
+    selectores.add("Baja Intensidad (LISS)") // MET 0.08–0.13 kcal/seg
+    selectores.add("Resistencia Muscular") // MET 0.13–0.17 kcal/seg
+    selectores.add("Entrenamiento Funcional") // MET 0.13–0.21 kcal/seg
 
     Column(
         modifier = Modifier
@@ -80,7 +83,7 @@ fun AddRoutinesScreen() {
                     )
                 ) {
                     Text(
-                        text = "Selecciona tipo",
+                        text = tipoEjercicio.value,
                         fontWeight = FontWeight.Bold,
                         color = CustomBlack,
                         fontSize = 15.sp
@@ -115,6 +118,7 @@ fun AddRoutinesScreen() {
                                     },
                                     onClick = {
                                         expanded.value = false
+                                        tipoEjercicio.value = itemSelector
                                     },
                                 )
                             }
@@ -122,6 +126,31 @@ fun AddRoutinesScreen() {
                     }
                 }
             }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = 16.dp)
+            ) {
+                items(tipos.size) { index ->
+                    Spacer(modifier = Modifier.height(10.dp))
+                    CustomTextField(
+                        value = nombreEjercicio[index],
+                        title = tipos[index],
+                        checkEmail = false
+                    ) {
+                        nombreEjercicio[index] = it
+                    }
+                }
+            }
+            SaveButton(
+                isButtonEnabled = true
+            ) { }
         }
     }
 }
