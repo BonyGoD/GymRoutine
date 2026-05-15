@@ -22,3 +22,6 @@ google-services.json
 GoogleService-Info.plist
 Info.plist
 /composeApp/schemas/*
+
+# OpenCode config (contains API keys and tokens)
+opencode.json
