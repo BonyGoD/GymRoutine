@@ -27,9 +27,17 @@ import dev.bonygod.gymroutine.auth.ui.interactions.AuthEffect
 import dev.bonygod.gymroutine.auth.ui.interactions.AuthEvent
 import dev.bonygod.signin.kmp.ui.GoogleSignin
 import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.common_back_description
+import gymroutine.composeapp.generated.resources.common_email_label
+import gymroutine.composeapp.generated.resources.common_name_label
+import gymroutine.composeapp.generated.resources.common_password_label
 import gymroutine.composeapp.generated.resources.google_icon
+import gymroutine.composeapp.generated.resources.register_screen_confirm_password_label
 import gymroutine.composeapp.generated.resources.register_screen_google_register
 import gymroutine.composeapp.generated.resources.register_screen_or_register_with
+import gymroutine.composeapp.generated.resources.register_screen_register_button
+import gymroutine.composeapp.generated.resources.register_screen_title
+import gymroutine.composeapp.generated.resources.register_screen_topbar_title
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -54,10 +62,10 @@ fun RegisterScreen(viewModel: AuthViewModel = koinViewModel()) {
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Crear cuenta") },
+                title = { Text(stringResource(Res.string.register_screen_topbar_title)) },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(AuthEvent.OnBackClick) }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atras")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back_description))
                     }
                 },
             )
@@ -68,13 +76,13 @@ fun RegisterScreen(viewModel: AuthViewModel = koinViewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text("Unete a GymRoutine", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+            Text(stringResource(Res.string.register_screen_title), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(32.dp))
 
             OutlinedTextField(
                 value = state.getUserData().userName,
                 onValueChange = { viewModel.onEvent(AuthEvent.OnUserNameChange(it)) },
-                label = { Text("Nombre") },
+                label = { Text(stringResource(Res.string.common_name_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -83,7 +91,7 @@ fun RegisterScreen(viewModel: AuthViewModel = koinViewModel()) {
             OutlinedTextField(
                 value = state.getUserData().email,
                 onValueChange = { viewModel.onEvent(AuthEvent.OnEmailChange(it)) },
-                label = { Text("Correo") },
+                label = { Text(stringResource(Res.string.common_email_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -93,7 +101,7 @@ fun RegisterScreen(viewModel: AuthViewModel = koinViewModel()) {
             OutlinedTextField(
                 value = state.getUserData().password,
                 onValueChange = { viewModel.onEvent(AuthEvent.OnPasswordChange(it)) },
-                label = { Text("Contrasena") },
+                label = { Text(stringResource(Res.string.common_password_label)) },
                 visualTransformation = if (state.eyePasswordOpen) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { viewModel.onEvent(AuthEvent.OnEyePasswordClick) }) {
@@ -109,7 +117,7 @@ fun RegisterScreen(viewModel: AuthViewModel = koinViewModel()) {
             OutlinedTextField(
                 value = state.getUserData().confirmPassword,
                 onValueChange = { viewModel.onEvent(AuthEvent.OnConfirmPasswordChange(it)) },
-                label = { Text("Confirmar contrasena") },
+                label = { Text(stringResource(Res.string.register_screen_confirm_password_label)) },
                 visualTransformation = if (state.eyeConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { viewModel.onEvent(AuthEvent.OnEyeConfirmPasswordClick) }) {
@@ -126,7 +134,7 @@ fun RegisterScreen(viewModel: AuthViewModel = koinViewModel()) {
                 CircularProgressIndicator()
             } else {
                 Button(onClick = { viewModel.onEvent(AuthEvent.OnRegisterClick) }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Registrarse")
+                    Text(stringResource(Res.string.register_screen_register_button))
                 }
 
                 SocialDivider(stringResource(Res.string.register_screen_or_register_with))

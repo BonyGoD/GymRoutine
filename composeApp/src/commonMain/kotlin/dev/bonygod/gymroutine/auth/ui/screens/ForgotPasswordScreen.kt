@@ -12,7 +12,18 @@ import androidx.compose.ui.unit.dp
 import dev.bonygod.gymroutine.auth.ui.AuthViewModel
 import dev.bonygod.gymroutine.auth.ui.interactions.AuthEffect
 import dev.bonygod.gymroutine.auth.ui.interactions.AuthEvent
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.common_accept
+import gymroutine.composeapp.generated.resources.common_back_description
+import gymroutine.composeapp.generated.resources.common_email_label
+import gymroutine.composeapp.generated.resources.forgot_password_screen_dialog_message
+import gymroutine.composeapp.generated.resources.forgot_password_screen_dialog_title
+import gymroutine.composeapp.generated.resources.forgot_password_screen_send_button
+import gymroutine.composeapp.generated.resources.forgot_password_screen_subtitle
+import gymroutine.composeapp.generated.resources.forgot_password_screen_title
+import gymroutine.composeapp.generated.resources.forgot_password_screen_topbar_title
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,10 +45,12 @@ fun ForgotPasswordScreen(viewModel: AuthViewModel = koinViewModel()) {
         AlertDialog(
             onDismissRequest = { viewModel.onEvent(AuthEvent.DismissDialog) },
             confirmButton = {
-                TextButton(onClick = { viewModel.onEvent(AuthEvent.DismissDialog) }) { Text("Aceptar") }
+                TextButton(onClick = { viewModel.onEvent(AuthEvent.DismissDialog) }) {
+                    Text(stringResource(Res.string.common_accept))
+                }
             },
-            title = { Text("Correo enviado") },
-            text = { Text("Revisa tu bandeja para el enlace de restablecimiento.") },
+            title = { Text(stringResource(Res.string.forgot_password_screen_dialog_title)) },
+            text = { Text(stringResource(Res.string.forgot_password_screen_dialog_message)) },
         )
     }
 
@@ -45,10 +58,10 @@ fun ForgotPasswordScreen(viewModel: AuthViewModel = koinViewModel()) {
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Restablecer contrasena") },
+                title = { Text(stringResource(Res.string.forgot_password_screen_topbar_title)) },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(AuthEvent.OnBackClick) }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atras")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back_description))
                     }
                 },
             )
@@ -59,15 +72,15 @@ fun ForgotPasswordScreen(viewModel: AuthViewModel = koinViewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text("Has olvidado tu contrasena?", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+            Text(stringResource(Res.string.forgot_password_screen_title), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
             Spacer(Modifier.height(8.dp))
-            Text("Escribe tu correo y te enviaremos un enlace.", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.forgot_password_screen_subtitle), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.height(32.dp))
 
             OutlinedTextField(
                 value = state.getUserData().email,
                 onValueChange = { viewModel.onEvent(AuthEvent.OnEmailChange(it)) },
-                label = { Text("Correo") },
+                label = { Text(stringResource(Res.string.common_email_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -79,7 +92,7 @@ fun ForgotPasswordScreen(viewModel: AuthViewModel = koinViewModel()) {
                 Button(
                     onClick = { viewModel.onEvent(AuthEvent.OnResetPassword(state.getUserData().email)) },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Enviar enlace") }
+                ) { Text(stringResource(Res.string.forgot_password_screen_send_button)) }
             }
         }
     }

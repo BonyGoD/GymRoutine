@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">GymRoutine</string>
+
+    <!-- Common -->
+    <string name="common_email_label">Correu</string>
+    <string name="common_password_label">Contrasenya</string>
+    <string name="common_name_label">Nom</string>
+    <string name="common_back_description">Enrere</string>
+    <string name="common_accept">Acceptar</string>
+
+    <!-- Login screen -->
+    <string name="login_screen_title">Benvingut a GymRoutine!</string>
+    <string name="login_screen_subtitle">Controla els teus entrenaments i manté la teva ratxa</string>
+    <string name="login_screen_forgot_password">Has oblidat la teva contrasenya?</string>
+    <string name="login_screen_login_button">Iniciar sessió</string>
+    <string name="login_screen_or_login_with">O inicia sessió amb</string>
+    <string name="login_screen_no_account">No tens compte?</string>
+    <string name="login_screen_register_link">Registra\'t</string>
+    <string name="login_screen_google_access">Continua amb Google</string>
+    <string name="login_screen_apple_signin">Continua amb Apple</string>
+
+    <!-- Register screen -->
+    <string name="register_screen_topbar_title">Crear compte</string>
+    <string name="register_screen_title">Uneix-te a GymRoutine</string>
+    <string name="register_screen_subtitle">Comença a construir el teu pla d\'entrenament</string>
+    <string name="register_screen_confirm_password_label">Confirmar contrasenya</string>
+    <string name="register_screen_register_button">Registrar-se</string>
+    <string name="register_screen_or_register_with">O registra\'t amb</string>
+    <string name="register_screen_google_register">Registrar-se amb Google</string>
+
+    <!-- Forgot password screen -->
+    <string name="forgot_password_screen_topbar_title">Restablir contrasenya</string>
+    <string name="forgot_password_screen_title">Has oblidat la teva contrasenya?</string>
+    <string name="forgot_password_screen_subtitle">Escriu el teu correu i t\'enviarem un enllaç.</string>
+    <string name="forgot_password_screen_send_button">Enviar enllaç</string>
+    <string name="forgot_password_screen_dialog_title">Correu enviat</string>
+    <string name="forgot_password_screen_dialog_message">Revisa la teva bústia per l\'enllaç de restabliment.</string>
+
+    <!-- Validation errors -->
+    <string name="error_invalid_email">Introdueix un correu electrònic vàlid</string>
+    <string name="error_name_empty">El nom no pot estar buit</string>
+    <string name="error_passwords_not_match">Les contrasenyes no coincideixen</string>
+    <string name="error_password_too_short">La contrasenya ha de tenir almenys 6 caràcters</string>
+
+    <!-- Generic errors -->
+    <string name="error_sign_in_generic">Error en iniciar sessió</string>
+    <string name="error_register_generic">Error en registrar-se</string>
+    <string name="error_reset_password_generic">Error en restablir la contrasenya</string>
+    <string name="error_reset_password_cooldown">Espera 5 minuts abans de tornar-ho a intentar.</string>
+    <string name="error_social_sign_in_generic">Error en iniciar sessió amb proveïdor extern</string>
+    <string name="error_social_no_google_account">No s\'ha trobat cap compte de Google al dispositiu</string>
+    <string name="error_social_invalid_credential">Credencial de Google no vàlida</string>
+    <string name="error_social_get_credential">Error en obtenir les credencials de Google</string>
+</resources>

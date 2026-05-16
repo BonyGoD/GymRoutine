@@ -33,4 +33,16 @@ data class AuthState(
     fun getUserData() = authUI
 
     fun setUserData(authUI: AuthUI) = copy(authUI = authUI)
+
+    fun isValidEmail(): Boolean = authUI.email.contains('@') && authUI.email.contains('.')
+
+    fun isNameFilled(): Boolean = authUI.userName.isNotBlank()
+
+    fun passwordsMatch(): Boolean = authUI.password == authUI.confirmPassword
+
+    fun isPasswordLongEnough(): Boolean = authUI.password.length >= MIN_PASSWORD_LENGTH
+
+    companion object {
+        const val MIN_PASSWORD_LENGTH = 6
+    }
 }

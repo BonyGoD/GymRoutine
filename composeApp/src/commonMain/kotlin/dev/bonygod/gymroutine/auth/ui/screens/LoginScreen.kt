@@ -29,10 +29,18 @@ import dev.bonygod.signin.kmp.ui.AppleSignin
 import dev.bonygod.signin.kmp.ui.GoogleSignin
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.applelogo
+import gymroutine.composeapp.generated.resources.common_email_label
+import gymroutine.composeapp.generated.resources.common_password_label
 import gymroutine.composeapp.generated.resources.google_icon
 import gymroutine.composeapp.generated.resources.login_screen_apple_signin
+import gymroutine.composeapp.generated.resources.login_screen_forgot_password
 import gymroutine.composeapp.generated.resources.login_screen_google_access
+import gymroutine.composeapp.generated.resources.login_screen_login_button
+import gymroutine.composeapp.generated.resources.login_screen_no_account
 import gymroutine.composeapp.generated.resources.login_screen_or_login_with
+import gymroutine.composeapp.generated.resources.login_screen_register_link
+import gymroutine.composeapp.generated.resources.login_screen_subtitle
+import gymroutine.composeapp.generated.resources.login_screen_title
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -58,15 +66,15 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text("GymRoutine", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+            Text(stringResource(Res.string.login_screen_title), style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(8.dp))
-            Text("Inicia sesion para continuar", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(Res.string.login_screen_subtitle), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.height(32.dp))
 
             OutlinedTextField(
                 value = state.getUserData().email,
                 onValueChange = { viewModel.onEvent(AuthEvent.OnEmailChange(it)) },
-                label = { Text("Correo") },
+                label = { Text(stringResource(Res.string.common_email_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -76,7 +84,7 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
             OutlinedTextField(
                 value = state.getUserData().password,
                 onValueChange = { viewModel.onEvent(AuthEvent.OnPasswordChange(it)) },
-                label = { Text("Contrasena") },
+                label = { Text(stringResource(Res.string.common_password_label)) },
                 visualTransformation = if (state.eyePasswordOpen) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { viewModel.onEvent(AuthEvent.OnEyePasswordClick) }) {
@@ -92,7 +100,7 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
             TextButton(
                 onClick = { viewModel.onEvent(AuthEvent.OnNavigateToForgotPassword) },
                 modifier = Modifier.align(Alignment.End),
-            ) { Text("Has olvidado tu contrasena?") }
+            ) { Text(stringResource(Res.string.login_screen_forgot_password)) }
 
             Spacer(Modifier.height(16.dp))
 
@@ -100,7 +108,7 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
                 CircularProgressIndicator()
             } else {
                 Button(onClick = { viewModel.onEvent(AuthEvent.OnSignInClick) }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Iniciar sesion")
+                    Text(stringResource(Res.string.login_screen_login_button))
                 }
 
                 SocialDivider(stringResource(Res.string.login_screen_or_login_with))
@@ -145,8 +153,11 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
                 }
 
                 Spacer(Modifier.height(12.dp))
-                TextButton(onClick = { viewModel.onEvent(AuthEvent.OnNavigateToRegister) }) {
-                    Text("No tienes cuenta? Registrate")
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(Res.string.login_screen_no_account), style = MaterialTheme.typography.bodyMedium)
+                    TextButton(onClick = { viewModel.onEvent(AuthEvent.OnNavigateToRegister) }) {
+                        Text(stringResource(Res.string.login_screen_register_link))
+                    }
                 }
             }
         }

@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">GymRoutine</string>
+
+    <!-- Common -->
+    <string name="common_email_label">Correo</string>
+    <string name="common_password_label">Contraseña</string>
+    <string name="common_name_label">Nombre</string>
+    <string name="common_back_description">Atrás</string>
+    <string name="common_accept">Aceptar</string>
+
+    <!-- Login screen -->
+    <string name="login_screen_title">¡Bienvenido a GymRoutine!</string>
+    <string name="login_screen_subtitle">Controla tus entrenamientos y mantén tu racha</string>
+    <string name="login_screen_forgot_password">¿Has olvidado tu contraseña?</string>
+    <string name="login_screen_login_button">Iniciar sesión</string>
+    <string name="login_screen_or_login_with">O inicia sesión con</string>
+    <string name="login_screen_no_account">¿No tienes cuenta?</string>
+    <string name="login_screen_register_link">Regístrate</string>
+    <string name="login_screen_google_access">Continuar con Google</string>
+    <string name="login_screen_apple_signin">Continuar con Apple</string>
+
+    <!-- Register screen -->
+    <string name="register_screen_topbar_title">Crear cuenta</string>
+    <string name="register_screen_title">Únete a GymRoutine</string>
+    <string name="register_screen_subtitle">Empieza a construir tu plan de entrenamiento</string>
+    <string name="register_screen_confirm_password_label">Confirmar contraseña</string>
+    <string name="register_screen_register_button">Registrarse</string>
+    <string name="register_screen_or_register_with">O regístrate con</string>
+    <string name="register_screen_google_register">Registrarse con Google</string>
+
+    <!-- Forgot password screen -->
+    <string name="forgot_password_screen_topbar_title">Restablecer contraseña</string>
+    <string name="forgot_password_screen_title">¿Has olvidado tu contraseña?</string>
+    <string name="forgot_password_screen_subtitle">Escribe tu correo y te enviaremos un enlace.</string>
+    <string name="forgot_password_screen_send_button">Enviar enlace</string>
+    <string name="forgot_password_screen_dialog_title">Correo enviado</string>
+    <string name="forgot_password_screen_dialog_message">Revisa tu bandeja para el enlace de restablecimiento.</string>
+
+    <!-- Validation errors -->
+    <string name="error_invalid_email">Introduce un correo electrónico válido</string>
+    <string name="error_name_empty">El nombre no puede estar vacío</string>
+    <string name="error_passwords_not_match">Las contraseñas no coinciden</string>
+    <string name="error_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+
+    <!-- Generic errors -->
+    <string name="error_sign_in_generic">Error al iniciar sesión</string>
+    <string name="error_register_generic">Error al registrarse</string>
+    <string name="error_reset_password_generic">Error al restablecer la contraseña</string>
+    <string name="error_reset_password_cooldown">Espera 5 minutos antes de volver a intentarlo.</string>
+    <string name="error_social_sign_in_generic">Error al iniciar sesión con proveedor externo</string>
+    <string name="error_social_no_google_account">No se encontró una cuenta de Google en el dispositivo</string>
+    <string name="error_social_invalid_credential">Credencial de Google no válida</string>
+    <string name="error_social_get_credential">Error al obtener credenciales de Google</string>
+</resources>
