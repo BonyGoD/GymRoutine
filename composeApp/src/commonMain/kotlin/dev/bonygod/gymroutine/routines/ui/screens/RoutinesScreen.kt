@@ -18,35 +18,35 @@ data class RoutineItem(val name: String, val exercises: Int, val days: String)
 @Composable
 fun RoutinesScreen() {
     val routines = listOf(
-        RoutineItem("Push Day A", 6, "Mon · Thu"),
-        RoutineItem("Pull Day B", 6, "Tue · Fri"),
-        RoutineItem("Leg Day C", 5, "Wed · Sat"),
-        RoutineItem("Full Body", 8, "Mon · Wed · Fri"),
+        RoutineItem("Empuje A", 6, "Lun · Jue"),
+        RoutineItem("Tiron B", 6, "Mar · Vie"),
+        RoutineItem("Pierna C", 5, "Mie · Sab"),
+        RoutineItem("Cuerpo completo", 8, "Lun · Mie · Vie"),
     )
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = PaddingValues(16.dp),
     ) {
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text("My Routines", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
-                FilledTonalButton(onClick = {}) { Text("+ New") }
+                Text("Mis rutinas", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                FilledTonalButton(onClick = {}) { Text("+ Nueva") }
             }
         }
         items(routines) { routine ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             ) {
                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.FitnessCenter, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp))
                     Spacer(Modifier.width(12.dp))
                     Column(Modifier.weight(1f)) {
                         Text(routine.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
-                        Text("${routine.exercises} exercises · ${routine.days}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("${routine.exercises} ejercicios · ${routine.days}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }

@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 fun SocialDivider(text: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(top = 24.dp)
+        modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
     ) {
         Spacer(modifier = Modifier.weight(1f).height(1.dp).background(Color.Gray))
         Text(text = text, color = Color.Gray, modifier = Modifier.padding(horizontal = 8.dp))

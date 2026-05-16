@@ -19,9 +19,8 @@ import kotlin.time.Duration.Companion.minutes
 
 class AuthViewModel(
     private val navigator: Navigator,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(AuthState())
     val state: StateFlow<AuthState> = _state
 
@@ -50,7 +49,7 @@ class AuthViewModel(
             is AuthEvent.OnSignInClick -> signIn()
             is AuthEvent.OnRegisterClick -> register()
             is AuthEvent.OnGoogleSignInSuccess -> handleGoogleSignIn(event.uid, event.displayName, event.email)
-            is AuthEvent.OnGoogleSignInError -> setEffect(AuthEffect.ShowError(event.errorMessage))
+            is AuthEvent.OnGoogleSignInError -> setEffect(AuthEffect.ShowError(translateSocialError(event.errorMessage)))
             is AuthEvent.OnNavigateToRegister -> navigator.navigateTo(Routes.Register)
             is AuthEvent.OnNavigateToForgotPassword -> navigator.navigateTo(Routes.ForgotPassword)
             is AuthEvent.DismissDialog -> setState { showDialog(false) }
@@ -70,7 +69,7 @@ class AuthViewModel(
                 navigator.clearAndNavigateTo(Routes.Main(uid))
             }.onFailure { error ->
                 setState { showLoading(false) }
-                setEffect(AuthEffect.ShowError(error.message ?: "Sign in failed"))
+                setEffect(AuthEffect.ShowError(error.message ?: "Error al iniciar sesion"))
             }
         }
     }
@@ -87,19 +86,23 @@ class AuthViewModel(
                 navigator.clearAndNavigateTo(Routes.Main(uid))
             }.onFailure { error ->
                 setState { showLoading(false) }
-                setEffect(AuthEffect.ShowError(error.message ?: "Registration failed"))
+                setEffect(AuthEffect.ShowError(error.message ?: "Error al registrarse"))
             }
         }
     }
 
-    private fun handleGoogleSignIn(uid: String, displayName: String, email: String) {
+    private fun handleGoogleSignIn(
+        uid: String,
+        displayName: String,
+        email: String,
+    ) {
         navigator.clearAndNavigateTo(Routes.Main(uid))
     }
 
     private fun resetPassword(email: String) {
         val currentTime = Clock.System.now().toEpochMilliseconds()
         if (currentTime - lastResetRequestTime < 5.minutes.inWholeMilliseconds) {
-            setEffect(AuthEffect.ShowError("Please wait 5 minutes before retrying."))
+            setEffect(AuthEffect.ShowError("Espera 5 minutos antes de volver a intentarlo."))
             return
         }
         viewModelScope.launch {
@@ -107,10 +110,17 @@ class AuthViewModel(
                 .onSuccess {
                     lastResetRequestTime = Clock.System.now().toEpochMilliseconds()
                     setState { updateEmail("").showDialog(true) }
-                }
-                .onFailure { error ->
-                    setEffect(AuthEffect.ShowError(error.message ?: "Reset failed"))
+                }.onFailure { error ->
+                    setEffect(AuthEffect.ShowError(error.message ?: "Error al restablecer"))
                 }
         }
+    }
+
+    private fun translateSocialError(message: String): String = when {
+        message.contains("No email found in your device", ignoreCase = true) -> "No se encontro una cuenta de Google en el dispositivo"
+        message.contains("Invalid credential type", ignoreCase = true) -> "Credencial de Google no valida"
+        message.contains("GetCredentialException", ignoreCase = true) -> "Error al obtener credenciales de Google"
+        message.contains("Error:", ignoreCase = true) -> "Error de inicio de sesion social"
+        else -> message
     }
 }

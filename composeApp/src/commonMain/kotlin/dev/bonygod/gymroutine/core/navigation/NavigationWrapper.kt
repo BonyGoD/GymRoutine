@@ -7,10 +7,10 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import dev.bonygod.gymroutine.MainScreen
 import dev.bonygod.gymroutine.auth.ui.screens.ForgotPasswordScreen
 import dev.bonygod.gymroutine.auth.ui.screens.LoginScreen
 import dev.bonygod.gymroutine.auth.ui.screens.RegisterScreen
-import dev.bonygod.gymroutine.MainScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -45,6 +45,6 @@ fun NavigationWrapper() {
         predictivePopTransitionSpec = {
             slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(250)) togetherWith
                 slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(250))
-        }
+        },
     )
 }

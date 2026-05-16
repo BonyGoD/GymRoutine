@@ -18,26 +18,26 @@ data class WorkoutSession(val routineName: String, val date: String, val duratio
 @Composable
 fun HistoryScreen() {
     val sessions = listOf(
-        WorkoutSession("Push Day A", "Today", "52 min", 18),
-        WorkoutSession("Pull Day B", "Yesterday", "45 min", 15),
-        WorkoutSession("Leg Day C", "Mon 12 May", "1h 5min", 21),
-        WorkoutSession("Push Day A", "Sat 10 May", "48 min", 18),
-        WorkoutSession("Full Body", "Thu 8 May", "1h 12min", 24),
+        WorkoutSession("Empuje A", "Hoy", "52 min", 18),
+        WorkoutSession("Tiron B", "Ayer", "45 min", 15),
+        WorkoutSession("Pierna C", "Lun 12 May", "1h 5min", 21),
+        WorkoutSession("Empuje A", "Sab 10 May", "48 min", 18),
+        WorkoutSession("Cuerpo completo", "Jue 8 May", "1h 12min", 24),
     )
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = PaddingValues(16.dp),
     ) {
         item {
-            Text("History", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+            Text("Historial", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
         }
         items(sessions) { session ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             ) {
                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.FitnessCenter, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
@@ -48,7 +48,7 @@ fun HistoryScreen() {
                     }
                     Column(horizontalAlignment = Alignment.End) {
                         Text(session.duration, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
-                        Text("${session.totalSets} sets", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("${session.totalSets} series", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }

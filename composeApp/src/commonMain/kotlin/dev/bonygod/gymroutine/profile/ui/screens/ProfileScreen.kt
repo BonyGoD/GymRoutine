@@ -16,24 +16,24 @@ import androidx.compose.ui.unit.dp
 fun ProfileScreen(userId: String = "") {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(Modifier.height(24.dp))
         Surface(shape = CircleShape, color = MaterialTheme.colorScheme.surfaceVariant, modifier = Modifier.size(80.dp)) {
             Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(16.dp))
         }
         Spacer(Modifier.height(12.dp))
-        Text("Athlete", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+        Text("Atleta", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
         if (userId.isNotEmpty()) {
             Text(userId, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Spacer(Modifier.height(32.dp))
 
-        listOf("Total workouts" to "24", "Personal records" to "12", "Training streak" to "5 days").forEach { (label, value) ->
+        listOf("Entrenos totales" to "24", "Records personales" to "12", "Racha de entrenamiento" to "5 dias").forEach { (label, value) ->
             Card(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             ) {
                 Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Text(label, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
@@ -44,7 +44,7 @@ fun ProfileScreen(userId: String = "") {
 
         Spacer(Modifier.height(24.dp))
         OutlinedButton(onClick = {}, modifier = Modifier.fillMaxWidth()) {
-            Text("Sign out")
+            Text("Cerrar sesion")
         }
     }
 }

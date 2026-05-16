@@ -11,13 +11,14 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val appModule = module {
-    single { Firebase.auth }
-    single { Navigator() }
-    single<String>(named("API_KEY")) { BuildConfig.FIREBASE_API_KEY }
-    single<String>(named("CLIENT_ID")) { BuildConfig.CLIENT_ID }
-    viewModel { AuthViewModel(get(), get()) }
-}
+val appModule =
+    module {
+        single { Firebase.auth }
+        single { Navigator() }
+        single<String>(named("API_KEY")) { BuildConfig.FIREBASE_API_KEY }
+        single<String>(named("CLIENT_ID")) { BuildConfig.CLIENT_ID }
+        viewModel { AuthViewModel(get(), get()) }
+    }
 
 fun initKoin(config: KoinApplication.() -> Unit = {}) {
     startKoin {

@@ -31,6 +31,6 @@ private val DarkColorScheme = darkColorScheme(
 fun GymRoutineTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = DarkColorScheme,
-        content = content
+        content = content,
     )
 }

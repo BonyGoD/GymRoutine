@@ -34,10 +34,10 @@ fun ForgotPasswordScreen(viewModel: AuthViewModel = koinViewModel()) {
         AlertDialog(
             onDismissRequest = { viewModel.onEvent(AuthEvent.DismissDialog) },
             confirmButton = {
-                TextButton(onClick = { viewModel.onEvent(AuthEvent.DismissDialog) }) { Text("OK") }
+                TextButton(onClick = { viewModel.onEvent(AuthEvent.DismissDialog) }) { Text("Aceptar") }
             },
-            title = { Text("Email sent") },
-            text = { Text("Check your inbox for the password reset link.") }
+            title = { Text("Correo enviado") },
+            text = { Text("Revisa tu bandeja para el enlace de restablecimiento.") },
         )
     }
 
@@ -45,31 +45,31 @@ fun ForgotPasswordScreen(viewModel: AuthViewModel = koinViewModel()) {
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Reset password") },
+                title = { Text("Restablecer contrasena") },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(AuthEvent.OnBackClick) }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atras")
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
-            Text("Forgot your password?", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+            Text("Has olvidado tu contrasena?", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
             Spacer(Modifier.height(8.dp))
-            Text("Enter your email and we'll send you a reset link.", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Escribe tu correo y te enviaremos un enlace.", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.height(32.dp))
 
             OutlinedTextField(
                 value = state.getUserData().email,
                 onValueChange = { viewModel.onEvent(AuthEvent.OnEmailChange(it)) },
-                label = { Text("Email") },
+                label = { Text("Correo") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
             )
             Spacer(Modifier.height(24.dp))
 
@@ -78,8 +78,8 @@ fun ForgotPasswordScreen(viewModel: AuthViewModel = koinViewModel()) {
             } else {
                 Button(
                     onClick = { viewModel.onEvent(AuthEvent.OnResetPassword(state.getUserData().email)) },
-                    modifier = Modifier.fillMaxWidth()
-                ) { Text("Send reset link") }
+                    modifier = Modifier.fillMaxWidth(),
+                ) { Text("Enviar enlace") }
             }
         }
     }

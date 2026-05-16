@@ -1,19 +1,19 @@
 <resources>
     <string name="app_name">GymRoutine</string>
 
-    <string name="login_screen_title">Welcome to GymRoutine!</string>
-    <string name="login_screen_subtitle">Track your training and keep your streak alive</string>
-    <string name="login_screen_forgot_password">Forgot your password?</string>
-    <string name="login_screen_login_button">Login</string>
-    <string name="login_screen_or_login_with">Or log in with</string>
-    <string name="login_screen_no_account">Don't have an account?</string>
-    <string name="login_screen_register_link">Register</string>
-    <string name="login_screen_google_access">Sign in with Google</string>
-    <string name="login_screen_apple_signin">Sign in with Apple</string>
+    <string name="login_screen_title">Bienvenido a GymRoutine!</string>
+    <string name="login_screen_subtitle">Controla tus entrenamientos y mantiene tu racha</string>
+    <string name="login_screen_forgot_password">Has olvidado tu contrasena?</string>
+    <string name="login_screen_login_button">Iniciar sesion</string>
+    <string name="login_screen_or_login_with">O inicia sesion con</string>
+    <string name="login_screen_no_account">No tienes cuenta?</string>
+    <string name="login_screen_register_link">Registrate</string>
+    <string name="login_screen_google_access">Continuar con Google</string>
+    <string name="login_screen_apple_signin">Continuar con Apple</string>
 
-    <string name="register_screen_title">Create your account</string>
-    <string name="register_screen_subtitle">Start building your training plan</string>
-    <string name="register_screen_register_button">Register</string>
-    <string name="register_screen_or_register_with">Or register with</string>
-    <string name="register_screen_google_register">Register with Google</string>
+    <string name="register_screen_title">Crea tu cuenta</string>
+    <string name="register_screen_subtitle">Empieza a construir tu plan de entrenamiento</string>
+    <string name="register_screen_register_button">Registrarse</string>
+    <string name="register_screen_or_register_with">O registrate con</string>
+    <string name="register_screen_google_register">Registrarse con Google</string>
 </resources>
