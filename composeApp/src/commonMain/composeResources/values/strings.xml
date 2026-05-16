@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">GymRoutine</string>
+
+    <string name="login_screen_title">Welcome to GymRoutine!</string>
+    <string name="login_screen_subtitle">Track your training and keep your streak alive</string>
+    <string name="login_screen_forgot_password">Forgot your password?</string>
+    <string name="login_screen_login_button">Login</string>
+    <string name="login_screen_or_login_with">Or log in with</string>
+    <string name="login_screen_no_account">Don't have an account?</string>
+    <string name="login_screen_register_link">Register</string>
+    <string name="login_screen_google_access">Sign in with Google</string>
+    <string name="login_screen_apple_signin">Sign in with Apple</string>
+
+    <string name="register_screen_title">Create your account</string>
+    <string name="register_screen_subtitle">Start building your training plan</string>
+    <string name="register_screen_register_button">Register</string>
+    <string name="register_screen_or_register_with">Or register with</string>
+    <string name="register_screen_google_register">Register with Google</string>
+</resources>

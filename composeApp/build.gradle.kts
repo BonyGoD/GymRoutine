@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.gradleBuildConfig)
 }
 
 kotlin {
@@ -99,4 +101,20 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+buildConfig {
+    packageName("dev.bonygod.gymroutine")
+
+    val properties = Properties()
+    val localProperties = project.rootProject.file("local.properties")
+    if (localProperties.exists()) {
+        properties.load(localProperties.reader())
+    }
+
+    val apiKey = properties.getProperty("FIREBASE_API_KEY", "")
+    val clientId = properties.getProperty("CLIENT_ID", "")
+
+    buildConfigField("FIREBASE_API_KEY", apiKey)
+    buildConfigField("CLIENT_ID", clientId)
 }

@@ -1,29 +1,46 @@
 package dev.bonygod.gymroutine.auth.ui.screens
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import dev.bonygod.gymroutine.getPlatform
 import dev.bonygod.gymroutine.auth.ui.AuthViewModel
+import dev.bonygod.gymroutine.auth.ui.components.SocialDivider
 import dev.bonygod.gymroutine.auth.ui.interactions.AuthEffect
 import dev.bonygod.gymroutine.auth.ui.interactions.AuthEvent
+import dev.bonygod.signin.kmp.ui.AppleSignin
+import dev.bonygod.signin.kmp.ui.GoogleSignin
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.applelogo
+import gymroutine.composeapp.generated.resources.login_screen_apple_signin
+import gymroutine.composeapp.generated.resources.login_screen_google_access
+import gymroutine.composeapp.generated.resources.login_screen_or_login_with
+import gymroutine.composeapp.generated.resources.google_icon
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
-    var snackbarMessage by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
@@ -37,7 +54,7 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
 
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding).padding(24.dp),
+            modifier = Modifier.fillMaxSize().padding(padding).padding(24.dp).verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -85,6 +102,48 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
                 Button(onClick = { viewModel.onEvent(AuthEvent.OnSignInClick) }, modifier = Modifier.fillMaxWidth()) {
                     Text("Sign In")
                 }
+
+                SocialDivider(stringResource(Res.string.login_screen_or_login_with))
+
+                GoogleSignin(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 18.dp)
+                        .border(1.dp, Color(0xFF000000), RoundedCornerShape(30.dp))
+                        .clip(RoundedCornerShape(30.dp))
+                        .height(50.dp),
+                    text = stringResource(Res.string.login_screen_google_access),
+                    textColor = Color.Black,
+                    icon = painterResource(Res.drawable.google_icon),
+                    onSuccess = { displayName, uid, email, _ ->
+                        viewModel.onEvent(AuthEvent.OnGoogleSignInSuccess(uid, displayName, email))
+                    },
+                    onError = { errorMessage ->
+                        viewModel.onEvent(AuthEvent.OnGoogleSignInError(errorMessage))
+                    }
+                )
+
+                if (getPlatform().name.contains("Android").not()) {
+                    AppleSignin(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp)
+                            .height(50.dp),
+                        text = stringResource(Res.string.login_screen_apple_signin),
+                        containerColor = Color.Black,
+                        contentColor = Color.White,
+                        icon = painterResource(Res.drawable.applelogo),
+                        textColor = Color.White,
+                        onSuccess = { _, uid, email, _ ->
+                            val name = email.substringBefore("@")
+                            viewModel.onEvent(AuthEvent.OnGoogleSignInSuccess(uid, name, email))
+                        },
+                        onError = { errorMessage ->
+                            viewModel.onEvent(AuthEvent.OnGoogleSignInError(errorMessage))
+                        }
+                    )
+                }
+
                 Spacer(Modifier.height(12.dp))
                 TextButton(onClick = { viewModel.onEvent(AuthEvent.OnNavigateToRegister) }) {
                     Text("Don't have an account? Register")
