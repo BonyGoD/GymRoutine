@@ -1,103 +1,429 @@
 package dev.bonygod.gymroutine.home.ui.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-
-data class QuickStat(val label: String, val value: String)
+import androidx.compose.ui.unit.sp
+import dev.bonygod.gymroutine.core.designsystem.GymRoutineColors
+import dev.bonygod.gymroutine.core.utils.DayItem
+import dev.bonygod.gymroutine.core.utils.buildCalendarDays
+import dev.bonygod.gymroutine.home.ui.HomeViewModel
+import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
 
 @Composable
-fun HomeScreen() {
-    val stats = listOf(
-        QuickStat("Entrenos esta semana", "3"),
-        QuickStat("Series totales", "42"),
-        QuickStat("Racha", "5 dias"),
-    )
+fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+    val userName by viewModel.userName.collectAsState()
+    val today = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date }
+    val days = remember(today) { buildCalendarDays(today) }
+    val todayIndex = remember(days) { days.indexOfFirst { it.isToday }.coerceAtLeast(0) }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(16.dp),
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(GymRoutineColors.BgPrimary)
+                .verticalScroll(rememberScrollState()),
     ) {
-        item {
+        // ── Top Header ────────────────────────────────────────────────────────
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Text(
-                text = "Bienvenido de nuevo!",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "Listo para entrenar hoy?",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(12.dp))
-            Text(
-                text = "Esta semana",
-                style = MaterialTheme.typography.titleMedium,
+                text = "GYMROUTINE",
+                color = GymRoutineColors.Accent,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground,
+                letterSpacing = (-1).sp,
+            )
+            Box(
+                modifier =
+                    Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(GymRoutineColors.BgAvatar)
+                        .border(1.dp, GymRoutineColors.Border, CircleShape),
             )
         }
-        items(stats) { stat ->
-            Card(
+
+        // ── Main content ──────────────────────────────────────────────────────
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(start = 24.dp, end = 24.dp, bottom = 128.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+        ) {
+            GreetingSection(userName = userName)
+            CalendarSection(days = days, todayIndex = todayIndex)
+            WorkoutCTASection()
+            QuickStatsBento()
+        }
+    }
+}
+
+// ── Section 1: Greeting ───────────────────────────────────────────────────────
+@Composable
+private fun GreetingSection(userName: String) {
+    val displayName = if (userName.isNotBlank()) userName else "…"
+    Text(
+        text = "Buenos días, $displayName",
+        color = GymRoutineColors.TextPrimary,
+        fontSize = 28.sp,
+        fontWeight = FontWeight.Bold,
+        letterSpacing = (-0.56).sp,
+        modifier = Modifier.fillMaxWidth(),
+    )
+}
+
+// ── Section 2: Real Horizontal Calendar ──────────────────────────────────────
+@Composable
+private fun CalendarSection(
+    days: List<DayItem>,
+    todayIndex: Int,
+) {
+    val listState = rememberLazyListState()
+    val coroutine = rememberCoroutineScope()
+
+    LaunchedEffect(todayIndex) {
+        coroutine.launch {
+            listState.scrollToItem(index = (todayIndex - 2).coerceAtLeast(0))
+        }
+    }
+
+    LazyRow(
+        state = listState,
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(80.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(days.size) { i ->
+            DayCell(day = days[i])
+        }
+    }
+}
+
+@Composable
+private fun DayCell(day: DayItem) {
+    val bgColor = if (day.isToday) GymRoutineColors.Accent else GymRoutineColors.BgCard
+    val textColor = if (day.isToday) GymRoutineColors.OnAccent else GymRoutineColors.TextSecondary
+    val numColor = if (day.isToday) GymRoutineColors.OnAccent else GymRoutineColors.TextPrimary
+    val numWeight = if (day.isToday) FontWeight.Bold else FontWeight.Normal
+
+    Box(
+        modifier =
+            Modifier
+                .size(width = 60.dp, height = 72.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(bgColor)
+                .border(
+                    1.dp,
+                    if (day.isToday) GymRoutineColors.Accent else GymRoutineColors.Border,
+                    RoundedCornerShape(12.dp),
+                ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(
+                text = day.abbr,
+                color = textColor,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = day.num.toString(),
+                color = numColor,
+                fontSize = 14.sp,
+                fontWeight = numWeight,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+// ── Section 3: Workout CTA ────────────────────────────────────────────────────
+@Composable
+private fun WorkoutCTASection() {
+    Box(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(32.dp))
+                .background(GymRoutineColors.BgCard)
+                .border(1.dp, GymRoutineColors.Border, RoundedCornerShape(32.dp))
+                .padding(32.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    text = "Día de Pierna",
+                    color = GymRoutineColors.TextPrimary,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.56).sp,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Text(
+                    text = "Enfoque Hipertrofia",
+                    color = GymRoutineColors.Accent,
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(
-                        text = stat.label,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.weight(1f),
-                    )
-                    Text(
-                        text = stat.value,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
+                    Icon(Icons.Default.AccessTime, null, tint = GymRoutineColors.TextSecondary, modifier = Modifier.size(16.dp))
+                    Text("60 min", color = GymRoutineColors.TextSecondary, fontSize = 14.sp)
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Default.FitnessCenter, null, tint = GymRoutineColors.TextSecondary, modifier = Modifier.size(16.dp))
+                    Text("6 Ejercicios", color = GymRoutineColors.TextSecondary, fontSize = 14.sp)
                 }
             }
-        }
-        item {
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "Ultimo entrenamiento",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-            Spacer(Modifier.height(8.dp))
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+
+            Button(
+                onClick = {},
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .height(64.dp),
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = GymRoutineColors.Accent),
             ) {
-                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.FitnessCenter, null, tint = MaterialTheme.colorScheme.primary)
-                    Spacer(Modifier.width(12.dp))
-                    Column {
-                        Text("Empuje A", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
-                        Text("Press banca · Press hombro · Triceps", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                }
+                Icon(Icons.Default.PlayArrow, null, tint = GymRoutineColors.OnAccent, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("INICIAR ENTRENAMIENTO", color = GymRoutineColors.OnAccent, fontSize = 16.sp)
             }
         }
+
+        // "LISTO" badge – top-right overlay
+        Box(
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .clip(CircleShape)
+                    .background(GymRoutineColors.BgBadge)
+                    .border(1.dp, GymRoutineColors.Border, CircleShape)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(
+                    Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(GymRoutineColors.Accent),
+                )
+                Text(
+                    "LISTO",
+                    color = GymRoutineColors.TextPrimary,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = (0.96).sp,
+                )
+            }
+        }
+    }
+}
+
+// ── Section 4: Quick Stats Bento ─────────────────────────────────────────────
+@Composable
+private fun QuickStatsBento() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        StatCard(
+            modifier = Modifier.fillMaxWidth(),
+            icon = { Icon(Icons.Default.Star, null, tint = GymRoutineColors.GoldIcon, modifier = Modifier.size(15.dp)) },
+            label = "RÉCORDS ESTA SEMANA",
+            bigNumber = "3",
+            bigUnit = null,
+            subtitle = "Squat, Deadlift, OHP",
+        )
+
+        IntrinsicHeightRow {
+            StatCard(
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                icon = { Icon(Icons.Default.BarChart, null, tint = GymRoutineColors.BlueIcon, modifier = Modifier.size(15.dp)) },
+                label = "VOLUMEN\nTOTAL",
+                bigNumber = "24",
+                bigUnit = "k",
+                subtitle = "kg levantados",
+            )
+            Spacer(Modifier.width(12.dp))
+            StatCard(
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                icon = {
+                    Icon(
+                        Icons.AutoMirrored.Filled.TrendingUp,
+                        null,
+                        tint = GymRoutineColors.Accent,
+                        modifier = Modifier.size(15.dp),
+                    )
+                },
+                label = "CONSTANCIA",
+                bigNumber = "92",
+                bigUnit = "%",
+                subtitle = "Últimos 30 días",
+            )
+        }
+    }
+}
+
+@Composable
+private fun IntrinsicHeightRow(content: @Composable RowScope.() -> Unit) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Max),
+        content = content,
+    )
+}
+
+@Composable
+private fun StatCard(
+    modifier: Modifier = Modifier,
+    icon: @Composable () -> Unit,
+    label: String,
+    bigNumber: String,
+    bigUnit: String?,
+    subtitle: String,
+) {
+    Column(
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(32.dp))
+                .background(GymRoutineColors.BgCard)
+                .border(1.dp, GymRoutineColors.Border, RoundedCornerShape(32.dp))
+                .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            icon()
+            Text(
+                text = label,
+                color = GymRoutineColors.TextSecondary,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = (0.96).sp,
+                lineHeight = 16.sp,
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(
+                text = bigNumber,
+                color = GymRoutineColors.TextPrimary,
+                fontSize = 48.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = (-1.92).sp,
+                lineHeight = 52.8.sp,
+            )
+            if (bigUnit != null) {
+                Text(
+                    text = bigUnit,
+                    color = GymRoutineColors.TextSecondary,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+            }
+        }
+        Text(
+            text = subtitle,
+            color = GymRoutineColors.TextSecondary,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+        )
     }
 }

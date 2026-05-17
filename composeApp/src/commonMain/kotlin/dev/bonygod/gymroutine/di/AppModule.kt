@@ -5,6 +5,7 @@ import dev.bonygod.gymroutine.auth.data.datasource.AuthRemoteDataSource
 import dev.bonygod.gymroutine.auth.data.datasource.AuthRemoteDataSourceImpl
 import dev.bonygod.gymroutine.auth.data.repository.AuthRepositoryImpl
 import dev.bonygod.gymroutine.auth.domain.repository.AuthRepository
+import dev.bonygod.gymroutine.auth.domain.usecase.GetCurrentUserUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LoginUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LoginWithSocialProviderUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LogoutUseCase
@@ -12,6 +13,7 @@ import dev.bonygod.gymroutine.auth.domain.usecase.RegisterUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.SendPasswordResetUseCase
 import dev.bonygod.gymroutine.auth.ui.AuthViewModel
 import dev.bonygod.gymroutine.core.navigation.Navigator
+import dev.bonygod.gymroutine.home.ui.HomeViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
@@ -43,9 +45,11 @@ val appModule = module {
     factory { SendPasswordResetUseCase(get()) }
     factory { LogoutUseCase(get()) }
     factory { LoginWithSocialProviderUseCase(get()) }
+    factory { GetCurrentUserUseCase(get()) }
 
     // ViewModels
     viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
+    viewModel { HomeViewModel(get()) }
 }
 
 fun initKoin(config: KoinApplication.() -> Unit = {}) {

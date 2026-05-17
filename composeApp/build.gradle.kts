@@ -63,6 +63,9 @@ kotlin {
 
             // SignInKMP
             implementation("com.github.BonyGoD.SignInKMP:signin-kmp:2.0.0")
+
+            // Date & Time
+            implementation(libs.kotlinx.datetime)
         }
 
         androidMain.dependencies {
