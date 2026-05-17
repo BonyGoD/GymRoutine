@@ -117,11 +117,11 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 18.dp)
-                        .border(1.dp, Color(0xFF000000), RoundedCornerShape(30.dp))
+                        .border(1.dp, Color.White, RoundedCornerShape(30.dp))
                         .clip(RoundedCornerShape(30.dp))
                         .height(50.dp),
                     text = stringResource(Res.string.login_screen_google_access),
-                    textColor = Color.Black,
+                    textColor = Color.White,
                     icon = painterResource(Res.drawable.google_icon),
                     onSuccess = { displayName, uid, email, _ ->
                         viewModel.onEvent(AuthEvent.OnGoogleSignInSuccess(uid, displayName, email))

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -22,7 +23,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.bonygod.gymroutine.core.designsystem.GymRoutineColors
 import dev.bonygod.gymroutine.history.ui.screens.HistoryScreen
 import dev.bonygod.gymroutine.home.ui.screens.HomeScreen
 import dev.bonygod.gymroutine.profile.ui.screens.ProfileScreen
@@ -38,12 +38,13 @@ enum class BottomTab(val label: String, val icon: ImageVector) {
 @Composable
 fun MainScreen(userId: String = "") {
     var selectedTab by remember { mutableStateOf(BottomTab.Home) }
+    val colorScheme = MaterialTheme.colorScheme
 
     Scaffold(
-        containerColor = GymRoutineColors.BgPrimary,
+        containerColor = colorScheme.background,
         bottomBar = {
             NavigationBar(
-                containerColor = GymRoutineColors.NavBarBg,
+                containerColor = colorScheme.surface,
                 tonalElevation = 0.dp,
             ) {
                 BottomTab.entries.forEach { tab ->
@@ -67,11 +68,11 @@ fun MainScreen(userId: String = "") {
                         },
                         colors =
                             NavigationBarItemDefaults.colors(
-                                selectedIconColor = GymRoutineColors.Accent,
-                                selectedTextColor = GymRoutineColors.Accent,
-                                indicatorColor = GymRoutineColors.NavActiveBg,
-                                unselectedIconColor = GymRoutineColors.NavInactive,
-                                unselectedTextColor = GymRoutineColors.NavInactive,
+                                selectedIconColor = colorScheme.primary,
+                                selectedTextColor = colorScheme.primary,
+                                indicatorColor = colorScheme.surfaceVariant,
+                                unselectedIconColor = colorScheme.onSurfaceVariant,
+                                unselectedTextColor = colorScheme.onSurfaceVariant,
                             ),
                     )
                 }

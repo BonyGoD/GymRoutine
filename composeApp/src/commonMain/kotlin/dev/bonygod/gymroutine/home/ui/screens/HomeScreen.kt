@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,11 +43,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.bonygod.gymroutine.core.designsystem.GymRoutineColors
 import dev.bonygod.gymroutine.core.utils.DayItem
 import dev.bonygod.gymroutine.core.utils.buildCalendarDays
 import dev.bonygod.gymroutine.home.ui.HomeViewModel
@@ -56,18 +57,22 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
 
+private val GoldIcon = Color(0xFFE7C26C)
+private val BlueIcon = Color(0xFF00A5D7)
+
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     val userName by viewModel.userName.collectAsState()
     val today = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date }
     val days = remember(today) { buildCalendarDays(today) }
     val todayIndex = remember(days) { days.indexOfFirst { it.isToday }.coerceAtLeast(0) }
+    val colorScheme = MaterialTheme.colorScheme
 
     Column(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(GymRoutineColors.BgPrimary)
+                .background(colorScheme.background)
                 .verticalScroll(rememberScrollState()),
     ) {
         // ── Top Header ────────────────────────────────────────────────────────
@@ -81,7 +86,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
         ) {
             Text(
                 text = "GYMROUTINE",
-                color = GymRoutineColors.Accent,
+                color = colorScheme.primary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = (-1).sp,
@@ -91,8 +96,8 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                     Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(GymRoutineColors.BgAvatar)
-                        .border(1.dp, GymRoutineColors.Border, CircleShape),
+                        .background(colorScheme.surfaceVariant)
+                        .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), CircleShape),
             )
         }
 
@@ -118,7 +123,7 @@ private fun GreetingSection(userName: String) {
     val displayName = if (userName.isNotBlank()) userName else "…"
     Text(
         text = "Buenos días, $displayName",
-        color = GymRoutineColors.TextPrimary,
+        color = MaterialTheme.colorScheme.onBackground,
         fontSize = 28.sp,
         fontWeight = FontWeight.Bold,
         letterSpacing = (-0.56).sp,
@@ -157,10 +162,12 @@ private fun CalendarSection(
 
 @Composable
 private fun DayCell(day: DayItem) {
-    val bgColor = if (day.isToday) GymRoutineColors.Accent else GymRoutineColors.BgCard
-    val textColor = if (day.isToday) GymRoutineColors.OnAccent else GymRoutineColors.TextSecondary
-    val numColor = if (day.isToday) GymRoutineColors.OnAccent else GymRoutineColors.TextPrimary
+    val colorScheme = MaterialTheme.colorScheme
+    val bgColor = if (day.isToday) colorScheme.primary else colorScheme.surface
+    val textColor = if (day.isToday) colorScheme.onPrimary else colorScheme.onSurfaceVariant
+    val numColor = if (day.isToday) colorScheme.onPrimary else colorScheme.onSurface
     val numWeight = if (day.isToday) FontWeight.Bold else FontWeight.Normal
+    val borderColor = if (day.isToday) colorScheme.primary else colorScheme.outline.copy(alpha = 0.15f)
 
     Box(
         modifier =
@@ -168,11 +175,7 @@ private fun DayCell(day: DayItem) {
                 .size(width = 60.dp, height = 72.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(bgColor)
-                .border(
-                    1.dp,
-                    if (day.isToday) GymRoutineColors.Accent else GymRoutineColors.Border,
-                    RoundedCornerShape(12.dp),
-                ),
+                .border(1.dp, borderColor, RoundedCornerShape(12.dp)),
         contentAlignment = Alignment.Center,
     ) {
         Column(
@@ -200,13 +203,14 @@ private fun DayCell(day: DayItem) {
 // ── Section 3: Workout CTA ────────────────────────────────────────────────────
 @Composable
 private fun WorkoutCTASection() {
+    val colorScheme = MaterialTheme.colorScheme
     Box(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(32.dp))
-                .background(GymRoutineColors.BgCard)
-                .border(1.dp, GymRoutineColors.Border, RoundedCornerShape(32.dp))
+                .background(colorScheme.surface)
+                .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(32.dp))
                 .padding(32.dp),
     ) {
         Column(
@@ -219,7 +223,7 @@ private fun WorkoutCTASection() {
             ) {
                 Text(
                     text = "Día de Pierna",
-                    color = GymRoutineColors.TextPrimary,
+                    color = colorScheme.onSurface,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = (-0.56).sp,
@@ -227,7 +231,7 @@ private fun WorkoutCTASection() {
                 )
                 Text(
                     text = "Enfoque Hipertrofia",
-                    color = GymRoutineColors.Accent,
+                    color = colorScheme.primary,
                     fontSize = 16.sp,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -245,15 +249,15 @@ private fun WorkoutCTASection() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Default.AccessTime, null, tint = GymRoutineColors.TextSecondary, modifier = Modifier.size(16.dp))
-                    Text("60 min", color = GymRoutineColors.TextSecondary, fontSize = 14.sp)
+                    Icon(Icons.Default.AccessTime, null, tint = colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
+                    Text("60 min", color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Default.FitnessCenter, null, tint = GymRoutineColors.TextSecondary, modifier = Modifier.size(16.dp))
-                    Text("6 Ejercicios", color = GymRoutineColors.TextSecondary, fontSize = 14.sp)
+                    Icon(Icons.Default.FitnessCenter, null, tint = colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
+                    Text("6 Ejercicios", color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 }
             }
 
@@ -265,11 +269,11 @@ private fun WorkoutCTASection() {
                         .padding(top = 16.dp)
                         .height(64.dp),
                 shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = GymRoutineColors.Accent),
+                colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
             ) {
-                Icon(Icons.Default.PlayArrow, null, tint = GymRoutineColors.OnAccent, modifier = Modifier.size(20.dp))
+                Icon(Icons.Default.PlayArrow, null, tint = colorScheme.onPrimary, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("INICIAR ENTRENAMIENTO", color = GymRoutineColors.OnAccent, fontSize = 16.sp)
+                Text("INICIAR ENTRENAMIENTO", color = colorScheme.onPrimary, fontSize = 16.sp)
             }
         }
 
@@ -279,8 +283,8 @@ private fun WorkoutCTASection() {
                 Modifier
                     .align(Alignment.TopEnd)
                     .clip(CircleShape)
-                    .background(GymRoutineColors.BgBadge)
-                    .border(1.dp, GymRoutineColors.Border, CircleShape)
+                    .background(colorScheme.surfaceVariant)
+                    .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), CircleShape)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Row(
@@ -291,11 +295,11 @@ private fun WorkoutCTASection() {
                     Modifier
                         .size(8.dp)
                         .clip(CircleShape)
-                        .background(GymRoutineColors.Accent),
+                        .background(colorScheme.primary),
                 )
                 Text(
                     "LISTO",
-                    color = GymRoutineColors.TextPrimary,
+                    color = colorScheme.onSurface,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = (0.96).sp,
@@ -308,13 +312,14 @@ private fun WorkoutCTASection() {
 // ── Section 4: Quick Stats Bento ─────────────────────────────────────────────
 @Composable
 private fun QuickStatsBento() {
+    val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         StatCard(
             modifier = Modifier.fillMaxWidth(),
-            icon = { Icon(Icons.Default.Star, null, tint = GymRoutineColors.GoldIcon, modifier = Modifier.size(15.dp)) },
+            icon = { Icon(Icons.Default.Star, null, tint = GoldIcon, modifier = Modifier.size(15.dp)) },
             label = "RÉCORDS ESTA SEMANA",
             bigNumber = "3",
             bigUnit = null,
@@ -324,7 +329,7 @@ private fun QuickStatsBento() {
         IntrinsicHeightRow {
             StatCard(
                 modifier = Modifier.weight(1f).fillMaxHeight(),
-                icon = { Icon(Icons.Default.BarChart, null, tint = GymRoutineColors.BlueIcon, modifier = Modifier.size(15.dp)) },
+                icon = { Icon(Icons.Default.BarChart, null, tint = BlueIcon, modifier = Modifier.size(15.dp)) },
                 label = "VOLUMEN\nTOTAL",
                 bigNumber = "24",
                 bigUnit = "k",
@@ -337,7 +342,7 @@ private fun QuickStatsBento() {
                     Icon(
                         Icons.AutoMirrored.Filled.TrendingUp,
                         null,
-                        tint = GymRoutineColors.Accent,
+                        tint = colorScheme.primary,
                         modifier = Modifier.size(15.dp),
                     )
                 },
@@ -370,12 +375,13 @@ private fun StatCard(
     bigUnit: String?,
     subtitle: String,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier =
             modifier
                 .clip(RoundedCornerShape(32.dp))
-                .background(GymRoutineColors.BgCard)
-                .border(1.dp, GymRoutineColors.Border, RoundedCornerShape(32.dp))
+                .background(colorScheme.surface)
+                .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(32.dp))
                 .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -390,7 +396,7 @@ private fun StatCard(
             icon()
             Text(
                 text = label,
-                color = GymRoutineColors.TextSecondary,
+                color = colorScheme.onSurfaceVariant,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = (0.96).sp,
@@ -404,7 +410,7 @@ private fun StatCard(
         ) {
             Text(
                 text = bigNumber,
-                color = GymRoutineColors.TextPrimary,
+                color = colorScheme.onSurface,
                 fontSize = 48.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = (-1.92).sp,
@@ -413,7 +419,7 @@ private fun StatCard(
             if (bigUnit != null) {
                 Text(
                     text = bigUnit,
-                    color = GymRoutineColors.TextSecondary,
+                    color = colorScheme.onSurfaceVariant,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
@@ -421,7 +427,7 @@ private fun StatCard(
         }
         Text(
             text = subtitle,
-            color = GymRoutineColors.TextSecondary,
+            color = colorScheme.onSurfaceVariant,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium,
         )
