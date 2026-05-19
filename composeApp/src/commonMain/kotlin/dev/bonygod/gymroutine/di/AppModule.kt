@@ -14,6 +14,15 @@ import dev.bonygod.gymroutine.auth.domain.usecase.SendPasswordResetUseCase
 import dev.bonygod.gymroutine.auth.ui.AuthViewModel
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.home.ui.HomeViewModel
+import dev.bonygod.gymroutine.routines.data.datasource.RoutineRemoteDataSource
+import dev.bonygod.gymroutine.routines.data.datasource.RoutineRemoteDataSourceImpl
+import dev.bonygod.gymroutine.routines.data.repository.RoutineRepositoryImpl
+import dev.bonygod.gymroutine.routines.domain.repository.RoutineRepository
+import dev.bonygod.gymroutine.routines.domain.usecase.CreateRoutineUseCase
+import dev.bonygod.gymroutine.routines.domain.usecase.DeleteRoutineUseCase
+import dev.bonygod.gymroutine.routines.domain.usecase.GetRoutinesUseCase
+import dev.bonygod.gymroutine.routines.domain.usecase.UpdateRoutineUseCase
+import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
@@ -47,9 +56,20 @@ val appModule = module {
     factory { LoginWithSocialProviderUseCase(get()) }
     factory { GetCurrentUserUseCase(get()) }
 
+    // Routines data layer
+    single<RoutineRemoteDataSource> { RoutineRemoteDataSourceImpl(get()) }
+    single<RoutineRepository> { RoutineRepositoryImpl(get()) }
+
+    // Routines use cases
+    factory { GetRoutinesUseCase(get()) }
+    factory { CreateRoutineUseCase(get()) }
+    factory { UpdateRoutineUseCase(get()) }
+    factory { DeleteRoutineUseCase(get()) }
+
     // ViewModels
     viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
     viewModel { HomeViewModel(get()) }
+    viewModel { RoutinesViewModel(get(), get(), get(), get(), get()) }
 }
 
 fun initKoin(config: KoinApplication.() -> Unit = {}) {

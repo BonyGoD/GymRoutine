@@ -10,4 +10,8 @@ sealed class Routes {
     data class Main(
         val userId: String,
     ) : Routes()
+
+    data object AddRoutine : Routes()
+
+    data class EditRoutine(val routineId: String) : Routes()
 }

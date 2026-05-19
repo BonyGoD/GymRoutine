@@ -1,0 +1,18 @@
+package dev.bonygod.gymroutine.routines.data.mapper
+
+import dev.bonygod.gymroutine.routines.domain.model.Exercise
+import dev.bonygod.gymroutine.routines.domain.model.Routine
+
+internal fun Exercise.toMap(): Map<String, Any> = mapOf(
+    "name" to name,
+    "reps" to reps,
+    "sets" to sets,
+    "weight" to weight,
+    "restSeconds" to restSeconds,
+    "days" to days,
+)
+
+internal fun Routine.toMap(): Map<String, Any> = mapOf(
+    "name" to name,
+    "exercises" to exercises.map { it.toMap() },
+)

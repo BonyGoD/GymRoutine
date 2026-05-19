@@ -15,18 +15,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.history.ui.screens.HistoryScreen
 import dev.bonygod.gymroutine.home.ui.screens.HomeScreen
 import dev.bonygod.gymroutine.profile.ui.screens.ProfileScreen
 import dev.bonygod.gymroutine.routines.ui.screens.RoutinesScreen
+import org.koin.compose.koinInject
 
 enum class BottomTab(val label: String, val icon: ImageVector) {
     Home("Inicio", Icons.Default.Home),
@@ -36,8 +36,8 @@ enum class BottomTab(val label: String, val icon: ImageVector) {
 }
 
 @Composable
-fun MainScreen(userId: String = "") {
-    var selectedTab by remember { mutableStateOf(BottomTab.Home) }
+fun MainScreen(userId: String = "", navigator: Navigator = koinInject()) {
+    var selectedTab by navigator.currentTab
     val colorScheme = MaterialTheme.colorScheme
 
     Scaffold(
@@ -67,13 +67,13 @@ fun MainScreen(userId: String = "") {
                             )
                         },
                         colors =
-                            NavigationBarItemDefaults.colors(
-                                selectedIconColor = colorScheme.primary,
-                                selectedTextColor = colorScheme.primary,
-                                indicatorColor = colorScheme.surfaceVariant,
-                                unselectedIconColor = colorScheme.onSurfaceVariant,
-                                unselectedTextColor = colorScheme.onSurfaceVariant,
-                            ),
+                        NavigationBarItemDefaults.colors(
+                            selectedIconColor = colorScheme.primary,
+                            selectedTextColor = colorScheme.primary,
+                            indicatorColor = colorScheme.surfaceVariant,
+                            unselectedIconColor = colorScheme.onSurfaceVariant,
+                            unselectedTextColor = colorScheme.onSurfaceVariant,
+                        ),
                     )
                 }
             }

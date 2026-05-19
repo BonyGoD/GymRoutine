@@ -70,17 +70,17 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
 
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .background(colorScheme.background)
-                .verticalScroll(rememberScrollState()),
+        Modifier
+            .fillMaxSize()
+            .background(colorScheme.background)
+            .verticalScroll(rememberScrollState()),
     ) {
         // ── Top Header ────────────────────────────────────────────────────────
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -93,20 +93,20 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             )
             Box(
                 modifier =
-                    Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(colorScheme.surfaceVariant)
-                        .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), CircleShape),
+                Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(colorScheme.surfaceVariant)
+                    .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), CircleShape),
             )
         }
 
         // ── Main content ──────────────────────────────────────────────────────
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp, bottom = 128.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 24.dp, end = 24.dp, bottom = 128.dp),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
             GreetingSection(userName = userName)
@@ -149,9 +149,9 @@ private fun CalendarSection(
     LazyRow(
         state = listState,
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .height(80.dp),
+        Modifier
+            .fillMaxWidth()
+            .height(80.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(days.size) { i ->
@@ -171,11 +171,11 @@ private fun DayCell(day: DayItem) {
 
     Box(
         modifier =
-            Modifier
-                .size(width = 60.dp, height = 72.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(bgColor)
-                .border(1.dp, borderColor, RoundedCornerShape(12.dp)),
+        Modifier
+            .size(width = 60.dp, height = 72.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(bgColor)
+            .border(1.dp, borderColor, RoundedCornerShape(12.dp)),
         contentAlignment = Alignment.Center,
     ) {
         Column(
@@ -206,12 +206,12 @@ private fun WorkoutCTASection() {
     val colorScheme = MaterialTheme.colorScheme
     Box(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(32.dp))
-                .background(colorScheme.surface)
-                .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(32.dp))
-                .padding(32.dp),
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(32.dp))
+            .background(colorScheme.surface)
+            .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(32.dp))
+            .padding(32.dp),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -239,9 +239,9 @@ private fun WorkoutCTASection() {
 
             Row(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -264,10 +264,10 @@ private fun WorkoutCTASection() {
             Button(
                 onClick = {},
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp)
-                        .height(64.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+                    .height(64.dp),
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
             ) {
@@ -280,12 +280,12 @@ private fun WorkoutCTASection() {
         // "LISTO" badge – top-right overlay
         Box(
             modifier =
-                Modifier
-                    .align(Alignment.TopEnd)
-                    .clip(CircleShape)
-                    .background(colorScheme.surfaceVariant)
-                    .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), CircleShape)
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            Modifier
+                .align(Alignment.TopEnd)
+                .clip(CircleShape)
+                .background(colorScheme.surfaceVariant)
+                .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), CircleShape)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -359,9 +359,9 @@ private fun QuickStatsBento() {
 private fun IntrinsicHeightRow(content: @Composable RowScope.() -> Unit) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Max),
+        Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max),
         content = content,
     )
 }
@@ -378,18 +378,18 @@ private fun StatCard(
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier =
-            modifier
-                .clip(RoundedCornerShape(32.dp))
-                .background(colorScheme.surface)
-                .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(32.dp))
-                .padding(24.dp),
+        modifier
+            .clip(RoundedCornerShape(32.dp))
+            .background(colorScheme.surface)
+            .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(32.dp))
+            .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
