@@ -69,7 +69,7 @@ val appModule = module {
     // ViewModels
     viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
     viewModel { HomeViewModel(get()) }
-    viewModel { RoutinesViewModel(get(), get(), get(), get(), get()) }
+    viewModel { RoutinesViewModel(get(), get(), get(), get(), get(), get()) }
 }
 
 fun initKoin(config: KoinApplication.() -> Unit = {}) {

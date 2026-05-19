@@ -26,8 +26,12 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,118 +41,121 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.bonygod.gymroutine.core.navigation.Navigator
-import dev.bonygod.gymroutine.core.navigation.Routes
 import dev.bonygod.gymroutine.routines.domain.model.Routine
-import dev.bonygod.gymroutine.routines.ui.RoutinesUiState
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
-import org.koin.compose.koinInject
+import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEffect
+import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEvent
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RoutinesScreen(
-    navigator: Navigator = koinInject(),
     viewModel: RoutinesViewModel = koinViewModel(),
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    val uiState by viewModel.uiState.collectAsState()
+    val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorScheme.background),
-    ) {
-        // ── Header fijo ───────────────────────────────────────────────────────
-        Text(
-            text = "Tus Rutinas",
-            color = colorScheme.primary,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = (-0.56).sp,
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is RoutinesEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
+            }
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 96.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
-        )
+                .fillMaxSize()
+                .background(colorScheme.background),
+        ) {
+            // ── Header fijo ───────────────────────────────────────────────────
+            Text(
+                text = "Tus Rutinas",
+                color = colorScheme.primary,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = (-0.56).sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 96.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
+            )
 
-        // ── Contenido scrollable ──────────────────────────────────────────────
-        when (uiState) {
-            is RoutinesUiState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is RoutinesUiState.Error -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(24.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = (uiState as RoutinesUiState.Error).message.ifEmpty { "Error al cargar rutinas" },
-                        color = colorScheme.onSurfaceVariant,
-                        fontSize = 16.sp,
-                    )
-                }
-            }
-
-            is RoutinesUiState.Success -> {
-                val routines = (uiState as RoutinesUiState.Success).routines
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState())
-                        .padding(start = 24.dp, end = 24.dp, bottom = 128.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    routines.forEach { routine ->
-                        RoutineCard(
-                            routine = routine,
-                            onEdit = { navigator.navigateTo(Routes.EditRoutine(routine.id)) },
-                            onDelete = { viewModel.onDeleteRoutine(routine.id) },
-                        )
-                    }
-
-                    // ── Create New Routine ────────────────────────────────────
+            // ── Contenido ─────────────────────────────────────────────────────
+            when {
+                state.isLoading -> {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(20.dp))
-                            .border(
-                                width = 1.dp,
-                                color = colorScheme.outline.copy(alpha = 0.3f),
-                                shape = RoundedCornerShape(20.dp),
-                            )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                            ) { navigator.navigateTo(Routes.AddRoutine) }
-                            .padding(vertical = 16.dp),
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        CircularProgressIndicator()
+                    }
+                }
+
+                else -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                            .padding(start = 24.dp, end = 24.dp, bottom = 128.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        state.routines.forEach { routine ->
+                            RoutineCard(
+                                routine = routine,
+                                onEdit = { viewModel.onEvent(RoutinesEvent.OnNavigateToEditRoutine(routine.id)) },
+                                onDelete = { viewModel.onEvent(RoutinesEvent.OnDeleteRoutine(routine.id)) },
+                            )
+                        }
+
+                        // ── Crear rutina ──────────────────────────────────────
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(20.dp))
+                                .border(
+                                    width = 1.dp,
+                                    color = colorScheme.outline.copy(alpha = 0.3f),
+                                    shape = RoundedCornerShape(20.dp),
+                                )
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                ) { viewModel.onEvent(RoutinesEvent.OnNavigateToAddRoutine) }
+                                .padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center,
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                tint = colorScheme.primary,
-                                modifier = Modifier.size(20.dp),
-                            )
-                            Text(
-                                text = "Crear Rutina Personalizada",
-                                color = colorScheme.primary,
-                                fontSize = 16.sp,
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = null,
+                                    tint = colorScheme.primary,
+                                    modifier = Modifier.size(20.dp),
+                                )
+                                Text(
+                                    text = "Crear Rutina Personalizada",
+                                    color = colorScheme.primary,
+                                    fontSize = 16.sp,
+                                )
+                            }
                         }
                     }
                 }
             }
+        }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        ) { data ->
+            Snackbar(
+                snackbarData = data,
+                containerColor = colorScheme.surfaceVariant,
+                contentColor = colorScheme.onSurface,
+            )
         }
     }
 }
@@ -227,7 +234,6 @@ private fun RoutineCard(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Empezar button
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -255,7 +261,6 @@ private fun RoutineCard(
                 }
             }
 
-            // Edit button
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -276,7 +281,6 @@ private fun RoutineCard(
                 )
             }
 
-            // Delete button
             Box(
                 modifier = Modifier
                     .size(48.dp)

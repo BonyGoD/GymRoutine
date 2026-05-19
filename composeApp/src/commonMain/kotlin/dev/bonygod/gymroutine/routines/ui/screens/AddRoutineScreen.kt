@@ -44,12 +44,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.routines.domain.model.Exercise
 import dev.bonygod.gymroutine.routines.domain.model.Routine
-import dev.bonygod.gymroutine.routines.ui.RoutinesUiState
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
-import org.koin.compose.koinInject
+import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEvent
 import org.koin.compose.viewmodel.koinViewModel
 
 // ── Estado interno del formulario de ejercicio ────────────────────────────────
@@ -86,14 +84,13 @@ private fun Exercise.toForm() = ExerciseForm(
 @Composable
 fun AddRoutineScreen(
     routineId: String? = null,
-    navigator: Navigator = koinInject(),
     viewModel: RoutinesViewModel = koinViewModel(),
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    val uiState by viewModel.uiState.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     val existing = routineId?.let {
-        (uiState as? RoutinesUiState.Success)?.routines?.firstOrNull { it.id == routineId }
+        state.routines.firstOrNull { it.id == routineId }
     }
 
     val isEdit = routineId != null
@@ -129,7 +126,7 @@ fun AddRoutineScreen(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                    ) { navigator.goBack() },
+                    ) { viewModel.onEvent(RoutinesEvent.OnBackClick) },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -397,11 +394,10 @@ fun AddRoutineScreen(
                             exercises = exercises.map { it.toExercise() },
                         )
                         if (isEdit) {
-                            viewModel.onUpdateRoutine(routine)
+                            viewModel.onEvent(RoutinesEvent.OnUpdateRoutine(routine))
                         } else {
-                            viewModel.onCreateRoutine(routine)
+                            viewModel.onEvent(RoutinesEvent.OnCreateRoutine(routine))
                         }
-                        navigator.goBack()
                     }
                     .padding(vertical = 16.dp),
                 contentAlignment = Alignment.Center,
