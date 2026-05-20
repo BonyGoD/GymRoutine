@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.bonygod.gymroutine.core.utils.formatDays
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
 import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEffect
@@ -97,7 +98,7 @@ fun RoutinesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .verticalScroll(rememberScrollState())
-                            .padding(start = 24.dp, end = 24.dp, bottom = 128.dp),
+                            .padding(start = 24.dp, end = 24.dp, bottom = 88.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         state.routines.forEach { routine ->
@@ -107,42 +108,50 @@ fun RoutinesScreen(
                                 onDelete = { viewModel.onEvent(RoutinesEvent.OnDeleteRoutine(routine.id)) },
                             )
                         }
-
-                        // ── Crear rutina ──────────────────────────────────────
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(20.dp))
-                                .border(
-                                    width = 1.dp,
-                                    color = colorScheme.outline.copy(alpha = 0.3f),
-                                    shape = RoundedCornerShape(20.dp),
-                                )
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                ) { viewModel.onEvent(RoutinesEvent.OnNavigateToAddRoutine) }
-                                .padding(vertical = 16.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = null,
-                                    tint = colorScheme.primary,
-                                    modifier = Modifier.size(20.dp),
-                                )
-                                Text(
-                                    text = "Crear Rutina Personalizada",
-                                    color = colorScheme.primary,
-                                    fontSize = 16.sp,
-                                )
-                            }
-                        }
                     }
+                }
+            }
+        }
+
+        // ── Botón fijo: Crear Rutina ──────────────────────────────────────────
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(start = 24.dp, end = 24.dp, bottom = 16.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(colorScheme.surface)
+                    .border(
+                        width = 1.dp,
+                        color = colorScheme.outline.copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(20.dp),
+                    )
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { viewModel.onEvent(RoutinesEvent.OnNavigateToAddRoutine) }
+                    .padding(vertical = 16.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                        tint = colorScheme.primary,
+                        modifier = Modifier.size(20.dp),
+                    )
+                    Text(
+                        text = "Crear Rutina Personalizada",
+                        color = colorScheme.primary,
+                        fontSize = 16.sp,
+                    )
                 }
             }
         }
@@ -218,7 +227,7 @@ private fun RoutineCard(
                     modifier = Modifier.size(12.dp),
                 )
                 Text(
-                    text = routine.exercises.map { it.days }.distinct().joinToString(", "),
+                    text = formatDays(routine.days),
                     color = colorScheme.onSurfaceVariant,
                     fontSize = 14.sp,
                     lineHeight = 20.sp,

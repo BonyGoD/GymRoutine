@@ -1,11 +1,8 @@
 package dev.bonygod.gymroutine
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ViewList
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -17,23 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.bonygod.gymroutine.core.navigation.BottomTab
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.history.ui.screens.HistoryScreen
 import dev.bonygod.gymroutine.home.ui.screens.HomeScreen
 import dev.bonygod.gymroutine.profile.ui.screens.ProfileScreen
 import dev.bonygod.gymroutine.routines.ui.screens.RoutinesScreen
 import org.koin.compose.koinInject
-
-enum class BottomTab(val label: String, val icon: ImageVector) {
-    Home("Inicio", Icons.Default.Home),
-    Routines("Rutinas", Icons.AutoMirrored.Filled.ViewList),
-    History("Historial", Icons.Default.History),
-    Profile("Perfil", Icons.Default.Person),
-}
 
 @Composable
 fun MainScreen(userId: String = "", navigator: Navigator = koinInject()) {
@@ -78,12 +68,14 @@ fun MainScreen(userId: String = "", navigator: Navigator = koinInject()) {
                 }
             }
         },
-    ) { _ ->
-        when (selectedTab) {
-            BottomTab.Home -> HomeScreen()
-            BottomTab.Routines -> RoutinesScreen()
-            BottomTab.History -> HistoryScreen()
-            BottomTab.Profile -> ProfileScreen(userId = userId)
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())) {
+            when (selectedTab) {
+                BottomTab.Home -> HomeScreen()
+                BottomTab.Routines -> RoutinesScreen()
+                BottomTab.History -> HistoryScreen()
+                BottomTab.Profile -> ProfileScreen(userId = userId)
+            }
         }
     }
 }

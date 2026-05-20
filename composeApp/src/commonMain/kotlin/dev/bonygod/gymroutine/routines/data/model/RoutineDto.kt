@@ -7,5 +7,6 @@ import kotlinx.serialization.Transient
 data class RoutineDto(
     @Transient val id: String = "",
     val name: String = "",
+    val days: String = "",
     val exercises: List<ExerciseDto> = emptyList(),
 )

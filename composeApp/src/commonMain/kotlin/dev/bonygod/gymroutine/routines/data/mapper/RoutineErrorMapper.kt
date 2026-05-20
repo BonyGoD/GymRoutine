@@ -15,4 +15,15 @@ internal fun Exception.toRoutineError(): RoutineError {
     }
 }
 
+internal fun <T> Result<T>.mapError(): Result<T> = fold(
+    onSuccess = { Result.success(it) },
+    onFailure = { throwable ->
+        if (throwable is Exception) {
+            Result.failure(throwable.toRoutineError())
+        } else {
+            Result.failure(throwable)
+        }
+    },
+)
+
 private fun String.containsAny(vararg keywords: String) = keywords.any { this.contains(it, ignoreCase = true) }

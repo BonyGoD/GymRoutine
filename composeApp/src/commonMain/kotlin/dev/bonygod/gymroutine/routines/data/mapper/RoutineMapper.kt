@@ -9,10 +9,10 @@ internal fun Exercise.toMap(): Map<String, Any> = mapOf(
     "sets" to sets,
     "weight" to weight,
     "restSeconds" to restSeconds,
-    "days" to days,
 )
 
 internal fun Routine.toMap(): Map<String, Any> = mapOf(
     "name" to name,
+    "days" to days,
     "exercises" to exercises.map { it.toMap() },
 )

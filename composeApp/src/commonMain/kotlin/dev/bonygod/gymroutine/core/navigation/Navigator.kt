@@ -3,7 +3,6 @@ package dev.bonygod.gymroutine.core.navigation
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import dev.bonygod.gymroutine.BottomTab
 
 class Navigator {
     private val _backStack: SnapshotStateList<Any> = mutableStateListOf(Routes.Login)

@@ -5,6 +5,8 @@ import dev.bonygod.gymroutine.routines.data.model.RoutineDto
 import dev.bonygod.gymroutine.routines.domain.mapper.toDomain
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 private const val USERS_COLLECTION = "users"
 private const val ROUTINES_COLLECTION = "routines"
@@ -23,6 +25,12 @@ class RoutineRemoteDataSourceImpl(
 
     override suspend fun getRoutines(userId: String): List<Routine> = routinesRef(userId).get().documents.map { doc ->
         doc.data<RoutineDto>().copy(id = doc.reference.id).toDomain()
+    }
+
+    override fun getRoutinesFlow(userId: String): Flow<List<Routine>> = routinesRef(userId).snapshots.map { snapshot ->
+        snapshot.documents.map { doc ->
+            doc.data<RoutineDto>().copy(id = doc.reference.id).toDomain()
+        }
     }
 
     override suspend fun getRoutineById(userId: String, routineId: String): Routine {

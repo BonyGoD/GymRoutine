@@ -6,5 +6,4 @@ data class Exercise(
     val sets: Int,
     val weight: Float,
     val restSeconds: Int,
-    val days: String,
 )

@@ -5,6 +5,9 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+val GoldIcon = Color(0xFFE7C26C)
+val BlueIcon = Color(0xFF00A5D7)
+
 val Primary = Color(0xFFE53935)
 val OnPrimary = Color(0xFFFFFFFF)
 val PrimaryContainer = Color(0xFF7F0000)

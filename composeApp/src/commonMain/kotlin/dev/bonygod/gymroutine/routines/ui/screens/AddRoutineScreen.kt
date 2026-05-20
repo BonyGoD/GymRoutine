@@ -44,42 +44,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.bonygod.gymroutine.routines.domain.model.Exercise
+import dev.bonygod.gymroutine.core.utils.Day
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
 import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEvent
+import dev.bonygod.gymroutine.routines.ui.mapper.toExercise
+import dev.bonygod.gymroutine.routines.ui.mapper.toForm
+import dev.bonygod.gymroutine.routines.ui.model.ExerciseForm
 import org.koin.compose.viewmodel.koinViewModel
-
-// ── Estado interno del formulario de ejercicio ────────────────────────────────
-
-private data class ExerciseForm(
-    val name: String = "",
-    val sets: String = "",
-    val reps: String = "",
-    val weight: String = "",
-    val restSeconds: String = "",
-    val days: String = "",
-)
-
-private fun ExerciseForm.toExercise() = Exercise(
-    name = name,
-    sets = sets.toIntOrNull() ?: 0,
-    reps = reps.toIntOrNull() ?: 0,
-    weight = weight.toFloatOrNull() ?: 0f,
-    restSeconds = restSeconds.toIntOrNull() ?: 0,
-    days = days,
-)
-
-private fun Exercise.toForm() = ExerciseForm(
-    name = name,
-    sets = if (sets == 0) "" else sets.toString(),
-    reps = if (reps == 0) "" else reps.toString(),
-    weight = if (weight == 0f) "" else weight.toString(),
-    restSeconds = if (restSeconds == 0) "" else restSeconds.toString(),
-    days = days,
-)
-
-// ── Pantalla ──────────────────────────────────────────────────────────────────
 
 @Composable
 fun AddRoutineScreen(
@@ -96,6 +68,14 @@ fun AddRoutineScreen(
     val isEdit = routineId != null
 
     var routineName by remember(existing) { mutableStateOf(existing?.name ?: "") }
+    var routineDays by remember(existing) {
+        mutableStateOf(
+            existing?.days?.split(",")
+                ?.map { it.trim().uppercase() }
+                ?.filter { abbr -> Day.fromAbbr(abbr) != null }
+                ?.toSet() ?: emptySet(),
+        )
+    }
     val exercises = remember(existing) {
         mutableStateListOf<ExerciseForm>().also { list ->
             existing?.exercises?.forEach { list.add(it.toForm()) }
@@ -186,6 +166,12 @@ fun AddRoutineScreen(
                 )
             }
 
+            // ── Días de la rutina ────────────────────────────────────────────
+            DayPickerField(
+                selectedDays = routineDays,
+                onDaysChange = { routineDays = it },
+            )
+
             // ── Lista de ejercicios añadidos ──────────────────────────────────
             if (exercises.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -275,13 +261,6 @@ fun AddRoutineScreen(
                             modifier = Modifier.weight(1f),
                         )
                     }
-                    FormField(
-                        label = "Días",
-                        value = draft.days,
-                        placeholder = "Ej: Lun, Jue",
-                        onValueChange = { draft = draft.copy(days = it) },
-                    )
-
                     // Acciones del formulario
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Box(
@@ -391,6 +370,7 @@ fun AddRoutineScreen(
                         val routine = Routine(
                             id = existing?.id ?: "",
                             name = routineName,
+                            days = Day.entries.filter { it.abbr in routineDays }.joinToString(",") { it.abbr },
                             exercises = exercises.map { it.toExercise() },
                         )
                         if (isEdit) {
@@ -442,7 +422,6 @@ private fun ExerciseItem(exercise: ExerciseForm, onEdit: () -> Unit, onDelete: (
                 if (exercise.sets.isNotBlank()) add("${exercise.sets} series")
                 if (exercise.reps.isNotBlank()) add("${exercise.reps} reps")
                 if (exercise.weight.isNotBlank()) add("${exercise.weight} kg")
-                if (exercise.days.isNotBlank()) add(exercise.days)
             }.joinToString(" · ")
             if (meta.isNotBlank()) {
                 Text(
@@ -488,6 +467,61 @@ private fun ExerciseItem(exercise: ExerciseForm, onEdit: () -> Unit, onDelete: (
                     tint = colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(16.dp),
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DayPickerField(
+    selectedDays: Set<String>,
+    onDaysChange: (Set<String>) -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            text = "Días",
+            color = colorScheme.onSurfaceVariant,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            Day.entries.forEach { day ->
+                val isSelected = day.abbr in selectedDays
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(
+                            if (isSelected) colorScheme.primary else colorScheme.background,
+                        )
+                        .border(
+                            1.dp,
+                            if (isSelected) colorScheme.primary else colorScheme.outline.copy(alpha = 0.3f),
+                            RoundedCornerShape(8.dp),
+                        )
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) {
+                            onDaysChange(
+                                if (isSelected) selectedDays - day.abbr else selectedDays + day.abbr,
+                            )
+                        }
+                        .padding(vertical = 9.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = day.display,
+                        color = if (isSelected) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+                        fontSize = 11.sp,
+                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                }
             }
         }
     }
