@@ -42,10 +42,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.utils.formatDays
+import dev.bonygod.gymroutine.core.navigation.Navigator
+import dev.bonygod.gymroutine.core.navigation.Routes
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
 import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEffect
 import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEvent
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -55,6 +58,7 @@ fun RoutinesScreen(
     val colorScheme = MaterialTheme.colorScheme
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val navigator: Navigator = koinInject()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -104,6 +108,14 @@ fun RoutinesScreen(
                         state.routines.forEach { routine ->
                             RoutineCard(
                                 routine = routine,
+                                onStart = {
+                                    navigator.navigateTo(
+                                        Routes.Workout(
+                                            routineId = routine.id,
+                                            routineName = routine.name,
+                                        ),
+                                    )
+                                },
                                 onEdit = { viewModel.onEvent(RoutinesEvent.OnNavigateToEditRoutine(routine.id)) },
                                 onDelete = { viewModel.onEvent(RoutinesEvent.OnDeleteRoutine(routine.id)) },
                             )
@@ -172,6 +184,7 @@ fun RoutinesScreen(
 @Composable
 private fun RoutineCard(
     routine: Routine,
+    onStart: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
 ) {
@@ -248,6 +261,10 @@ private fun RoutineCard(
                     .weight(1f)
                     .clip(CircleShape)
                     .background(colorScheme.primary)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { onStart() }
                     .padding(vertical = 12.dp),
                 contentAlignment = Alignment.Center,
             ) {

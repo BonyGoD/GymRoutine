@@ -27,9 +27,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -54,13 +54,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.bonygod.gymroutine.core.theme.BlueIcon
 import dev.bonygod.gymroutine.core.theme.GoldIcon
+import dev.bonygod.gymroutine.core.theme.OrangeIcon
 import dev.bonygod.gymroutine.core.utils.DayItem
 import dev.bonygod.gymroutine.core.utils.buildCalendarDays
 import dev.bonygod.gymroutine.core.utils.dayAbbrToFullName
 import dev.bonygod.gymroutine.core.utils.monthName
 import dev.bonygod.gymroutine.home.ui.HomeViewModel
+import dev.bonygod.gymroutine.home.ui.interactions.HomeEvent
 import dev.bonygod.gymroutine.routines.domain.mapper.hasRoutineForDay
 import dev.bonygod.gymroutine.routines.domain.mapper.routinesForDay
 import dev.bonygod.gymroutine.routines.domain.model.Exercise
@@ -74,8 +75,7 @@ import kotlin.time.Clock
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
-    val userName by viewModel.userName.collectAsState()
-    val routines by viewModel.routines.collectAsState()
+    val state by viewModel.state.collectAsState()
     val today = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date }
     val days = remember(today) { buildCalendarDays(today) }
     val todayIndex = remember(days) { days.indexOfFirst { it.isToday }.coerceAtLeast(0) }
@@ -115,7 +115,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
 
         // ── FIJO: Saludo ──────────────────────────────────────────────────────
         GreetingSection(
-            userName = userName,
+            userName = state.userName,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 4.dp),
@@ -125,7 +125,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
         CalendarSection(
             days = days,
             todayIndex = todayIndex,
-            routines = routines,
+            routines = state.routines,
             onDayClick = { day -> selectedDay = day },
         )
 
@@ -137,8 +137,8 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 128.dp),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            WorkoutCTASection()
-            QuickStatsBento()
+            WorkoutCTASection(onStart = { viewModel.onEvent(HomeEvent.OnStartWorkout) })
+            QuickStatsBento(todayKcal = state.todayKcal, consistency = state.consistency)
         }
     }
 
@@ -149,7 +149,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             sheetState = sheetState,
             containerColor = MaterialTheme.colorScheme.surface,
         ) {
-            RoutineDayBottomSheet(day = day, routines = routines)
+            RoutineDayBottomSheet(day = day, routines = state.routines)
         }
     }
 }
@@ -367,7 +367,7 @@ private fun ExerciseRow(exercise: Exercise) {
 
 // ── Section 3: Workout CTA ────────────────────────────────────────────────────
 @Composable
-private fun WorkoutCTASection() {
+private fun WorkoutCTASection(onStart: () -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
     Box(
         modifier = Modifier
@@ -425,7 +425,7 @@ private fun WorkoutCTASection() {
             }
 
             Button(
-                onClick = {},
+                onClick = onStart,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
@@ -472,7 +472,7 @@ private fun WorkoutCTASection() {
 
 // ── Section 4: Quick Stats Bento ─────────────────────────────────────────────
 @Composable
-private fun QuickStatsBento() {
+private fun QuickStatsBento(todayKcal: Int, consistency: Int) {
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -490,11 +490,11 @@ private fun QuickStatsBento() {
         IntrinsicHeightRow {
             StatCard(
                 modifier = Modifier.weight(1f).fillMaxHeight(),
-                icon = { Icon(Icons.Default.BarChart, null, tint = BlueIcon, modifier = Modifier.size(15.dp)) },
-                label = "VOLUMEN\nTOTAL",
-                bigNumber = "24",
-                bigUnit = "k",
-                subtitle = "kg levantados",
+                icon = { Icon(Icons.Default.Whatshot, null, tint = OrangeIcon, modifier = Modifier.size(15.dp)) },
+                label = "KCAL\nQUEMADAS",
+                bigNumber = if (todayKcal > 0) todayKcal.toString() else "--",
+                bigUnit = if (todayKcal > 0) "kcal" else null,
+                subtitle = if (todayKcal > 0) "estimadas hoy" else "sin entreno hoy",
             )
             Spacer(Modifier.width(12.dp))
             StatCard(
@@ -508,8 +508,8 @@ private fun QuickStatsBento() {
                     )
                 },
                 label = "CONSTANCIA",
-                bigNumber = "92",
-                bigUnit = "%",
+                bigNumber = if (consistency > 0) consistency.toString() else "--",
+                bigUnit = if (consistency > 0) "%" else null,
                 subtitle = "Últimos 30 días",
             )
         }

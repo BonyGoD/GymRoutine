@@ -12,6 +12,7 @@ import dev.bonygod.gymroutine.auth.ui.screens.ForgotPasswordScreen
 import dev.bonygod.gymroutine.auth.ui.screens.LoginScreen
 import dev.bonygod.gymroutine.auth.ui.screens.RegisterScreen
 import dev.bonygod.gymroutine.routines.ui.screens.AddRoutineScreen
+import dev.bonygod.gymroutine.workout.ui.screens.WorkoutScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -39,6 +40,9 @@ fun NavigationWrapper() {
             }
             entry<Routes.EditRoutine> { entry ->
                 AddRoutineScreen(routineId = entry.routineId)
+            }
+            entry<Routes.Workout> { entry ->
+                WorkoutScreen(routineId = entry.routineId, routineName = entry.routineName)
             }
         },
         transitionSpec = {

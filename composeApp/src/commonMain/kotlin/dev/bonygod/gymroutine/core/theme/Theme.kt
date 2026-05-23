@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 
 val GoldIcon = Color(0xFFE7C26C)
 val BlueIcon = Color(0xFF00A5D7)
+val OrangeIcon = Color(0xFFFF7043)
 
 val Primary = Color(0xFFE53935)
 val OnPrimary = Color(0xFFFFFFFF)

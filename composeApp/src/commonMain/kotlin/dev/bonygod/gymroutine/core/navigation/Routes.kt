@@ -14,4 +14,9 @@ sealed class Routes {
     data object AddRoutine : Routes()
 
     data class EditRoutine(val routineId: String) : Routes()
+
+    data class Workout(
+        val routineId: String = "",
+        val routineName: String = "",
+    ) : Routes()
 }

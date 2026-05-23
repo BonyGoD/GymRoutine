@@ -24,6 +24,13 @@ import dev.bonygod.gymroutine.routines.domain.usecase.GetRoutinesUseCase
 import dev.bonygod.gymroutine.routines.domain.usecase.ObserveRoutinesUseCase
 import dev.bonygod.gymroutine.routines.domain.usecase.UpdateRoutineUseCase
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
+import dev.bonygod.gymroutine.workout.data.datasource.WorkoutLogRemoteDataSource
+import dev.bonygod.gymroutine.workout.data.datasource.WorkoutLogRemoteDataSourceImpl
+import dev.bonygod.gymroutine.workout.data.repository.WorkoutLogRepositoryImpl
+import dev.bonygod.gymroutine.workout.domain.repository.WorkoutLogRepository
+import dev.bonygod.gymroutine.workout.domain.usecase.LogWorkoutUseCase
+import dev.bonygod.gymroutine.workout.domain.usecase.ObserveWorkoutLogsUseCase
+import dev.bonygod.gymroutine.workout.ui.WorkoutViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
@@ -68,10 +75,19 @@ val appModule = module {
     factory { UpdateRoutineUseCase(get()) }
     factory { DeleteRoutineUseCase(get()) }
 
+    // Workout logs data layer
+    single<WorkoutLogRemoteDataSource> { WorkoutLogRemoteDataSourceImpl(get()) }
+    single<WorkoutLogRepository> { WorkoutLogRepositoryImpl(get()) }
+
+    // Workout logs use cases
+    factory { LogWorkoutUseCase(get()) }
+    factory { ObserveWorkoutLogsUseCase(get()) }
+
     // ViewModels
     viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { RoutinesViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { WorkoutViewModel(get(), get(), get()) }
 }
 
 fun initKoin(config: KoinApplication.() -> Unit = {}) {
