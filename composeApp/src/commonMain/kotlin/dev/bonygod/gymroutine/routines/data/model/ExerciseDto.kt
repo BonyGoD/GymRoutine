@@ -10,4 +10,6 @@ data class ExerciseDto(
     val weight: Float = 0f,
     val restSeconds: Int = 0,
     val days: String = "",
+    val initialWeight: Float = 0f,
+    val initialReps: Int = 0,
 )

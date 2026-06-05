@@ -6,6 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 class ObserveWorkoutLogsUseCase(private val repository: WorkoutLogRepository) {
 
-    operator fun invoke(userId: String): Flow<List<WorkoutLog>> =
-        repository.getLogsFlow(userId)
+    operator fun invoke(userId: String): Flow<List<WorkoutLog>> = repository.getLogsFlow(userId)
 }

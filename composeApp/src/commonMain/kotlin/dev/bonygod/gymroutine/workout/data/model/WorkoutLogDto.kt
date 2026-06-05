@@ -10,4 +10,5 @@ data class WorkoutLogDto(
     val routineName: String = "",
     /** ISO-8601 date: "YYYY-MM-DD" */
     val date: String = "",
+    val completado: Boolean = false,
 )

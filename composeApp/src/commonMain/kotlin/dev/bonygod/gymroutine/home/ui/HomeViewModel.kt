@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
@@ -57,9 +58,12 @@ class HomeViewModel(
                                 .catch { /* keep last known value */ }
                                 .collect { routines ->
                                     setState {
+                                        val records = calculateWeekRecords(routines, workoutLogs)
                                         setRoutines(routines)
-                                            .setTodayKcal(calculateTodayKcal(routines, userWeightKg))
+                                            .setTodayKcal(calculateTodayKcal(routines, workoutLogs, userWeightKg))
                                             .setConsistency(calculateConsistency(routines, workoutLogs))
+                                            .setIsTodayCompleted(calculateIsTodayCompleted(workoutLogs))
+                                            .setWeekRecords(records.first, records.second)
                                     }
                                 }
                         }
@@ -68,8 +72,12 @@ class HomeViewModel(
                                 .catch { /* keep last known value */ }
                                 .collect { logs ->
                                     setState {
+                                        val records = calculateWeekRecords(routines, logs)
                                         setWorkoutLogs(logs)
+                                            .setTodayKcal(calculateTodayKcal(routines, logs, userWeightKg))
                                             .setConsistency(calculateConsistency(routines, logs))
+                                            .setIsTodayCompleted(calculateIsTodayCompleted(logs))
+                                            .setWeekRecords(records.first, records.second)
                                     }
                                 }
                         }
@@ -83,18 +91,22 @@ class HomeViewModel(
 
     fun onEvent(event: HomeEvent) {
         when (event) {
-            is HomeEvent.OnStartWorkout -> navigator.navigateTo(Routes.Workout())
+            is HomeEvent.OnStartWorkout -> navigator.navigateTo(
+                Routes.Workout(routineId = event.routineId, routineName = event.routineName),
+            )
         }
     }
 
     // ── Kcal ─────────────────────────────────────────────────────────────────
 
     /**
-     * Estima las kcal quemadas con las rutinas asignadas a hoy.
-     * Duración estimada por ejercicio: sets × (reps × 2s + descanso).
+     * Solo muestra kcal si el entreno de hoy está marcado como completado.
      * Fórmula: kcal ≈ peso(kg) × minutos × 0.125
      */
-    private fun calculateTodayKcal(routines: List<Routine>, weightKg: Float): Int {
+    private fun calculateTodayKcal(routines: List<Routine>, logs: List<WorkoutLog>, weightKg: Float): Int {
+        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+        if (logs.none { it.date == today && it.completado }) return 0
+
         val todayAbbr = todayDayAbbr()
         val todayRoutines = routines.routinesForDay(todayAbbr)
         if (todayRoutines.isEmpty()) return 0
@@ -112,8 +124,7 @@ class HomeViewModel(
     // ── Constancia ────────────────────────────────────────────────────────────
 
     /**
-     * Calcula el porcentaje de constancia de los últimos 30 días:
-     *   (días con entreno completado) / (días con rutina programada) × 100
+     * Solo cuenta entrenos con completado = true en los últimos 30 días.
      */
     private fun calculateConsistency(routines: List<Routine>, logs: List<WorkoutLog>): Int {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
@@ -126,10 +137,49 @@ class HomeViewModel(
         }
         if (scheduledDays == 0) return 0
 
-        val completedDates = logs.map { it.date }.toSet()
+        val completedDates = logs.filter { it.completado }.map { it.date }.toSet()
         val completedDays = last30Days.count { date -> date.toString() in completedDates }
 
         return ((completedDays.toFloat() / scheduledDays) * 100f).toInt().coerceIn(0, 100)
+    }
+
+    // ── Completado hoy ────────────────────────────────────────────────────────
+
+    private fun calculateIsTodayCompleted(logs: List<WorkoutLog>): Boolean {
+        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+        return logs.any { it.date == today && it.completado }
+    }
+
+    // ── Récords semanales ─────────────────────────────────────────────────────
+
+    /**
+     * Busca ejercicios con mejora de peso o repeticiones respecto al valor inicial,
+     * limitado a las rutinas entrenadas (completadas) en los últimos 7 días.
+     * Devuelve (count, subtítulo con los nombres).
+     */
+    private fun calculateWeekRecords(routines: List<Routine>, logs: List<WorkoutLog>): Pair<Int, String> {
+        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val weekAgo = today.minus(7, DateTimeUnit.DAY)
+
+        val weekRoutineIds = logs
+            .filter { it.completado }
+            .filter {
+                runCatching { LocalDate.parse(it.date) >= weekAgo }.getOrDefault(false)
+            }
+            .map { it.routineId }
+            .toSet()
+
+        if (weekRoutineIds.isEmpty()) return Pair(0, "Sin entrenos esta semana")
+
+        val recordExercises = routines
+            .filter { it.id in weekRoutineIds }
+            .flatMap { it.exercises }
+            .filter { it.weight > it.initialWeight || it.reps > it.initialReps }
+
+        if (recordExercises.isEmpty()) return Pair(0, "Sin nuevos récords")
+
+        val subtitle = recordExercises.take(3).joinToString(", ") { it.name }
+        return Pair(recordExercises.size, subtitle)
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -141,14 +191,14 @@ class HomeViewModel(
         .toSpanishAbbr()
 
     private fun DayOfWeek.toSpanishAbbr(): String = when (this) {
-        DayOfWeek.MONDAY    -> "LUN"
-        DayOfWeek.TUESDAY   -> "MAR"
+        DayOfWeek.MONDAY -> "LUN"
+        DayOfWeek.TUESDAY -> "MAR"
         DayOfWeek.WEDNESDAY -> "MIÉ"
-        DayOfWeek.THURSDAY  -> "JUE"
-        DayOfWeek.FRIDAY    -> "VIE"
-        DayOfWeek.SATURDAY  -> "SÁB"
-        DayOfWeek.SUNDAY    -> "DOM"
-        else                -> ""
+        DayOfWeek.THURSDAY -> "JUE"
+        DayOfWeek.FRIDAY -> "VIE"
+        DayOfWeek.SATURDAY -> "SÁB"
+        DayOfWeek.SUNDAY -> "DOM"
+        else -> ""
     }
 
     private fun setState(reducer: HomeState.() -> HomeState) {

@@ -9,6 +9,8 @@ internal fun Exercise.toMap(): Map<String, Any> = mapOf(
     "sets" to sets,
     "weight" to weight,
     "restSeconds" to restSeconds,
+    "initialWeight" to initialWeight,
+    "initialReps" to initialReps,
 )
 
 internal fun Routine.toMap(): Map<String, Any> = mapOf(

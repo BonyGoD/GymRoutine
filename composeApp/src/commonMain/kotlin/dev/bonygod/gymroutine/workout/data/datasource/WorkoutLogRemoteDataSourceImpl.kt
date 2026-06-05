@@ -24,10 +24,9 @@ class WorkoutLogRemoteDataSourceImpl(
         logsRef(userId).document.set(log.toMap())
     }
 
-    override fun getLogsFlow(userId: String): Flow<List<WorkoutLog>> =
-        logsRef(userId).snapshots.map { snapshot ->
-            snapshot.documents.map { doc ->
-                doc.data<WorkoutLogDto>().copy(id = doc.reference.id).toDomain()
-            }
+    override fun getLogsFlow(userId: String): Flow<List<WorkoutLog>> = logsRef(userId).snapshots.map { snapshot ->
+        snapshot.documents.map { doc ->
+            doc.data<WorkoutLogDto>().copy(id = doc.reference.id).toDomain()
         }
+    }
 }

@@ -8,4 +8,5 @@ fun WorkoutLogDto.toDomain() = WorkoutLog(
     routineId = routineId,
     routineName = routineName,
     date = date,
+    completado = completado,
 )

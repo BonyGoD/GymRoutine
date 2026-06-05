@@ -10,6 +10,9 @@ data class HomeState(
     val userWeightKg: Float = 70f,
     val todayKcal: Int = 0,
     val consistency: Int = 0,
+    val isTodayCompleted: Boolean = false,
+    val weekRecordCount: Int = 0,
+    val weekRecordSubtitle: String = "",
 ) {
     fun setUserName(name: String) = copy(userName = name)
     fun setRoutines(routines: List<Routine>) = copy(routines = routines)
@@ -17,4 +20,6 @@ data class HomeState(
     fun setUserWeight(weightKg: Float) = copy(userWeightKg = weightKg)
     fun setTodayKcal(kcal: Int) = copy(todayKcal = kcal)
     fun setConsistency(pct: Int) = copy(consistency = pct)
+    fun setIsTodayCompleted(completed: Boolean) = copy(isTodayCompleted = completed)
+    fun setWeekRecords(count: Int, subtitle: String) = copy(weekRecordCount = count, weekRecordSubtitle = subtitle)
 }

@@ -9,9 +9,7 @@ class WorkoutLogRepositoryImpl(
     private val dataSource: WorkoutLogRemoteDataSource,
 ) : WorkoutLogRepository {
 
-    override suspend fun logWorkout(userId: String, log: WorkoutLog) =
-        dataSource.logWorkout(userId, log)
+    override suspend fun logWorkout(userId: String, log: WorkoutLog) = dataSource.logWorkout(userId, log)
 
-    override fun getLogsFlow(userId: String): Flow<List<WorkoutLog>> =
-        dataSource.getLogsFlow(userId)
+    override fun getLogsFlow(userId: String): Flow<List<WorkoutLog>> = dataSource.getLogsFlow(userId)
 }

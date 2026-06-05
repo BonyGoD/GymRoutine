@@ -27,10 +27,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +51,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -79,6 +81,8 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     val today = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date }
     val days = remember(today) { buildCalendarDays(today) }
     val todayIndex = remember(days) { days.indexOfFirst { it.isToday }.coerceAtLeast(0) }
+    val todayAbbr = remember(days, todayIndex) { days.getOrNull(todayIndex)?.abbr.orEmpty() }
+    val todayRoutines = remember(state.routines, todayAbbr) { state.routines.routinesForDay(todayAbbr) }
     val colorScheme = MaterialTheme.colorScheme
 
     var selectedDay by remember { mutableStateOf<DayItem?>(null) }
@@ -137,8 +141,25 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 128.dp),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            WorkoutCTASection(onStart = { viewModel.onEvent(HomeEvent.OnStartWorkout) })
-            QuickStatsBento(todayKcal = state.todayKcal, consistency = state.consistency)
+            WorkoutCTASection(
+                todayRoutines = todayRoutines,
+                isTodayCompleted = state.isTodayCompleted,
+                onStart = {
+                    val routine = todayRoutines.firstOrNull()
+                    viewModel.onEvent(
+                        HomeEvent.OnStartWorkout(
+                            routineId = routine?.id.orEmpty(),
+                            routineName = routine?.name.orEmpty(),
+                        ),
+                    )
+                },
+            )
+            QuickStatsBento(
+                todayKcal = state.todayKcal,
+                consistency = state.consistency,
+                weekRecordCount = state.weekRecordCount,
+                weekRecordSubtitle = state.weekRecordSubtitle,
+            )
         }
     }
 
@@ -367,8 +388,17 @@ private fun ExerciseRow(exercise: Exercise) {
 
 // ── Section 3: Workout CTA ────────────────────────────────────────────────────
 @Composable
-private fun WorkoutCTASection(onStart: () -> Unit) {
+private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Boolean, onStart: () -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
+    val routine = todayRoutines.firstOrNull()
+    val isRestDay = routine == null
+    val routineName = routine?.name ?: "Día de descanso"
+    val exerciseCount = routine?.exercises?.size ?: 0
+    val estimatedMinutes = routine?.exercises?.sumOf { ex ->
+        val rest = ex.restSeconds.coerceAtLeast(60)
+        ex.sets * (ex.reps * 2 + rest)
+    }?.div(60) ?: 0
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -381,46 +411,39 @@ private fun WorkoutCTASection(onStart: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Column(
+            Text(
+                text = routineName,
+                color = colorScheme.onSurface,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = (-0.56).sp,
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text(
-                    text = "Día de Pierna",
-                    color = colorScheme.onSurface,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = (-0.56).sp,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Text(
-                    text = "Enfoque Hipertrofia",
-                    color = colorScheme.primary,
-                    fontSize = 16.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
+            )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            if (!isRestDay) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Default.AccessTime, null, tint = colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
-                    Text("60 min", color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
-                }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(Icons.Default.FitnessCenter, null, tint = colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
-                    Text("6 Ejercicios", color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                    if (estimatedMinutes > 0) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(Icons.Default.AccessTime, null, tint = colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
+                            Text("$estimatedMinutes min", color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                        }
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(Icons.Default.FitnessCenter, null, tint = colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
+                        Text("$exerciseCount Ejercicios", color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                    }
                 }
             }
 
@@ -431,15 +454,28 @@ private fun WorkoutCTASection(onStart: () -> Unit) {
                     .padding(top = 16.dp)
                     .height(64.dp),
                 shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
+                enabled = !isTodayCompleted,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    disabledContainerColor = Color(0xFF1B5E20),
+                ),
             ) {
-                Icon(Icons.Default.PlayArrow, null, tint = colorScheme.onPrimary, modifier = Modifier.size(20.dp))
+                Icon(
+                    if (isTodayCompleted) Icons.Default.CheckCircle else Icons.Default.PlayArrow,
+                    null,
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp),
+                )
                 Spacer(Modifier.width(8.dp))
-                Text("INICIAR ENTRENAMIENTO", color = colorScheme.onPrimary, fontSize = 16.sp)
+                Text(
+                    if (isTodayCompleted) "ENTRENAMIENTO COMPLETADO" else "INICIAR ENTRENAMIENTO",
+                    color = Color.White,
+                    fontSize = 15.sp,
+                )
             }
         }
 
-        // "LISTO" badge – top-right overlay
+        // Badge: LISTO / TERMINADO – top-right overlay
         Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -452,15 +488,24 @@ private fun WorkoutCTASection(onStart: () -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
-                    Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(colorScheme.primary),
-                )
+                if (isTodayCompleted) {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = Color(0xFF4CAF50),
+                        modifier = Modifier.size(10.dp),
+                    )
+                } else {
+                    Box(
+                        Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(colorScheme.primary),
+                    )
+                }
                 Text(
-                    "LISTO",
-                    color = colorScheme.onSurface,
+                    if (isTodayCompleted) "TERMINADO" else "LISTO",
+                    color = if (isTodayCompleted) Color(0xFF4CAF50) else colorScheme.onSurface,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = (0.96).sp,
@@ -472,7 +517,12 @@ private fun WorkoutCTASection(onStart: () -> Unit) {
 
 // ── Section 4: Quick Stats Bento ─────────────────────────────────────────────
 @Composable
-private fun QuickStatsBento(todayKcal: Int, consistency: Int) {
+private fun QuickStatsBento(
+    todayKcal: Int,
+    consistency: Int,
+    weekRecordCount: Int,
+    weekRecordSubtitle: String,
+) {
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -482,9 +532,9 @@ private fun QuickStatsBento(todayKcal: Int, consistency: Int) {
             modifier = Modifier.fillMaxWidth(),
             icon = { Icon(Icons.Default.Star, null, tint = GoldIcon, modifier = Modifier.size(15.dp)) },
             label = "RÉCORDS ESTA SEMANA",
-            bigNumber = "3",
+            bigNumber = if (weekRecordCount > 0) weekRecordCount.toString() else "--",
             bigUnit = null,
-            subtitle = "Squat, Deadlift, OHP",
+            subtitle = weekRecordSubtitle.ifBlank { "Sin entrenos esta semana" },
         )
 
         IntrinsicHeightRow {

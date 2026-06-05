@@ -41,9 +41,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.bonygod.gymroutine.core.utils.formatDays
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.core.navigation.Routes
+import dev.bonygod.gymroutine.core.utils.formatDays
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
 import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEffect

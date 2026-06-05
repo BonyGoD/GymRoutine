@@ -12,6 +12,10 @@ fun ExerciseDto.toDomain() = Exercise(
     sets = sets,
     weight = weight,
     restSeconds = restSeconds,
+    // Si el documento de Firestore no tenía estos campos (ejercicios viejos),
+    // se inicializan con los valores actuales de weight/reps.
+    initialWeight = if (initialWeight == 0f) weight else initialWeight,
+    initialReps = if (initialReps == 0) reps else initialReps,
 )
 
 fun Exercise.toDto() = ExerciseDto(
@@ -20,6 +24,8 @@ fun Exercise.toDto() = ExerciseDto(
     sets = sets,
     weight = weight,
     restSeconds = restSeconds,
+    initialWeight = initialWeight,
+    initialReps = initialReps,
 )
 
 fun RoutineDto.toDomain() = Routine(

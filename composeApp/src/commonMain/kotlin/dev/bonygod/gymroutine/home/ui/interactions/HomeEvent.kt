@@ -1,5 +1,5 @@
 package dev.bonygod.gymroutine.home.ui.interactions
 
 sealed class HomeEvent {
-    data object OnStartWorkout : HomeEvent()
+    data class OnStartWorkout(val routineId: String, val routineName: String) : HomeEvent()
 }

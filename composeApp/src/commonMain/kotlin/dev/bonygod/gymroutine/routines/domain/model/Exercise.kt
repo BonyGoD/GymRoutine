@@ -6,4 +6,6 @@ data class Exercise(
     val sets: Int,
     val weight: Float,
     val restSeconds: Int,
+    val initialWeight: Float = weight,
+    val initialReps: Int = reps,
 )
