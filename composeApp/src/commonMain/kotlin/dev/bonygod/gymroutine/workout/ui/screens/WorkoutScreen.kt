@@ -28,14 +28,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -184,6 +187,7 @@ private fun ExerciseCard(
     onComplete: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
+    var completedRestSets by remember { mutableIntStateOf(0) }
 
     val cardBg = when {
         isCompleted -> GreenCompletedBg.copy(alpha = 0.25f)
@@ -216,7 +220,6 @@ private fun ExerciseCard(
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
-        // ── Cabecera siempre visible ──────────────────────────────────────────
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -252,7 +255,6 @@ private fun ExerciseCard(
             }
         }
 
-        // ── Contenido expandible ──────────────────────────────────────────────
         AnimatedVisibility(
             visible = isExpanded && !isCompleted,
             enter = expandVertically(),
@@ -264,12 +266,35 @@ private fun ExerciseCard(
                     .padding(top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // Timer
-                if (exercise.restSeconds > 0) {
-                    RestTimer(restSeconds = exercise.restSeconds, isVisible = isExpanded)
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = "Series completadas: $completedRestSets/${exercise.sets}",
+                        color = colorScheme.onSurfaceVariant,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                    )
+                    LinearProgressIndicator(
+                        progress = { if (exercise.sets > 0) completedRestSets / exercise.sets.toFloat() else 0f },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(6.dp)
+                            .clip(RoundedCornerShape(3.dp)),
+                        color = colorScheme.primary,
+                        trackColor = colorScheme.surfaceVariant,
+                        drawStopIndicator = {},
+                    )
                 }
 
-                // Campos editables
+                if (exercise.restSeconds > 0) {
+                    RestTimer(
+                        restSeconds = exercise.restSeconds,
+                        isVisible = isExpanded,
+                        onRestCompleted = {
+                            completedRestSets = (completedRestSets + 1).coerceAtMost(exercise.sets)
+                        },
+                    )
+                }
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -290,7 +315,6 @@ private fun ExerciseCard(
                     )
                 }
 
-                // Referencia inicial
                 if (exercise.initialWeight != exercise.weight || exercise.initialReps != exercise.reps) {
                     Text(
                         text = "Inicio: ${exercise.initialWeight} kg × ${exercise.initialReps} reps",
@@ -299,27 +323,28 @@ private fun ExerciseCard(
                     )
                 }
 
-                // Botón terminar ejercicio
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(CircleShape)
-                        .background(colorScheme.primary)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = onComplete,
+                if (completedRestSets >= exercise.sets) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(CircleShape)
+                            .background(colorScheme.primary)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = onComplete,
+                            )
+                            .padding(vertical = 14.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = "TERMINAR EJERCICIO",
+                            color = colorScheme.onPrimary,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp,
                         )
-                        .padding(vertical = 14.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "TERMINAR EJERCICIO",
-                        color = colorScheme.onPrimary,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.5.sp,
-                    )
+                    }
                 }
             }
         }
@@ -327,10 +352,15 @@ private fun ExerciseCard(
 }
 
 @Composable
-private fun RestTimer(restSeconds: Int, isVisible: Boolean) {
+private fun RestTimer(
+    restSeconds: Int,
+    isVisible: Boolean,
+    onRestCompleted: () -> Unit,
+) {
     val colorScheme = MaterialTheme.colorScheme
     var isRunning by remember(isVisible) { mutableStateOf(false) }
     var timeLeft by remember(isVisible) { mutableIntStateOf(restSeconds) }
+    var showDialog by remember(isVisible) { mutableStateOf(false) }
 
     LaunchedEffect(isRunning) {
         if (isRunning) {
@@ -339,15 +369,37 @@ private fun RestTimer(restSeconds: Int, isVisible: Boolean) {
                 timeLeft--
             }
             isRunning = false
+            onRestCompleted()
+            timeLeft = restSeconds
+            showDialog = true
         }
     }
 
-    val finished = timeLeft == 0
-    val timerColor = when {
-        finished -> GreenCompleted
-        isRunning -> colorScheme.primary
-        else -> colorScheme.onSurfaceVariant
+    if (showDialog) {
+        LaunchedEffect(showDialog) {
+            delay(5000L)
+            showDialog = false
+        }
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = {
+                Text(
+                    text = "Descanso terminado",
+                    fontWeight = FontWeight.Bold,
+                )
+            },
+            text = {
+                Text(text = "¡Listo para la siguiente serie!")
+            },
+            confirmButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("OK")
+                }
+            },
+        )
     }
+
+    val timerColor = if (isRunning) colorScheme.primary else colorScheme.onSurfaceVariant
 
     Row(
         modifier = Modifier
@@ -378,10 +430,7 @@ private fun RestTimer(restSeconds: Int, isVisible: Boolean) {
                     letterSpacing = 0.8.sp,
                 )
                 Text(
-                    text = when {
-                        finished -> "¡Listo!"
-                        else -> "${timeLeft}s"
-                    },
+                    text = "${timeLeft}s",
                     color = timerColor,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
@@ -390,37 +439,30 @@ private fun RestTimer(restSeconds: Int, isVisible: Boolean) {
             }
         }
 
-        // Botón iniciar / en curso
-        if (!finished) {
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(
-                        if (isRunning) {
-                            colorScheme.surfaceVariant
-                        } else {
-                            colorScheme.primary
-                        },
-                    )
-                    .then(
-                        if (!isRunning) {
-                            Modifier.clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                            ) { isRunning = true }
-                        } else {
-                            Modifier
-                        },
-                    )
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
-            ) {
-                Text(
-                    text = if (isRunning) "En curso…" else "Iniciar",
-                    color = if (isRunning) colorScheme.onSurfaceVariant else colorScheme.onPrimary,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
+        Box(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(
+                    if (isRunning) colorScheme.surfaceVariant else colorScheme.primary,
                 )
-            }
+                .then(
+                    if (!isRunning) {
+                        Modifier.clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) { isRunning = true }
+                    } else {
+                        Modifier
+                    },
+                )
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+        ) {
+            Text(
+                text = if (isRunning) "En curso…" else "Iniciar",
+                color = if (isRunning) colorScheme.onSurfaceVariant else Color.White,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
         }
     }
 }
