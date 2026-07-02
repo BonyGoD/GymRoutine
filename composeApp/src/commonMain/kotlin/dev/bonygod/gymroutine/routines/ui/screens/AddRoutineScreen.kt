@@ -52,6 +52,38 @@ import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEvent
 import dev.bonygod.gymroutine.routines.ui.mapper.toExercise
 import dev.bonygod.gymroutine.routines.ui.mapper.toForm
 import dev.bonygod.gymroutine.routines.ui.model.ExerciseForm
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.add_routine_action_add
+import gymroutine.composeapp.generated.resources.add_routine_action_cancel
+import gymroutine.composeapp.generated.resources.add_routine_action_save
+import gymroutine.composeapp.generated.resources.add_routine_button_add_exercise
+import gymroutine.composeapp.generated.resources.add_routine_button_save_changes
+import gymroutine.composeapp.generated.resources.add_routine_button_save_routine
+import gymroutine.composeapp.generated.resources.add_routine_days_label
+import gymroutine.composeapp.generated.resources.add_routine_field_exercise_name
+import gymroutine.composeapp.generated.resources.add_routine_field_exercise_name_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_field_reps
+import gymroutine.composeapp.generated.resources.add_routine_field_reps_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_field_rest_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_field_rest_seconds
+import gymroutine.composeapp.generated.resources.add_routine_field_sets
+import gymroutine.composeapp.generated.resources.add_routine_field_sets_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_field_weight_kg
+import gymroutine.composeapp.generated.resources.add_routine_field_weight_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_form_title_edit_exercise
+import gymroutine.composeapp.generated.resources.add_routine_form_title_new_exercise
+import gymroutine.composeapp.generated.resources.add_routine_meta_reps
+import gymroutine.composeapp.generated.resources.add_routine_meta_sets
+import gymroutine.composeapp.generated.resources.add_routine_meta_weight_kg
+import gymroutine.composeapp.generated.resources.add_routine_name_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_screen_title_edit
+import gymroutine.composeapp.generated.resources.add_routine_screen_title_new
+import gymroutine.composeapp.generated.resources.add_routine_section_exercises
+import gymroutine.composeapp.generated.resources.add_routine_section_name
+import gymroutine.composeapp.generated.resources.common_back_description
+import gymroutine.composeapp.generated.resources.common_delete_description
+import gymroutine.composeapp.generated.resources.common_edit_description
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -86,6 +118,21 @@ fun AddRoutineScreen(
     var draft by remember { mutableStateOf(ExerciseForm()) }
     var editingIndex by remember { mutableStateOf<Int?>(null) }
 
+    val titleNew = stringResource(Res.string.add_routine_screen_title_new)
+    val titleEdit = stringResource(Res.string.add_routine_screen_title_edit)
+    val backDescription = stringResource(Res.string.common_back_description)
+    val sectionNameLabel = stringResource(Res.string.add_routine_section_name)
+    val namePlaceholder = stringResource(Res.string.add_routine_name_placeholder)
+    val sectionExercises = stringResource(Res.string.add_routine_section_exercises)
+    val formTitleNew = stringResource(Res.string.add_routine_form_title_new_exercise)
+    val formTitleEdit = stringResource(Res.string.add_routine_form_title_edit_exercise)
+    val actionCancel = stringResource(Res.string.add_routine_action_cancel)
+    val actionSave = stringResource(Res.string.add_routine_action_save)
+    val actionAdd = stringResource(Res.string.add_routine_action_add)
+    val buttonAddExercise = stringResource(Res.string.add_routine_button_add_exercise)
+    val buttonSaveChanges = stringResource(Res.string.add_routine_button_save_changes)
+    val buttonSaveRoutine = stringResource(Res.string.add_routine_button_save_routine)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -112,13 +159,13 @@ fun AddRoutineScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver",
+                    contentDescription = backDescription,
                     tint = colorScheme.onSurface,
                     modifier = Modifier.size(20.dp),
                 )
             }
             Text(
-                text = if (isEdit) "Editar Rutina" else "Nueva Rutina",
+                text = if (isEdit) titleEdit else titleNew,
                 color = colorScheme.primary,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
@@ -138,7 +185,7 @@ fun AddRoutineScreen(
             // ── Nombre de la rutina ───────────────────────────────────────────
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "NOMBRE",
+                    text = sectionNameLabel,
                     color = colorScheme.onSurfaceVariant,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -149,7 +196,7 @@ fun AddRoutineScreen(
                     onValueChange = { routineName = it },
                     placeholder = {
                         Text(
-                            text = "Ej: Push Day",
+                            text = namePlaceholder,
                             color = colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                         )
                     },
@@ -178,7 +225,7 @@ fun AddRoutineScreen(
             if (exercises.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = "EJERCICIOS",
+                        text = sectionExercises,
                         color = colorScheme.onSurfaceVariant,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -214,7 +261,7 @@ fun AddRoutineScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Text(
-                        text = if (editingIndex != null) "EDITAR EJERCICIO" else "NUEVO EJERCICIO",
+                        text = if (editingIndex != null) formTitleEdit else formTitleNew,
                         color = colorScheme.primary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -222,24 +269,24 @@ fun AddRoutineScreen(
                     )
 
                     FormField(
-                        label = "Nombre",
+                        label = stringResource(Res.string.add_routine_field_exercise_name),
                         value = draft.name,
-                        placeholder = "Ej: Press Banca",
+                        placeholder = stringResource(Res.string.add_routine_field_exercise_name_placeholder),
                         onValueChange = { draft = draft.copy(name = it) },
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         FormField(
-                            label = "Series",
+                            label = stringResource(Res.string.add_routine_field_sets),
                             value = draft.sets,
-                            placeholder = "4",
+                            placeholder = stringResource(Res.string.add_routine_field_sets_placeholder),
                             onValueChange = { draft = draft.copy(sets = it) },
                             keyboard = KeyboardType.Number,
                             modifier = Modifier.weight(1f),
                         )
                         FormField(
-                            label = "Reps",
+                            label = stringResource(Res.string.add_routine_field_reps),
                             value = draft.reps,
-                            placeholder = "10",
+                            placeholder = stringResource(Res.string.add_routine_field_reps_placeholder),
                             onValueChange = { draft = draft.copy(reps = it) },
                             keyboard = KeyboardType.Number,
                             modifier = Modifier.weight(1f),
@@ -247,17 +294,17 @@ fun AddRoutineScreen(
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         FormField(
-                            label = "Peso (kg)",
+                            label = stringResource(Res.string.add_routine_field_weight_kg),
                             value = draft.weight,
-                            placeholder = "80",
+                            placeholder = stringResource(Res.string.add_routine_field_weight_placeholder),
                             onValueChange = { draft = draft.copy(weight = it) },
                             keyboard = KeyboardType.Decimal,
                             modifier = Modifier.weight(1f),
                         )
                         FormField(
-                            label = "Descanso (s)",
+                            label = stringResource(Res.string.add_routine_field_rest_seconds),
                             value = draft.restSeconds,
-                            placeholder = "90",
+                            placeholder = stringResource(Res.string.add_routine_field_rest_placeholder),
                             onValueChange = { draft = draft.copy(restSeconds = it) },
                             keyboard = KeyboardType.Number,
                             modifier = Modifier.weight(1f),
@@ -282,7 +329,7 @@ fun AddRoutineScreen(
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(
-                                text = "Cancelar",
+                                text = actionCancel,
                                 color = colorScheme.onSurfaceVariant,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
@@ -313,7 +360,7 @@ fun AddRoutineScreen(
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(
-                                text = if (editingIndex != null) "Guardar" else "Añadir",
+                                text = if (editingIndex != null) actionSave else actionAdd,
                                 color = if (canAdd) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold,
@@ -348,7 +395,7 @@ fun AddRoutineScreen(
                             modifier = Modifier.size(18.dp),
                         )
                         Text(
-                            text = "Añadir ejercicio",
+                            text = buttonAddExercise,
                             color = colorScheme.primary,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Medium,
@@ -385,7 +432,7 @@ fun AddRoutineScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = if (isEdit) "Guardar Cambios" else "Guardar Rutina",
+                    text = if (isEdit) buttonSaveChanges else buttonSaveRoutine,
                     color = if (canSave) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -400,6 +447,14 @@ fun AddRoutineScreen(
 @Composable
 private fun ExerciseItem(exercise: ExerciseForm, onEdit: () -> Unit, onDelete: () -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
+    val editDescription = stringResource(Res.string.common_edit_description)
+    val deleteDescription = stringResource(Res.string.common_delete_description)
+
+    val metaSetsText = if (exercise.sets.isNotBlank()) stringResource(Res.string.add_routine_meta_sets, exercise.sets) else null
+    val metaRepsText = if (exercise.reps.isNotBlank()) stringResource(Res.string.add_routine_meta_reps, exercise.reps) else null
+    val metaWeightText = if (exercise.weight.isNotBlank()) stringResource(Res.string.add_routine_meta_weight_kg, exercise.weight) else null
+    val meta = listOfNotNull(metaSetsText, metaRepsText, metaWeightText).joinToString(" · ")
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -420,11 +475,6 @@ private fun ExerciseItem(exercise: ExerciseForm, onEdit: () -> Unit, onDelete: (
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
             )
-            val meta = buildList {
-                if (exercise.sets.isNotBlank()) add("${exercise.sets} series")
-                if (exercise.reps.isNotBlank()) add("${exercise.reps} reps")
-                if (exercise.weight.isNotBlank()) add("${exercise.weight} kg")
-            }.joinToString(" · ")
             if (meta.isNotBlank()) {
                 Text(
                     text = meta,
@@ -447,7 +497,7 @@ private fun ExerciseItem(exercise: ExerciseForm, onEdit: () -> Unit, onDelete: (
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Editar",
+                    contentDescription = editDescription,
                     tint = colorScheme.primary,
                     modifier = Modifier.size(16.dp),
                 )
@@ -465,7 +515,7 @@ private fun ExerciseItem(exercise: ExerciseForm, onEdit: () -> Unit, onDelete: (
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Eliminar",
+                    contentDescription = deleteDescription,
                     tint = colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(16.dp),
                 )
@@ -482,7 +532,7 @@ private fun DayPickerField(
     val colorScheme = MaterialTheme.colorScheme
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(
-            text = "Días",
+            text = stringResource(Res.string.add_routine_days_label),
             color = colorScheme.onSurfaceVariant,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
@@ -517,7 +567,7 @@ private fun DayPickerField(
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = day.display,
+                        text = stringResource(day.res),
                         color = if (isSelected) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
                         fontSize = 11.sp,
                         fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,

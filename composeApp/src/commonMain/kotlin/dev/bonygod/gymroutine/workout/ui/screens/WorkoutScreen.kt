@@ -62,7 +62,26 @@ import dev.bonygod.gymroutine.routines.domain.model.Exercise
 import dev.bonygod.gymroutine.workout.ui.WorkoutViewModel
 import dev.bonygod.gymroutine.workout.ui.interactions.WorkoutEvent
 import dev.bonygod.gymroutine.workout.ui.model.ExerciseWorkoutForm
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.common_accept
+import gymroutine.composeapp.generated.resources.common_back_description
+import gymroutine.composeapp.generated.resources.workout_screen_completed_sets
+import gymroutine.composeapp.generated.resources.workout_screen_field_reps
+import gymroutine.composeapp.generated.resources.workout_screen_field_weight_kg
+import gymroutine.composeapp.generated.resources.workout_screen_finish_exercise
+import gymroutine.composeapp.generated.resources.workout_screen_finish_workout
+import gymroutine.composeapp.generated.resources.workout_screen_initial_values
+import gymroutine.composeapp.generated.resources.workout_screen_rest_done_message
+import gymroutine.composeapp.generated.resources.workout_screen_rest_done_title
+import gymroutine.composeapp.generated.resources.workout_screen_rest_label
+import gymroutine.composeapp.generated.resources.workout_screen_seconds_left
+import gymroutine.composeapp.generated.resources.workout_screen_sets_reps
+import gymroutine.composeapp.generated.resources.workout_screen_timer_running
+import gymroutine.composeapp.generated.resources.workout_screen_timer_start
+import gymroutine.composeapp.generated.resources.workout_screen_title
+import gymroutine.composeapp.generated.resources.workout_screen_weight_kg
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 private val GreenCompleted = Color(0xFF388E3C)
@@ -82,12 +101,16 @@ fun WorkoutScreen(
         viewModel.onEvent(WorkoutEvent.OnInit(routineId))
     }
 
+    val titleText = stringResource(Res.string.workout_screen_title)
+    val backDescription = stringResource(Res.string.common_back_description)
+    val finishWorkoutText = stringResource(Res.string.workout_screen_finish_workout)
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Column {
-                        Text("Entrenamiento", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text(titleText, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                         if (routineName.isNotBlank()) {
                             Text(
                                 routineName,
@@ -100,7 +123,7 @@ fun WorkoutScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(WorkoutEvent.OnBackClick) }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = backDescription)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -158,7 +181,7 @@ fun WorkoutScreen(
                         )
                         Spacer(Modifier.width(10.dp))
                         Text(
-                            "FINALIZAR ENTRENAMIENTO",
+                            finishWorkoutText,
                             color = Color.White,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
@@ -188,6 +211,29 @@ private fun ExerciseCard(
 ) {
     val colorScheme = MaterialTheme.colorScheme
     var completedRestSets by remember { mutableIntStateOf(0) }
+
+    val setsRepsText = stringResource(
+        Res.string.workout_screen_sets_reps,
+        exercise.sets,
+        form.reps.ifBlank { exercise.reps.toString() },
+    )
+    val weightKgText = stringResource(
+        Res.string.workout_screen_weight_kg,
+        form.weight.ifBlank { exercise.weight.toString() },
+    )
+    val completedSetsText = stringResource(
+        Res.string.workout_screen_completed_sets,
+        completedRestSets,
+        exercise.sets,
+    )
+    val initialValuesText = stringResource(
+        Res.string.workout_screen_initial_values,
+        exercise.initialWeight.toString(),
+        exercise.initialReps,
+    )
+    val finishExerciseText = stringResource(Res.string.workout_screen_finish_exercise)
+    val fieldWeightLabel = stringResource(Res.string.workout_screen_field_weight_kg)
+    val fieldRepsLabel = stringResource(Res.string.workout_screen_field_reps)
 
     val cardBg = when {
         isCompleted -> GreenCompletedBg.copy(alpha = 0.25f)
@@ -233,7 +279,7 @@ private fun ExerciseCard(
                     fontWeight = FontWeight.SemiBold,
                 )
                 Text(
-                    text = "${exercise.sets} series × ${form.reps.ifBlank { exercise.reps.toString() }} reps",
+                    text = setsRepsText,
                     color = colorScheme.onSurfaceVariant,
                     fontSize = 13.sp,
                 )
@@ -247,7 +293,7 @@ private fun ExerciseCard(
                 )
             } else {
                 Text(
-                    text = "${form.weight.ifBlank { exercise.weight.toString() }} kg",
+                    text = weightKgText,
                     color = colorScheme.primary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -268,7 +314,7 @@ private fun ExerciseCard(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
-                        text = "Series completadas: $completedRestSets/${exercise.sets}",
+                        text = completedSetsText,
                         color = colorScheme.onSurfaceVariant,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
@@ -301,14 +347,14 @@ private fun ExerciseCard(
                 ) {
                     WorkoutField(
                         modifier = Modifier.weight(1f),
-                        label = "Peso (kg)",
+                        label = fieldWeightLabel,
                         value = form.weight,
                         onValueChange = onUpdateWeight,
                         keyboardType = KeyboardType.Decimal,
                     )
                     WorkoutField(
                         modifier = Modifier.weight(1f),
-                        label = "Reps",
+                        label = fieldRepsLabel,
                         value = form.reps,
                         onValueChange = onUpdateReps,
                         keyboardType = KeyboardType.Number,
@@ -317,7 +363,7 @@ private fun ExerciseCard(
 
                 if (exercise.initialWeight != exercise.weight || exercise.initialReps != exercise.reps) {
                     Text(
-                        text = "Inicio: ${exercise.initialWeight} kg × ${exercise.initialReps} reps",
+                        text = initialValuesText,
                         color = colorScheme.onSurfaceVariant,
                         fontSize = 12.sp,
                     )
@@ -338,7 +384,7 @@ private fun ExerciseCard(
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            text = "TERMINAR EJERCICIO",
+                            text = finishExerciseText,
                             color = colorScheme.onPrimary,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
@@ -362,6 +408,14 @@ private fun RestTimer(
     var timeLeft by remember(isVisible) { mutableIntStateOf(restSeconds) }
     var showDialog by remember(isVisible) { mutableStateOf(false) }
 
+    val restDoneTitle = stringResource(Res.string.workout_screen_rest_done_title)
+    val restDoneMessage = stringResource(Res.string.workout_screen_rest_done_message)
+    val acceptText = stringResource(Res.string.common_accept)
+    val restLabel = stringResource(Res.string.workout_screen_rest_label)
+    val timerRunningText = stringResource(Res.string.workout_screen_timer_running)
+    val timerStartText = stringResource(Res.string.workout_screen_timer_start)
+    val secondsLeftText = stringResource(Res.string.workout_screen_seconds_left, timeLeft)
+
     LaunchedEffect(isRunning) {
         if (isRunning) {
             while (timeLeft > 0) {
@@ -384,16 +438,16 @@ private fun RestTimer(
             onDismissRequest = { showDialog = false },
             title = {
                 Text(
-                    text = "Descanso terminado",
+                    text = restDoneTitle,
                     fontWeight = FontWeight.Bold,
                 )
             },
             text = {
-                Text(text = "¡Listo para la siguiente serie!")
+                Text(text = restDoneMessage)
             },
             confirmButton = {
                 TextButton(onClick = { showDialog = false }) {
-                    Text("OK")
+                    Text(acceptText)
                 }
             },
         )
@@ -423,14 +477,14 @@ private fun RestTimer(
             )
             Column {
                 Text(
-                    text = "Descanso",
+                    text = restLabel,
                     color = colorScheme.onSurfaceVariant,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     letterSpacing = 0.8.sp,
                 )
                 Text(
-                    text = "${timeLeft}s",
+                    text = secondsLeftText,
                     color = timerColor,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
@@ -458,7 +512,7 @@ private fun RestTimer(
                 .padding(horizontal = 14.dp, vertical = 8.dp),
         ) {
             Text(
-                text = if (isRunning) "En curso…" else "Iniciar",
+                text = if (isRunning) timerRunningText else timerStartText,
                 color = if (isRunning) colorScheme.onSurfaceVariant else Color.White,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,

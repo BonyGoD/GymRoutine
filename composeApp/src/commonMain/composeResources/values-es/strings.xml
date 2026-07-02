@@ -10,7 +10,7 @@
 
     <!-- Login screen -->
     <string name="login_screen_title">¡Bienvenido a GymRoutine!</string>
-    <string name="login_screen_subtitle">Controla tus entrenamientos y mantén tu racha</string>
+    <string name="login_screen_subtitle">Controla tus entrenamientos y crea tus propias rutinas</string>
     <string name="login_screen_forgot_password">¿Has olvidado tu contraseña?</string>
     <string name="login_screen_login_button">Iniciar sesión</string>
     <string name="login_screen_or_login_with">O inicia sesión con</string>
@@ -51,4 +51,107 @@
     <string name="error_social_no_google_account">No se encontró una cuenta de Google en el dispositivo</string>
     <string name="error_social_invalid_credential">Credencial de Google no válida</string>
     <string name="error_social_get_credential">Error al obtener credenciales de Google</string>
+
+    <!-- Common actions -->
+    <string name="common_edit_description">Editar</string>
+    <string name="common_delete_description">Eliminar</string>
+
+    <!-- Home screen -->
+    <string name="home_screen_brand">GYMROUTINE</string>
+    <string name="home_screen_greeting_morning">Buenos días, %1$s</string>
+    <string name="home_screen_bottom_sheet_date_format">%1$d de %2$s</string>
+    <string name="home_screen_rest_day">Día de descanso</string>
+    <string name="home_screen_meta_minutes">%1$d min</string>
+    <string name="home_screen_meta_exercises_other">%1$d Ejercicios</string>
+    <string name="home_screen_cta_start">INICIAR ENTRENAMIENTO</string>
+    <string name="home_screen_cta_completed">ENTRENAMIENTO COMPLETADO</string>
+    <string name="home_screen_badge_ready">LISTO</string>
+    <string name="home_screen_badge_done">TERMINADO</string>
+    <string name="home_screen_stats_records_week_label">RÉCORDS ESTA SEMANA</string>
+    <string name="home_screen_stats_records_week_empty">Sin entrenos esta semana</string>
+    <string name="home_screen_stats_kcal_label">KCAL\nQUEMADAS</string>
+    <string name="home_screen_stats_kcal_unit">kcal</string>
+    <string name="home_screen_stats_kcal_estimated_today">Estimadas hoy</string>
+    <string name="home_screen_stats_kcal_no_workout">Sin entreno hoy</string>
+    <string name="home_screen_stats_consistency_label">CONSTANCIA</string>
+    <string name="home_screen_stats_consistency_subtitle">Esta semana</string>
+    <string name="home_screen_exercise_sets_reps">%1$d×%2$d</string>
+
+    <!-- Routines screen -->
+    <string name="routines_screen_title">Tus Rutinas</string>
+    <string name="routines_screen_create_custom">Crear Rutina Personalizada</string>
+    <string name="routines_screen_exercise_count_other">%1$d ejercicios</string>
+    <string name="routines_screen_start">Empezar</string>
+
+    <!-- Add routine screen -->
+    <string name="add_routine_screen_title_new">Nueva Rutina</string>
+    <string name="add_routine_screen_title_edit">Editar Rutina</string>
+    <string name="add_routine_section_name">NOMBRE</string>
+    <string name="add_routine_name_placeholder">Ej: Push Day</string>
+    <string name="add_routine_section_exercises">EJERCICIOS</string>
+    <string name="add_routine_form_title_new_exercise">NUEVO EJERCICIO</string>
+    <string name="add_routine_form_title_edit_exercise">EDITAR EJERCICIO</string>
+    <string name="add_routine_field_exercise_name">Nombre</string>
+    <string name="add_routine_field_exercise_name_placeholder">Ej: Press Banca</string>
+    <string name="add_routine_field_sets">Series</string>
+    <string name="add_routine_field_sets_placeholder">4</string>
+    <string name="add_routine_field_reps">Reps</string>
+    <string name="add_routine_field_reps_placeholder">10</string>
+    <string name="add_routine_field_weight_kg">Peso (kg)</string>
+    <string name="add_routine_field_weight_placeholder">80</string>
+    <string name="add_routine_field_rest_seconds">Descanso (s)</string>
+    <string name="add_routine_field_rest_placeholder">90</string>
+    <string name="add_routine_action_cancel">Cancelar</string>
+    <string name="add_routine_action_save">Guardar</string>
+    <string name="add_routine_action_add">Añadir</string>
+    <string name="add_routine_button_add_exercise">Añadir ejercicio</string>
+    <string name="add_routine_button_save_changes">Guardar Cambios</string>
+    <string name="add_routine_button_save_routine">Guardar Rutina</string>
+    <string name="add_routine_meta_sets">%1$s series</string>
+    <string name="add_routine_meta_reps">%1$s reps</string>
+    <string name="add_routine_meta_weight_kg">%1$s kg</string>
+    <string name="add_routine_days_label">Días</string>
+
+    <!-- Workout screen -->
+    <string name="workout_screen_title">Entrenamiento</string>
+    <string name="workout_screen_finish_workout">FINALIZAR ENTRENAMIENTO</string>
+    <string name="workout_screen_sets_reps">%1$d series × %2$s reps</string>
+    <string name="workout_screen_weight_kg">%1$s kg</string>
+    <string name="workout_screen_completed_sets">Series completadas: %1$d/%2$d</string>
+    <string name="workout_screen_field_weight_kg">Peso (kg)</string>
+    <string name="workout_screen_field_reps">Reps</string>
+    <string name="workout_screen_initial_values">Inicio: %1$s kg × %2$d reps</string>
+    <string name="workout_screen_finish_exercise">TERMINAR EJERCICIO</string>
+    <string name="workout_screen_rest_done_title">Descanso terminado</string>
+    <string name="workout_screen_rest_done_message">¡Listo para la siguiente serie!</string>
+    <string name="workout_screen_rest_label">Descanso</string>
+    <string name="workout_screen_seconds_left">%1$ds</string>
+    <string name="workout_screen_timer_running">En curso…</string>
+    <string name="workout_screen_timer_start">Iniciar</string>
+
+    <!-- History screen -->
+    <string name="history_screen_title">Historial</string>
+    <string name="history_screen_empty">Sin entrenos completados</string>
+    <string name="history_screen_workout_fallback">Entrenamiento</string>
+    <string name="history_screen_date_today">Hoy</string>
+    <string name="history_screen_date_yesterday">Ayer</string>
+    <string name="history_screen_date_day_month">%1$d de %2$s</string>
+
+    <!-- Profile screen -->
+    <string name="profile_screen_default_user_name">Atleta</string>
+    <string name="profile_screen_total_workouts">Entrenos totales</string>
+    <string name="profile_screen_personal_records">Récords personales</string>
+    <string name="profile_screen_training_streak">Racha de entrenamiento</string>
+    <string name="profile_screen_streak_days">%1$d días</string>
+    <string name="profile_screen_logout">Cerrar sesión</string>
+
+    <!-- Day items -->
+    <string name="day_item_monday">LUN</string>
+    <string name="day_item_tuesday">MAR</string>
+    <string name="day_item_wednesday">MIÉ</string>
+    <string name="day_item_thursday">JUE</string>
+    <string name="day_item_friday">VIE</string>
+    <string name="day_item_saturday">SÁB</string>
+    <string name="day_item_sunday">DOM</string>
+    <string name="format_days_no_days">Sin días asignados</string>
 </resources>

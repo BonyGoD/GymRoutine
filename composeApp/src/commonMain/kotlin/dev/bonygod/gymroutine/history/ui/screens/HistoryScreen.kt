@@ -35,11 +35,19 @@ import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.utils.monthName
 import dev.bonygod.gymroutine.history.ui.HistoryViewModel
 import dev.bonygod.gymroutine.workout.domain.model.WorkoutLog
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.history_screen_date_day_month
+import gymroutine.composeapp.generated.resources.history_screen_date_today
+import gymroutine.composeapp.generated.resources.history_screen_date_yesterday
+import gymroutine.composeapp.generated.resources.history_screen_empty
+import gymroutine.composeapp.generated.resources.history_screen_title
+import gymroutine.composeapp.generated.resources.history_screen_workout_fallback
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
 
@@ -54,7 +62,7 @@ fun HistoryScreen(vmKey: String = "", viewModel: HistoryViewModel = koinViewMode
             .background(colorScheme.background),
     ) {
         Text(
-            text = "Historial",
+            text = stringResource(Res.string.history_screen_title),
             color = colorScheme.primary,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
@@ -89,7 +97,7 @@ fun HistoryScreen(vmKey: String = "", viewModel: HistoryViewModel = koinViewMode
                             modifier = Modifier.size(48.dp),
                         )
                         Text(
-                            "Sin entrenos completados",
+                            stringResource(Res.string.history_screen_empty),
                             color = colorScheme.onSurfaceVariant,
                             fontSize = 16.sp,
                             textAlign = TextAlign.Center,
@@ -119,6 +127,24 @@ fun HistoryScreen(vmKey: String = "", viewModel: HistoryViewModel = koinViewMode
 private fun WorkoutLogCard(log: WorkoutLog) {
     val colorScheme = MaterialTheme.colorScheme
 
+    val todayText = stringResource(Res.string.history_screen_date_today)
+    val yesterdayText = stringResource(Res.string.history_screen_date_yesterday)
+    val dayMonthFormat = stringResource(Res.string.history_screen_date_day_month)
+    val workoutFallback = stringResource(Res.string.history_screen_workout_fallback)
+
+    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val yesterday = today.minus(1, DateTimeUnit.DAY)
+    val dateLabel = try {
+        val d = LocalDate.parse(log.date)
+        when (d) {
+            today -> todayText
+            yesterday -> yesterdayText
+            else -> dayMonthFormat.format(d.dayOfMonth, monthName(d.monthNumber))
+        }
+    } catch (e: Exception) {
+        log.date
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -146,29 +172,16 @@ private fun WorkoutLogCard(log: WorkoutLog) {
 
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
-                text = log.routineName.ifBlank { "Entrenamiento" },
+                text = log.routineName.ifBlank { workoutFallback },
                 color = colorScheme.onSurface,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
-                text = formatLogDate(log.date),
+                text = dateLabel,
                 color = colorScheme.onSurfaceVariant,
                 fontSize = 13.sp,
             )
         }
     }
-}
-
-private fun formatLogDate(dateStr: String): String = try {
-    val d = LocalDate.parse(dateStr)
-    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-    val yesterday = today.minus(1, DateTimeUnit.DAY)
-    when (d) {
-        today -> "Hoy"
-        yesterday -> "Ayer"
-        else -> "${d.dayOfMonth} de ${monthName(d.monthNumber)}"
-    }
-} catch (e: Exception) {
-    dateStr
 }

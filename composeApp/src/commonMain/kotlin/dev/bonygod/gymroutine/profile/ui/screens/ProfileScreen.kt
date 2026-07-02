@@ -49,6 +49,14 @@ import dev.bonygod.gymroutine.core.theme.OrangeIcon
 import dev.bonygod.gymroutine.profile.ui.ProfileViewModel
 import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEffect
 import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEvent
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.profile_screen_default_user_name
+import gymroutine.composeapp.generated.resources.profile_screen_logout
+import gymroutine.composeapp.generated.resources.profile_screen_personal_records
+import gymroutine.composeapp.generated.resources.profile_screen_streak_days
+import gymroutine.composeapp.generated.resources.profile_screen_total_workouts
+import gymroutine.composeapp.generated.resources.profile_screen_training_streak
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -67,6 +75,13 @@ fun ProfileScreen(
             }
         }
     }
+
+    val defaultUserName = stringResource(Res.string.profile_screen_default_user_name)
+    val totalWorkoutsLabel = stringResource(Res.string.profile_screen_total_workouts)
+    val personalRecordsLabel = stringResource(Res.string.profile_screen_personal_records)
+    val trainingStreakLabel = stringResource(Res.string.profile_screen_training_streak)
+    val streakDaysText = stringResource(Res.string.profile_screen_streak_days, state.streak)
+    val logoutText = stringResource(Res.string.profile_screen_logout)
 
     Box(
         modifier = Modifier
@@ -118,7 +133,7 @@ fun ProfileScreen(
 
                 // ── Nombre y email ────────────────────────────────────────────
                 Text(
-                    text = state.userName.ifBlank { "Atleta" },
+                    text = state.userName.ifBlank { defaultUserName },
                     color = colorScheme.onSurface,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
@@ -143,20 +158,20 @@ fun ProfileScreen(
                     StatRow(
                         icon = Icons.Default.FitnessCenter,
                         iconTint = colorScheme.primary,
-                        label = "Entrenos totales",
+                        label = totalWorkoutsLabel,
                         value = state.totalWorkouts.toString(),
                     )
                     StatRow(
                         icon = Icons.Default.Star,
                         iconTint = GoldIcon,
-                        label = "Récords personales",
+                        label = personalRecordsLabel,
                         value = state.personalRecords.toString(),
                     )
                     StatRow(
                         icon = Icons.Default.LocalFireDepartment,
                         iconTint = OrangeIcon,
-                        label = "Racha de entrenamiento",
-                        value = "${state.streak} días",
+                        label = trainingStreakLabel,
+                        value = streakDaysText,
                     )
                 }
 
@@ -187,7 +202,7 @@ fun ProfileScreen(
                             modifier = Modifier.size(18.dp),
                         )
                         Text(
-                            "Cerrar sesión",
+                            logoutText,
                             color = Color(0xFFEF5350),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,

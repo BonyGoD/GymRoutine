@@ -48,6 +48,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -71,9 +72,30 @@ import dev.bonygod.gymroutine.routines.domain.mapper.hasRoutineForDay
 import dev.bonygod.gymroutine.routines.domain.mapper.routinesForDay
 import dev.bonygod.gymroutine.routines.domain.model.Exercise
 import dev.bonygod.gymroutine.routines.domain.model.Routine
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.home_screen_badge_done
+import gymroutine.composeapp.generated.resources.home_screen_badge_ready
+import gymroutine.composeapp.generated.resources.home_screen_bottom_sheet_date_format
+import gymroutine.composeapp.generated.resources.home_screen_brand
+import gymroutine.composeapp.generated.resources.home_screen_cta_completed
+import gymroutine.composeapp.generated.resources.home_screen_cta_start
+import gymroutine.composeapp.generated.resources.home_screen_exercise_sets_reps
+import gymroutine.composeapp.generated.resources.home_screen_greeting_morning
+import gymroutine.composeapp.generated.resources.home_screen_meta_exercises_other
+import gymroutine.composeapp.generated.resources.home_screen_meta_minutes
+import gymroutine.composeapp.generated.resources.home_screen_rest_day
+import gymroutine.composeapp.generated.resources.home_screen_stats_consistency_label
+import gymroutine.composeapp.generated.resources.home_screen_stats_consistency_subtitle
+import gymroutine.composeapp.generated.resources.home_screen_stats_kcal_estimated_today
+import gymroutine.composeapp.generated.resources.home_screen_stats_kcal_label
+import gymroutine.composeapp.generated.resources.home_screen_stats_kcal_no_workout
+import gymroutine.composeapp.generated.resources.home_screen_stats_kcal_unit
+import gymroutine.composeapp.generated.resources.home_screen_stats_records_week_empty
+import gymroutine.composeapp.generated.resources.home_screen_stats_records_week_label
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
 
@@ -82,7 +104,9 @@ import kotlin.time.Clock
 fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key = vmKey.ifBlank { null })) {
     val state by viewModel.state.collectAsState()
     val today = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date }
-    val days = remember(today) { buildCalendarDays(today) }
+    val days by produceState(initialValue = emptyList(), today) {
+        value = buildCalendarDays(today)
+    }
     val todayIndex = remember(days) { days.indexOfFirst { it.isToday }.coerceAtLeast(0) }
     val todayAbbr = remember(days, todayIndex) { days.getOrNull(todayIndex)?.abbr.orEmpty() }
     val todayRoutines = remember(state.routines, todayAbbr) { state.routines.routinesForDay(todayAbbr) }
@@ -105,7 +129,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "GYMROUTINE",
+                text = stringResource(Res.string.home_screen_brand),
                 color = colorScheme.primary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -200,7 +224,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
 private fun GreetingSection(userName: String, modifier: Modifier = Modifier) {
     val displayName = if (userName.isNotBlank()) userName else "…"
     Text(
-        text = "Buenos días, $displayName",
+        text = stringResource(Res.string.home_screen_greeting_morning, displayName),
         color = MaterialTheme.colorScheme.onBackground,
         fontSize = 28.sp,
         fontWeight = FontWeight.Bold,
@@ -334,7 +358,7 @@ private fun RoutineDayBottomSheet(
                 letterSpacing = (-0.52).sp,
             )
             Text(
-                text = "${day.num} de ${monthName(day.date.monthNumber)}",
+                text = stringResource(Res.string.home_screen_bottom_sheet_date_format, day.num, monthName(day.date.monthNumber)),
                 color = colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
             )
@@ -399,7 +423,7 @@ private fun ExerciseRow(exercise: Exercise) {
             )
         }
         Text(
-            text = "${exercise.sets}×${exercise.reps}",
+            text = stringResource(Res.string.home_screen_exercise_sets_reps, exercise.sets, exercise.reps),
             color = colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
         )
@@ -412,12 +436,20 @@ private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Bo
     val colorScheme = MaterialTheme.colorScheme
     val routine = todayRoutines.firstOrNull()
     val isRestDay = routine == null
-    val routineName = routine?.name ?: "Día de descanso"
+    val restDayText = stringResource(Res.string.home_screen_rest_day)
+    val routineName = routine?.name ?: restDayText
     val exerciseCount = routine?.exercises?.size ?: 0
     val estimatedMinutes = routine?.exercises?.sumOf { ex ->
         val rest = ex.restSeconds.coerceAtLeast(60)
         ex.sets * (ex.reps * 2 + rest)
     }?.div(60) ?: 0
+
+    val ctaStartText = stringResource(Res.string.home_screen_cta_start)
+    val ctaCompletedText = stringResource(Res.string.home_screen_cta_completed)
+    val badgeReadyText = stringResource(Res.string.home_screen_badge_ready)
+    val badgeDoneText = stringResource(Res.string.home_screen_badge_done)
+    val minutesText = stringResource(Res.string.home_screen_meta_minutes, estimatedMinutes)
+    val exercisesText = stringResource(Res.string.home_screen_meta_exercises_other, exerciseCount)
 
     Box(
         modifier = Modifier
@@ -454,7 +486,7 @@ private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Bo
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Icon(Icons.Default.AccessTime, null, tint = colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
-                            Text("$estimatedMinutes min", color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                            Text(minutesText, color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
                         }
                     }
                     Row(
@@ -462,7 +494,7 @@ private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Bo
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(Icons.Default.FitnessCenter, null, tint = colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
-                        Text("$exerciseCount Ejercicios", color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                        Text(exercisesText, color = colorScheme.onSurfaceVariant, fontSize = 14.sp)
                     }
                 }
             }
@@ -488,7 +520,7 @@ private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Bo
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    if (isTodayCompleted) "ENTRENAMIENTO COMPLETADO" else "INICIAR ENTRENAMIENTO",
+                    if (isTodayCompleted) ctaCompletedText else ctaStartText,
                     color = Color.White,
                     fontSize = 15.sp,
                 )
@@ -524,7 +556,7 @@ private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Bo
                     )
                 }
                 Text(
-                    if (isTodayCompleted) "TERMINADO" else "LISTO",
+                    if (isTodayCompleted) badgeDoneText else badgeReadyText,
                     color = if (isTodayCompleted) Color(0xFF4CAF50) else colorScheme.onSurface,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -544,6 +576,16 @@ private fun QuickStatsBento(
     weekRecordSubtitle: String,
 ) {
     val colorScheme = MaterialTheme.colorScheme
+
+    val recordsWeekLabel = stringResource(Res.string.home_screen_stats_records_week_label)
+    val recordsWeekEmpty = stringResource(Res.string.home_screen_stats_records_week_empty)
+    val kcalLabel = stringResource(Res.string.home_screen_stats_kcal_label)
+    val kcalUnit = stringResource(Res.string.home_screen_stats_kcal_unit)
+    val kcalEstimatedToday = stringResource(Res.string.home_screen_stats_kcal_estimated_today)
+    val kcalNoWorkout = stringResource(Res.string.home_screen_stats_kcal_no_workout)
+    val consistencyLabel = stringResource(Res.string.home_screen_stats_consistency_label)
+    val consistencySubtitle = stringResource(Res.string.home_screen_stats_consistency_subtitle)
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -551,20 +593,20 @@ private fun QuickStatsBento(
         StatCard(
             modifier = Modifier.fillMaxWidth(),
             icon = { Icon(Icons.Default.Star, null, tint = GoldIcon, modifier = Modifier.size(15.dp)) },
-            label = "RÉCORDS ESTA SEMANA",
+            label = recordsWeekLabel,
             bigNumber = if (weekRecordCount > 0) weekRecordCount.toString() else "--",
             bigUnit = null,
-            subtitle = weekRecordSubtitle.ifBlank { "Sin entrenos esta semana" },
+            subtitle = weekRecordSubtitle.ifBlank { recordsWeekEmpty },
         )
 
         IntrinsicHeightRow {
             StatCard(
                 modifier = Modifier.weight(1f).fillMaxHeight(),
                 icon = { Icon(Icons.Default.Whatshot, null, tint = OrangeIcon, modifier = Modifier.size(15.dp)) },
-                label = "KCAL\nQUEMADAS",
+                label = kcalLabel,
                 bigNumber = if (todayKcal > 0) todayKcal.toString() else "--",
-                bigUnit = if (todayKcal > 0) "kcal" else null,
-                subtitle = if (todayKcal > 0) "Estimadas hoy" else "Sin entreno hoy",
+                bigUnit = if (todayKcal > 0) kcalUnit else null,
+                subtitle = if (todayKcal > 0) kcalEstimatedToday else kcalNoWorkout,
             )
             Spacer(Modifier.width(12.dp))
             StatCard(
@@ -577,10 +619,10 @@ private fun QuickStatsBento(
                         modifier = Modifier.size(15.dp),
                     )
                 },
-                label = "CONSTANCIA",
+                label = consistencyLabel,
                 bigNumber = if (consistency > 0) consistency.toString() else "--",
                 bigUnit = if (consistency > 0) "%" else null,
-                subtitle = "Esta semana",
+                subtitle = consistencySubtitle,
             )
         }
     }

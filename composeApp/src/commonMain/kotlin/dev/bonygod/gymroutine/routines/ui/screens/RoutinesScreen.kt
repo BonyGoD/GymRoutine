@@ -43,11 +43,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.core.navigation.Routes
-import dev.bonygod.gymroutine.core.utils.formatDays
+import dev.bonygod.gymroutine.core.utils.formatDaysLocalized
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
 import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEffect
 import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEvent
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.common_delete_description
+import gymroutine.composeapp.generated.resources.common_edit_description
+import gymroutine.composeapp.generated.resources.routines_screen_create_custom
+import gymroutine.composeapp.generated.resources.routines_screen_exercise_count_other
+import gymroutine.composeapp.generated.resources.routines_screen_start
+import gymroutine.composeapp.generated.resources.routines_screen_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -77,7 +85,7 @@ fun RoutinesScreen(
         ) {
             // ── Header fijo ───────────────────────────────────────────────────
             Text(
-                text = "Tus Rutinas",
+                text = stringResource(Res.string.routines_screen_title),
                 color = colorScheme.primary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
@@ -161,7 +169,7 @@ fun RoutinesScreen(
                         modifier = Modifier.size(20.dp),
                     )
                     Text(
-                        text = "Crear Rutina Personalizada",
+                        text = stringResource(Res.string.routines_screen_create_custom),
                         color = colorScheme.primary,
                         fontSize = 16.sp,
                     )
@@ -190,6 +198,8 @@ private fun RoutineCard(
     onDelete: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
+    val editDescription = stringResource(Res.string.common_edit_description)
+    val deleteDescription = stringResource(Res.string.common_delete_description)
 
     Column(
         modifier = Modifier
@@ -223,7 +233,7 @@ private fun RoutineCard(
                     modifier = Modifier.size(12.dp),
                 )
                 Text(
-                    text = "${routine.exercises.size} ejercicios",
+                    text = stringResource(Res.string.routines_screen_exercise_count_other, routine.exercises.size),
                     color = colorScheme.onSurfaceVariant,
                     fontSize = 14.sp,
                     lineHeight = 20.sp,
@@ -241,7 +251,7 @@ private fun RoutineCard(
                     modifier = Modifier.size(12.dp),
                 )
                 Text(
-                    text = formatDays(routine.days),
+                    text = formatDaysLocalized(routine.days),
                     color = colorScheme.onSurfaceVariant,
                     fontSize = 14.sp,
                     lineHeight = 20.sp,
@@ -280,7 +290,7 @@ private fun RoutineCard(
                         modifier = Modifier.size(16.dp),
                     )
                     Text(
-                        text = "Empezar",
+                        text = stringResource(Res.string.routines_screen_start),
                         color = colorScheme.onPrimary,
                         fontSize = 16.sp,
                         lineHeight = 24.sp,
@@ -302,7 +312,7 @@ private fun RoutineCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Editar",
+                    contentDescription = editDescription,
                     tint = colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp),
                 )
@@ -322,7 +332,7 @@ private fun RoutineCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Eliminar",
+                    contentDescription = deleteDescription,
                     tint = colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp),
                 )

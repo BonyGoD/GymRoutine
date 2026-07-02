@@ -41,14 +41,20 @@ fun RoutineDto.toDomain() = Routine(
     exercises = exercises.map { it.toDomain() },
 )
 
-fun List<Routine>.hasRoutineForDay(dayAbbr: String): Boolean = any { routine ->
-    routine.days.split(",").any { part ->
-        normalizeDayToken(part) == dayAbbr
+fun List<Routine>.hasRoutineForDay(dayAbbr: String): Boolean {
+    val normalizedTarget = normalizeDayToken(dayAbbr) ?: return false
+    return any { routine ->
+        routine.days.split(",").any { part ->
+            normalizeDayToken(part) == normalizedTarget
+        }
     }
 }
 
-fun List<Routine>.routinesForDay(dayAbbr: String): List<Routine> = filter { routine ->
-    routine.days.split(",").any { part ->
-        normalizeDayToken(part) == dayAbbr
+fun List<Routine>.routinesForDay(dayAbbr: String): List<Routine> {
+    val normalizedTarget = normalizeDayToken(dayAbbr) ?: return emptyList()
+    return filter { routine ->
+        routine.days.split(",").any { part ->
+            normalizeDayToken(part) == normalizedTarget
+        }
     }
 }

@@ -1,5 +1,17 @@
 package dev.bonygod.gymroutine.core.utils
 
+import androidx.compose.runtime.Composable
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.day_item_friday
+import gymroutine.composeapp.generated.resources.day_item_monday
+import gymroutine.composeapp.generated.resources.day_item_saturday
+import gymroutine.composeapp.generated.resources.day_item_sunday
+import gymroutine.composeapp.generated.resources.day_item_thursday
+import gymroutine.composeapp.generated.resources.day_item_tuesday
+import gymroutine.composeapp.generated.resources.day_item_wednesday
+import gymroutine.composeapp.generated.resources.format_days_no_days
+import org.jetbrains.compose.resources.stringResource
+
 /**
  * Normalizes any known day token (abbreviated or full name, with or without
  * accents, any case) to a canonical uppercase abbreviation like "LUN", "MIÉ",
@@ -22,6 +34,22 @@ fun normalizeDayToken(token: String): String? = when (token.trim().uppercase()) 
     "VIERNES" -> "VIE"
     "SÁBADO", "SABADO" -> "SÁB"
     "DOMINGO" -> "DOM"
+    // English abbreviations (values/strings.xml default locale)
+    "MON", "MONDAY" -> "LUN"
+    "TUE", "TUESDAY" -> "MAR"
+    "WED", "WEDNESDAY" -> "MIÉ"
+    "THU", "THURSDAY" -> "JUE"
+    "FRI", "FRIDAY" -> "VIE"
+    "SAT", "SATURDAY" -> "SÁB"
+    "SUN", "SUNDAY" -> "DOM"
+    // Catalan abbreviations (values-ca/strings.xml)
+    "DL", "DILLUNS" -> "LUN"
+    "DT", "DIMARTS" -> "MAR"
+    "DC", "DIMECRES" -> "MIÉ"
+    "DJ", "DIJOUS" -> "JUE"
+    "DV", "DIVENDRES" -> "VIE"
+    "DS", "DISSABTE" -> "SÁB"
+    "DG", "DIUMENGE" -> "DOM"
     else -> null
 }
 
@@ -59,3 +87,26 @@ fun formatDays(days: String): String {
     val selected = days.split(",").map { it.trim().uppercase() }.toSet()
     return Day.entries.filter { it.abbr in selected }.joinToString(", ") { it.display }
 }
+
+/** Localized version of [formatDays] for use inside Composable functions. */
+@Composable
+fun formatDaysLocalized(days: String): String {
+    // All stringResource calls must be at the top level of the @Composable body,
+    // not inside lambdas (map/joinToString are not @Composable contexts).
+    val noDays = stringResource(Res.string.format_days_no_days)
+    val labels = mapOf(
+        Day.MONDAY to stringResource(Res.string.day_item_monday),
+        Day.TUESDAY to stringResource(Res.string.day_item_tuesday),
+        Day.WEDNESDAY to stringResource(Res.string.day_item_wednesday),
+        Day.THURSDAY to stringResource(Res.string.day_item_thursday),
+        Day.FRIDAY to stringResource(Res.string.day_item_friday),
+        Day.SATURDAY to stringResource(Res.string.day_item_saturday),
+        Day.SUNDAY to stringResource(Res.string.day_item_sunday),
+    )
+    if (days.isBlank()) return noDays
+    val selected = days.split(",").map { it.trim().uppercase() }.toSet()
+    return Day.entries
+        .filter { it.abbr in selected }
+        .joinToString(", ") { labels[it] ?: it.display }
+}
+
