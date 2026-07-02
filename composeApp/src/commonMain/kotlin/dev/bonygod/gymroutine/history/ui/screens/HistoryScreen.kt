@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -129,20 +130,21 @@ private fun WorkoutLogCard(log: WorkoutLog) {
 
     val todayText = stringResource(Res.string.history_screen_date_today)
     val yesterdayText = stringResource(Res.string.history_screen_date_yesterday)
-    val dayMonthFormat = stringResource(Res.string.history_screen_date_day_month)
     val workoutFallback = stringResource(Res.string.history_screen_workout_fallback)
 
     val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     val yesterday = today.minus(1, DateTimeUnit.DAY)
-    val dateLabel = try {
-        val d = LocalDate.parse(log.date)
-        when (d) {
-            today -> todayText
-            yesterday -> yesterdayText
-            else -> dayMonthFormat.format(d.dayOfMonth, monthName(d.monthNumber))
-        }
-    } catch (e: Exception) {
-        log.date
+
+    // Parse outside @Composable restrictions (try/catch blocks can't contain @Composable calls)
+    val parsedDate = remember(log.date) {
+        try { LocalDate.parse(log.date) } catch (_: Exception) { null }
+    }
+
+    val dateLabel = when {
+        parsedDate == null -> log.date
+        parsedDate == today -> todayText
+        parsedDate == yesterday -> yesterdayText
+        else -> stringResource(Res.string.history_screen_date_day_month, parsedDate.day, monthName(parsedDate.month.ordinal + 1))
     }
 
     Row(
