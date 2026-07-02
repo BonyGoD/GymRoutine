@@ -53,7 +53,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RoutinesScreen(
-    viewModel: RoutinesViewModel = koinViewModel(),
+    vmKey: String = "",
+    viewModel: RoutinesViewModel = koinViewModel(key = vmKey.ifBlank { null }),
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val state by viewModel.state.collectAsState()

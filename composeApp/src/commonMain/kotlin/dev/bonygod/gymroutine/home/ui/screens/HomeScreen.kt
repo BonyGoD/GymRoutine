@@ -31,6 +31,7 @@ import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Whatshot
@@ -78,7 +79,7 @@ import kotlin.time.Clock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key = vmKey.ifBlank { null })) {
     val state by viewModel.state.collectAsState()
     val today = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date }
     val days = remember(today) { buildCalendarDays(today) }
@@ -116,7 +117,24 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                     .clip(CircleShape)
                     .background(colorScheme.surfaceVariant)
                     .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), CircleShape),
-            )
+                contentAlignment = Alignment.Center,
+            ) {
+                if (state.userName.isNotBlank()) {
+                    Text(
+                        text = state.userName.first().uppercase(),
+                        color = colorScheme.primary,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                } else {
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = null,
+                        tint = colorScheme.primary,
+                        modifier = Modifier.size(40.dp),
+                    )
+                }
+            }
         }
 
         // ── FIJO: Saludo ──────────────────────────────────────────────────────
@@ -546,7 +564,7 @@ private fun QuickStatsBento(
                 label = "KCAL\nQUEMADAS",
                 bigNumber = if (todayKcal > 0) todayKcal.toString() else "--",
                 bigUnit = if (todayKcal > 0) "kcal" else null,
-                subtitle = if (todayKcal > 0) "estimadas hoy" else "sin entreno hoy",
+                subtitle = if (todayKcal > 0) "Estimadas hoy" else "Sin entreno hoy",
             )
             Spacer(Modifier.width(12.dp))
             StatCard(
@@ -562,7 +580,7 @@ private fun QuickStatsBento(
                 label = "CONSTANCIA",
                 bigNumber = if (consistency > 0) consistency.toString() else "--",
                 bigUnit = if (consistency > 0) "%" else null,
-                subtitle = "Últimos 30 días",
+                subtitle = "Esta semana",
             )
         }
     }

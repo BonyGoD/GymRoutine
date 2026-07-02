@@ -44,7 +44,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
 
 @Composable
-fun HistoryScreen(viewModel: HistoryViewModel = koinViewModel()) {
+fun HistoryScreen(vmKey: String = "", viewModel: HistoryViewModel = koinViewModel(key = vmKey.ifBlank { null })) {
     val state by viewModel.state.collectAsState()
     val colorScheme = MaterialTheme.colorScheme
 

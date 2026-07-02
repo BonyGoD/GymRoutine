@@ -30,5 +30,8 @@ class Navigator {
     fun clearAndNavigateTo(route: Routes) {
         _backStack.clear()
         _backStack.add(route)
+        if (route is Routes.Login || route is Routes.Main) {
+            currentTab.value = BottomTab.Home
+        }
     }
 }

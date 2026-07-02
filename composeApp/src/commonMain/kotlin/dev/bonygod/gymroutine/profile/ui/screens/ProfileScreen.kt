@@ -53,8 +53,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ProfileScreen(
-    userId: String = "",
-    viewModel: ProfileViewModel = koinViewModel(),
+    vmKey: String = "",
+    viewModel: ProfileViewModel = koinViewModel(key = vmKey.ifBlank { null }),
 ) {
     val state by viewModel.state.collectAsState()
     val colorScheme = MaterialTheme.colorScheme

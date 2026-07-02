@@ -71,10 +71,10 @@ fun MainScreen(userId: String = "", navigator: Navigator = koinInject()) {
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())) {
             when (selectedTab) {
-                BottomTab.Home -> HomeScreen()
-                BottomTab.Routines -> RoutinesScreen()
-                BottomTab.History -> HistoryScreen()
-                BottomTab.Profile -> ProfileScreen(userId = userId)
+                BottomTab.Home -> HomeScreen(vmKey = "home_$userId")
+                BottomTab.Routines -> RoutinesScreen(vmKey = "routines_$userId")
+                BottomTab.History -> HistoryScreen(vmKey = "history_$userId")
+                BottomTab.Profile -> ProfileScreen(vmKey = "profile_$userId")
             }
         }
     }

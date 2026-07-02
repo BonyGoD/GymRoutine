@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -15,7 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -50,6 +54,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -91,7 +97,12 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
                         Icon(if (state.eyePasswordOpen) Icons.Default.VisibilityOff else Icons.Default.Visibility, null)
                     }
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus(force = true)
+                    keyboardController?.hide()
+                    viewModel.onEvent(AuthEvent.OnSignInClick)
+                }),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -107,7 +118,11 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
             if (state.isLoading) {
                 CircularProgressIndicator()
             } else {
-                Button(onClick = { viewModel.onEvent(AuthEvent.OnSignInClick) }, modifier = Modifier.fillMaxWidth()) {
+                Button(onClick = {
+                    focusManager.clearFocus(force = true)
+                    keyboardController?.hide()
+                    viewModel.onEvent(AuthEvent.OnSignInClick)
+                }, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.login_screen_login_button))
                 }
 
