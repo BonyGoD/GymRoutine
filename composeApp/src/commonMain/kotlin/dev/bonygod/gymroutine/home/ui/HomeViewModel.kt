@@ -26,6 +26,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 
@@ -124,21 +125,23 @@ class HomeViewModel(
     // ── Constancia ────────────────────────────────────────────────────────────
 
     /**
-     * Solo cuenta entrenos con completado = true en los últimos 30 días.
+     * Cuenta entrenos con completado = true en los 7 días de la semana en curso (lun–dom).
      */
     private fun calculateConsistency(routines: List<Routine>, logs: List<WorkoutLog>): Int {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val last30Days = (0 until 30).map { daysAgo ->
-            today.minus(daysAgo.toLong(), DateTimeUnit.DAY)
+        // Lunes de la semana actual (dayOfWeek.ordinal: MONDAY=0 … SUNDAY=6)
+        val mondayOfWeek = today.minus(today.dayOfWeek.ordinal.toLong(), DateTimeUnit.DAY)
+        val currentWeekDays = (0 until 7).map { offset ->
+            mondayOfWeek.plus(offset.toLong(), DateTimeUnit.DAY)
         }
 
-        val scheduledDays = last30Days.count { date ->
+        val scheduledDays = currentWeekDays.count { date ->
             routines.hasRoutineForDay(date.dayOfWeek.toSpanishAbbr())
         }
         if (scheduledDays == 0) return 0
 
         val completedDates = logs.filter { it.completado }.map { it.date }.toSet()
-        val completedDays = last30Days.count { date -> date.toString() in completedDates }
+        val completedDays = currentWeekDays.count { date -> date.toString() in completedDates }
 
         return ((completedDays.toFloat() / scheduledDays) * 100f).toInt().coerceIn(0, 100)
     }
