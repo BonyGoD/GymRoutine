@@ -1,77 +1,157 @@
 <resources>
-    <!--Pantalla Login-->
-    <string name="login_email">Correu electrònic</string>
-    <string name="login_password">Contrasenya</string>
-    <string name="login_forgot_password">Has oblidat la teva contrasenya?</string>
-    <string name="login_button_text_login">Inicia sessió</string>
-    <string name="login_button_text_google">Accedir amb Google</string>
-    <string name="login_spacer_login_google">O</string>
+    <string name="app_name">GymRoutine</string>
 
-    <!--!Pantalla LoginOrSignup-->
-    <string name="loginOrSignup_button_login">Registra't</string>
-    <string name="loginOrSignup_button_signup">Iniciar sessió</string>
-    <string name="loginOrSignup_subtitle">Crea les teves rutines.</string>
-    <string name="loginOrSignup_second_subtitle">Controla els teus temps.</string>
-    <string name="loginOrSignup_dialog_title">Sol·licitud de canvi de contrasenya enviada correctament</string>
-    <string name="loginOrSignup_dialog_subtitle">Si us plau, revisa el teu correu electrònic per canviar la contrasenya.</string>
+    <!-- Common -->
+    <string name="common_email_label">Correu</string>
+    <string name="common_password_label">Contrasenya</string>
+    <string name="common_name_label">Nom</string>
+    <string name="common_back_description">Enrere</string>
+    <string name="common_accept">Acceptar</string>
 
-    <!--Pantalla SignUp-->
-    <string name="register_email">Correu electrònic</string>
-    <string name="register_user">Usuari</string>
-    <string name="register_password">Contrasenya</string>
-    <string name="register_repeat_password">Repetir contrasenya</string>
-    <string name="register_button_signup">Crear compte</string>
-    <string name="register_password_not_match">Les contrasenyes no coincideixen</string>
-    <string name="register_password_not_minimum_large">La contrasenya ha de tenir almenys 6 caràcters</string>
-    <string name="register_user_error_message">Error en crear l'usuari</string>
-    <string name="register_user_error_subtitle_message">Intenta-ho de nou més tard</string>
+    <!-- Login screen -->
+    <string name="login_screen_title">Benvingut a GymRoutine!</string>
+    <string name="login_screen_subtitle">Controla entrenaments i crea les teves pròpies rutines</string>
+    <string name="login_screen_forgot_password">Has oblidat la teva contrasenya?</string>
+    <string name="login_screen_login_button">Iniciar sessió</string>
+    <string name="login_screen_or_login_with">O inicia sessió amb</string>
+    <string name="login_screen_no_account">No tens compte?</string>
+    <string name="login_screen_register_link">Registra't</string>
+    <string name="login_screen_google_access">Continua amb Google</string>
+    <string name="login_screen_apple_signin">Continua amb Apple</string>
 
+    <!-- Register screen -->
+    <string name="register_screen_topbar_title">Crear compte</string>
+    <string name="register_screen_title">Uneix-te a GymRoutine</string>
+    <string name="register_screen_subtitle">Comença a construir el teu pla d\'entrenament</string>
+    <string name="register_screen_confirm_password_label">Confirmar contrasenya</string>
+    <string name="register_screen_register_button">Registrar-se</string>
+    <string name="register_screen_or_register_with">O registra\'t amb</string>
+    <string name="register_screen_google_register">Registrar-se amb Google</string>
 
-    <!--CustomDialog-->
-    <string name="custom_dialog_title">Usuari o contrasenya incorrectes</string>
-    <string name="custom_dialog_button_text">OK</string>
+    <!-- Forgot password screen -->
+    <string name="forgot_password_screen_topbar_title">Restablir contrasenya</string>
+    <string name="forgot_password_screen_title">Has oblidat la teva contrasenya?</string>
+    <string name="forgot_password_screen_subtitle">Escriu el teu correu i t\'enviarem un enllaç.</string>
+    <string name="forgot_password_screen_send_button">Enviar enllaç</string>
+    <string name="forgot_password_screen_dialog_title">Correu enviat</string>
+    <string name="forgot_password_screen_dialog_message">Revisa la teva bústia per l\'enllaç de restabliment.</string>
 
-    <!--Forgot Password-->
-    <string name="forgot_password_button">Canvia la contrasenya</string>
-    <string name="forgot_password_error_message_dialog">Adreça de correu electrònic no vàlida</string>
+    <!-- Validation errors -->
+    <string name="error_invalid_email">Introdueix un correu electrònic vàlid</string>
+    <string name="error_name_empty">El nom no pot estar buit</string>
+    <string name="error_passwords_not_match">Les contrasenyes no coincideixen</string>
+    <string name="error_password_too_short">La contrasenya ha de tenir almenys 6 caràcters</string>
 
-    <!--CustomTextField-->
-    <string name="custom_text_field_incorrect_email">Correu electrònic incorrecte</string>
+    <!-- Generic errors -->
+    <string name="error_sign_in_generic">Error en iniciar sessió</string>
+    <string name="error_register_generic">Error en registrar-se</string>
+    <string name="error_reset_password_generic">Error en restablir la contrasenya</string>
+    <string name="error_reset_password_cooldown">Espera 5 minuts abans de tornar-ho a intentar.</string>
+    <string name="error_social_sign_in_generic">Error en iniciar sessió amb proveïdor extern</string>
+    <string name="error_social_no_google_account">No s\'ha trobat cap compte de Google al dispositiu</string>
+    <string name="error_social_invalid_credential">Credencial de Google no vàlida</string>
+    <string name="error_social_get_credential">Error en obtenir les credencials de Google</string>
 
-    <!--Errors-->
-    <string name="error_400_email_exists">EMAIL_EXISTS</string>
-    <string name="error_email_exist_title">Usuari existent</string>
-    <string name="error_email_exist_subtitle">L'usuari ja existeix, si us plau, tria un altre</string>
+    <!-- Common actions -->
+    <string name="common_edit_description">Editar</string>
+    <string name="common_delete_description">Eliminar</string>
 
-    <!--Wellcome-->
-    <string name="wellcome_title">Benvingut a GymRoutine</string>
-    <string name="wellcome_subtitle">Per començar, necessitem una mica més d'informació sobre tu</string>
-    <string name="wellcome_button">Començar</string>
+    <!-- Home screen -->
+    <string name="home_screen_brand">GYMROUTINE</string>
+    <string name="home_screen_greeting_morning">Bon dia, %1$s</string>
+    <string name="home_screen_bottom_sheet_date_format">%1$d de %2$s</string>
+    <string name="home_screen_rest_day">Dia de descans</string>
+    <string name="home_screen_meta_minutes">%1$d min</string>
+    <string name="home_screen_meta_exercises_other">%1$d Exercicis</string>
+    <string name="home_screen_cta_start">INICIAR ENTRENAMENT</string>
+    <string name="home_screen_cta_completed">ENTRENAMENT COMPLETAT</string>
+    <string name="home_screen_badge_ready">LLEST</string>
+    <string name="home_screen_badge_done">ACABAT</string>
+    <string name="home_screen_stats_records_week_label">RÈCORDS D'AQUESTA SETMANA</string>
+    <string name="home_screen_stats_records_week_empty">Sense entrenaments aquesta setmana</string>
+    <string name="home_screen_stats_kcal_label">KCAL\nCREMADES</string>
+    <string name="home_screen_stats_kcal_unit">kcal</string>
+    <string name="home_screen_stats_kcal_estimated_today">Estimades avui</string>
+    <string name="home_screen_stats_kcal_no_workout">Sense entrenament avui</string>
+    <string name="home_screen_stats_consistency_label">CONSTÀNCIA</string>
+    <string name="home_screen_stats_consistency_subtitle">Aquesta setmana</string>
+    <string name="home_screen_exercise_sets_reps">%1$d×%2$d</string>
 
-    <!--UserProfile-->
-    <string name="user_profile_weight">Pes</string>
-    <string name="user_profile_height">Alçada</string>
-    <string name="user_profile_age">Edat</string>
-    <string name="user_profile_man">Home</string>
-    <string name="user_profile_women">Dona</string>
-    <string name="user_profile_button">Finalitzar</string>
+    <!-- Routines screen -->
+    <string name="routines_screen_title">Les teves rutines</string>
+    <string name="routines_screen_create_custom">Crear rutina personalitzada</string>
+    <string name="routines_screen_exercise_count_other">%1$d exercicis</string>
+    <string name="routines_screen_start">Començar</string>
 
-    <!--DashboardScreen-->
-    <string name="dashboard_today_sesion_title">Sessió d'avui</string>
-    <string name="dashboard_statistics_title">Estadístiques</string>
+    <!-- Add routine screen -->
+    <string name="add_routine_screen_title_new">Nova rutina</string>
+    <string name="add_routine_screen_title_edit">Editar rutina</string>
+    <string name="add_routine_section_name">NOM</string>
+    <string name="add_routine_name_placeholder">Ex: Push Day</string>
+    <string name="add_routine_section_exercises">EXERCICIS</string>
+    <string name="add_routine_form_title_new_exercise">NOU EXERCICI</string>
+    <string name="add_routine_form_title_edit_exercise">EDITAR EXERCICI</string>
+    <string name="add_routine_field_exercise_name">Nom</string>
+    <string name="add_routine_field_exercise_name_placeholder">Ex: Press de Banca</string>
+    <string name="add_routine_field_sets">Sèries</string>
+    <string name="add_routine_field_sets_placeholder">4</string>
+    <string name="add_routine_field_reps">Reps</string>
+    <string name="add_routine_field_reps_placeholder">10</string>
+    <string name="add_routine_field_weight_kg">Pes (kg)</string>
+    <string name="add_routine_field_weight_placeholder">80</string>
+    <string name="add_routine_field_rest_seconds">Descans (s)</string>
+    <string name="add_routine_field_rest_placeholder">90</string>
+    <string name="add_routine_action_cancel">Cancel·lar</string>
+    <string name="add_routine_action_save">Desar</string>
+    <string name="add_routine_action_add">Afegir</string>
+    <string name="add_routine_button_add_exercise">Afegir exercici</string>
+    <string name="add_routine_button_save_changes">Desar canvis</string>
+    <string name="add_routine_button_save_routine">Desar rutina</string>
+    <string name="add_routine_meta_sets">%1$s sèries</string>
+    <string name="add_routine_meta_reps">%1$s reps</string>
+    <string name="add_routine_meta_weight_kg">%1$s kg</string>
+    <string name="add_routine_days_label">Dies</string>
 
-    <!--ProfileScreen-->
-    <string name="profile_screen_title_user_data">Dades</string>
-    <string name="profile_screen_subtitle_user">Usuari</string>
-    <string name="profile_screen_subtitle_email">Correu electrònic</string>
-    <string name="profile_screen_change_password">Canvia la contrasenya</string>
-    <string name="profile_screen_subtitle_fisic_state">Estat físic</string>
-    <string name="profile_screen_title_weight">Pes</string>
-    <string name="profile_screen_title_age">Edat</string>
-    <string name="profile_screen_text_years">anys</string>
-    <string name="profile_screen_text_save">Desa</string>
-    <string name="profile_screen_text_logout">Tanca la sessió</string>
-    <string name="profile_screen_text_delete_account">Elimina el meu compte</string>
+    <!-- Workout screen -->
+    <string name="workout_screen_title">Entrenament</string>
+    <string name="workout_screen_finish_workout">FINALITZAR ENTRENAMENT</string>
+    <string name="workout_screen_sets_reps">%1$d sèries × %2$s reps</string>
+    <string name="workout_screen_weight_kg">%1$s kg</string>
+    <string name="workout_screen_completed_sets">Sèries completades: %1$d/%2$d</string>
+    <string name="workout_screen_field_weight_kg">Pes (kg)</string>
+    <string name="workout_screen_field_reps">Reps</string>
+    <string name="workout_screen_initial_values">Inici: %1$s kg × %2$d reps</string>
+    <string name="workout_screen_finish_exercise">ACABAR EXERCICI</string>
+    <string name="workout_screen_rest_done_title">Descans acabat</string>
+    <string name="workout_screen_rest_done_message">Llest per a la següent sèrie!</string>
+    <string name="workout_screen_rest_label">Descans</string>
+    <string name="workout_screen_seconds_left">%1$ds</string>
+    <string name="workout_screen_timer_running">En curs…</string>
+    <string name="workout_screen_timer_start">Iniciar</string>
 
+    <!-- History screen -->
+    <string name="history_screen_title">Historial</string>
+    <string name="history_screen_empty">Sense entrenaments completats</string>
+    <string name="history_screen_workout_fallback">Entrenament</string>
+    <string name="history_screen_date_today">Avui</string>
+    <string name="history_screen_date_yesterday">Ahir</string>
+    <string name="history_screen_date_day_month">%1$d de %2$s</string>
 
+    <!-- Profile screen -->
+    <string name="profile_screen_default_user_name">Atleta</string>
+    <string name="profile_screen_total_workouts">Entrenaments totals</string>
+    <string name="profile_screen_personal_records">Rècords personals</string>
+    <string name="profile_screen_training_streak">Ratxa d'entrenament</string>
+    <string name="profile_screen_streak_days">%1$d dies</string>
+    <string name="profile_screen_logout">Tancar sessió</string>
+
+    <!-- Day items -->
+    <string name="day_item_monday">DL</string>
+    <string name="day_item_tuesday">DT</string>
+    <string name="day_item_wednesday">DC</string>
+    <string name="day_item_thursday">DJ</string>
+    <string name="day_item_friday">DV</string>
+    <string name="day_item_saturday">DS</string>
+    <string name="day_item_sunday">DG</string>
+    <string name="format_days_no_days">Sense dies assignats</string>
 </resources>

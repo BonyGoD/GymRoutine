@@ -1,76 +1,157 @@
 <resources>
-    <!--Pantalla Login-->
-    <string name="login_email">Email</string>
-    <string name="login_password">Contraseña</string>
-    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
-    <string name="login_button_text_login">Iniciar sesión</string>
-    <string name="login_button_text_google">Acceder con google</string>
-    <string name="login_spacer_login_google">O</string>
+    <string name="app_name">GymRoutine</string>
 
-    <!--!Pantalla LoginOrSignup-->
-    <string name="loginOrSignup_button_login">Registrate</string>
-    <string name="loginOrSignup_button_signup">Iniciar sesión</string>
-    <string name="loginOrSignup_subtitle">Crea tus rutinas.</string>
-    <string name="loginOrSignup_second_subtitle">Controla tus tiempos.</string>
-    <string name="loginOrSignup_dialog_title">Solicitud de cambio de contraseña enviada correctamente</string>
-    <string name="loginOrSignup_dialog_subtitle">Por favor, revisa tu correo electrónico para cambiar tu contraseña.</string>
+    <!-- Common -->
+    <string name="common_email_label">Correo</string>
+    <string name="common_password_label">Contraseña</string>
+    <string name="common_name_label">Nombre</string>
+    <string name="common_back_description">Atrás</string>
+    <string name="common_accept">Aceptar</string>
 
-    <!--Pantalla SignUp-->
-    <string name="register_email">Email</string>
-    <string name="register_user">Usuario</string>
-    <string name="register_password">Contraseña</string>
-    <string name="register_repeat_password">Repetir contraseña</string>
-    <string name="register_button_signup">Crear cuenta</string>
-    <string name="register_password_not_match">Las contraseñas no coinciden</string>
-    <string name="register_password_not_minimum_large">La contraseña debe tener al menos 6 caracteres</string>
-    <string name="register_user_error_message">Error al crear el usuario</string>
-    <string name="register_user_error_subtitle_message">Intentelo de nuevo, mas tarde</string>
+    <!-- Login screen -->
+    <string name="login_screen_title">¡Bienvenido a GymRoutine!</string>
+    <string name="login_screen_subtitle">Controla tus entrenamientos y crea tus propias rutinas</string>
+    <string name="login_screen_forgot_password">¿Has olvidado tu contraseña?</string>
+    <string name="login_screen_login_button">Iniciar sesión</string>
+    <string name="login_screen_or_login_with">O inicia sesión con</string>
+    <string name="login_screen_no_account">¿No tienes cuenta?</string>
+    <string name="login_screen_register_link">Regístrate</string>
+    <string name="login_screen_google_access">Continuar con Google</string>
+    <string name="login_screen_apple_signin">Continuar con Apple</string>
 
+    <!-- Register screen -->
+    <string name="register_screen_topbar_title">Crear cuenta</string>
+    <string name="register_screen_title">Únete a GymRoutine</string>
+    <string name="register_screen_subtitle">Empieza a construir tu plan de entrenamiento</string>
+    <string name="register_screen_confirm_password_label">Confirmar contraseña</string>
+    <string name="register_screen_register_button">Registrarse</string>
+    <string name="register_screen_or_register_with">O regístrate con</string>
+    <string name="register_screen_google_register">Registrarse con Google</string>
 
-    <!--CustomDialog-->
-    <string name="custom_dialog_title">Usuario o contraseña incorrectos</string>
-    <string name="custom_dialog_button_text">OK</string>
+    <!-- Forgot password screen -->
+    <string name="forgot_password_screen_topbar_title">Restablecer contraseña</string>
+    <string name="forgot_password_screen_title">¿Has olvidado tu contraseña?</string>
+    <string name="forgot_password_screen_subtitle">Escribe tu correo y te enviaremos un enlace.</string>
+    <string name="forgot_password_screen_send_button">Enviar enlace</string>
+    <string name="forgot_password_screen_dialog_title">Correo enviado</string>
+    <string name="forgot_password_screen_dialog_message">Revisa tu bandeja para el enlace de restablecimiento.</string>
 
-    <!--Forgot Password-->
-    <string name="forgot_password_button">Change password</string>
-    <string name="forgot_password_error_message_dialog">Dirección de correo electrónico no válida</string>
+    <!-- Validation errors -->
+    <string name="error_invalid_email">Introduce un correo electrónico válido</string>
+    <string name="error_name_empty">El nombre no puede estar vacío</string>
+    <string name="error_passwords_not_match">Las contraseñas no coinciden</string>
+    <string name="error_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
 
-    <!--CustomTextField-->
-    <string name="custom_text_field_incorrect_email">Email incorrecto</string>
+    <!-- Generic errors -->
+    <string name="error_sign_in_generic">Error al iniciar sesión</string>
+    <string name="error_register_generic">Error al registrarse</string>
+    <string name="error_reset_password_generic">Error al restablecer la contraseña</string>
+    <string name="error_reset_password_cooldown">Espera 5 minutos antes de volver a intentarlo.</string>
+    <string name="error_social_sign_in_generic">Error al iniciar sesión con proveedor externo</string>
+    <string name="error_social_no_google_account">No se encontró una cuenta de Google en el dispositivo</string>
+    <string name="error_social_invalid_credential">Credencial de Google no válida</string>
+    <string name="error_social_get_credential">Error al obtener credenciales de Google</string>
 
-    <!--Errors-->
-    <string name="error_400_email_exists">EMAIL_EXISTS</string>
-    <string name="error_email_exist_title">Usuario existente</string>
-    <string name="error_email_exist_subtitle">El usuario ya existe, por favor elige otro</string>
+    <!-- Common actions -->
+    <string name="common_edit_description">Editar</string>
+    <string name="common_delete_description">Eliminar</string>
 
-    <!--Wellcome-->
-    <string name="wellcome_title">Bienvenido a GymRoutine</string>
-    <string name="wellcome_subtitle">Para comenzar, necesitamos un poco mas de información sobre ti</string>
-    <string name="wellcome_button">Empezar</string>
+    <!-- Home screen -->
+    <string name="home_screen_brand">GYMROUTINE</string>
+    <string name="home_screen_greeting_morning">Buenos días, %1$s</string>
+    <string name="home_screen_bottom_sheet_date_format">%1$d de %2$s</string>
+    <string name="home_screen_rest_day">Día de descanso</string>
+    <string name="home_screen_meta_minutes">%1$d min</string>
+    <string name="home_screen_meta_exercises_other">%1$d Ejercicios</string>
+    <string name="home_screen_cta_start">INICIAR ENTRENAMIENTO</string>
+    <string name="home_screen_cta_completed">ENTRENAMIENTO COMPLETADO</string>
+    <string name="home_screen_badge_ready">LISTO</string>
+    <string name="home_screen_badge_done">TERMINADO</string>
+    <string name="home_screen_stats_records_week_label">RÉCORDS ESTA SEMANA</string>
+    <string name="home_screen_stats_records_week_empty">Sin entrenos esta semana</string>
+    <string name="home_screen_stats_kcal_label">KCAL\nQUEMADAS</string>
+    <string name="home_screen_stats_kcal_unit">kcal</string>
+    <string name="home_screen_stats_kcal_estimated_today">Estimadas hoy</string>
+    <string name="home_screen_stats_kcal_no_workout">Sin entreno hoy</string>
+    <string name="home_screen_stats_consistency_label">CONSTANCIA</string>
+    <string name="home_screen_stats_consistency_subtitle">Esta semana</string>
+    <string name="home_screen_exercise_sets_reps">%1$d×%2$d</string>
 
-    <!--UserProfile-->
-    <string name="user_profile_weight">Peso</string>
-    <string name="user_profile_height">Altura</string>
-    <string name="user_profile_age">Edad</string>
-    <string name="user_profile_man">Hombre</string>
-    <string name="user_profile_women">Mujer</string>
-    <string name="user_profile_button">Finalizar</string>
+    <!-- Routines screen -->
+    <string name="routines_screen_title">Tus Rutinas</string>
+    <string name="routines_screen_create_custom">Crear Rutina Personalizada</string>
+    <string name="routines_screen_exercise_count_other">%1$d ejercicios</string>
+    <string name="routines_screen_start">Empezar</string>
 
-    <!--DashboardScreen-->
-    <string name="dashboard_today_sesion_title">Sesión de hoy</string>
-    <string name="dashboard_statistics_title">Estadísticas</string>
+    <!-- Add routine screen -->
+    <string name="add_routine_screen_title_new">Nueva Rutina</string>
+    <string name="add_routine_screen_title_edit">Editar Rutina</string>
+    <string name="add_routine_section_name">NOMBRE</string>
+    <string name="add_routine_name_placeholder">Ej: Push Day</string>
+    <string name="add_routine_section_exercises">EJERCICIOS</string>
+    <string name="add_routine_form_title_new_exercise">NUEVO EJERCICIO</string>
+    <string name="add_routine_form_title_edit_exercise">EDITAR EJERCICIO</string>
+    <string name="add_routine_field_exercise_name">Nombre</string>
+    <string name="add_routine_field_exercise_name_placeholder">Ej: Press Banca</string>
+    <string name="add_routine_field_sets">Series</string>
+    <string name="add_routine_field_sets_placeholder">4</string>
+    <string name="add_routine_field_reps">Reps</string>
+    <string name="add_routine_field_reps_placeholder">10</string>
+    <string name="add_routine_field_weight_kg">Peso (kg)</string>
+    <string name="add_routine_field_weight_placeholder">80</string>
+    <string name="add_routine_field_rest_seconds">Descanso (s)</string>
+    <string name="add_routine_field_rest_placeholder">90</string>
+    <string name="add_routine_action_cancel">Cancelar</string>
+    <string name="add_routine_action_save">Guardar</string>
+    <string name="add_routine_action_add">Añadir</string>
+    <string name="add_routine_button_add_exercise">Añadir ejercicio</string>
+    <string name="add_routine_button_save_changes">Guardar Cambios</string>
+    <string name="add_routine_button_save_routine">Guardar Rutina</string>
+    <string name="add_routine_meta_sets">%1$s series</string>
+    <string name="add_routine_meta_reps">%1$s reps</string>
+    <string name="add_routine_meta_weight_kg">%1$s kg</string>
+    <string name="add_routine_days_label">Días</string>
 
-    <!--ProfileScreen-->
-    <string name="profile_screen_title_user_data">Datos</string>
-    <string name="profile_screen_subtitle_user">Usuario</string>
-    <string name="profile_screen_subtitle_email">Email</string>
-    <string name="profile_screen_change_password">Cambiar de contraseña</string>
-    <string name="profile_screen_subtitle_fisic_state">Estado físico</string>
-    <string name="profile_screen_title_weight">Peso</string>
-    <string name="profile_screen_title_age">Edad</string>
-    <string name="profile_screen_text_years">años</string>
-    <string name="profile_screen_text_save">Guardar</string>
-    <string name="profile_screen_text_logout">Cerrar sesión</string>
-    <string name="profile_screen_text_delete_account">Eliminar mi cuenta</string>
+    <!-- Workout screen -->
+    <string name="workout_screen_title">Entrenamiento</string>
+    <string name="workout_screen_finish_workout">FINALIZAR ENTRENAMIENTO</string>
+    <string name="workout_screen_sets_reps">%1$d series × %2$s reps</string>
+    <string name="workout_screen_weight_kg">%1$s kg</string>
+    <string name="workout_screen_completed_sets">Series completadas: %1$d/%2$d</string>
+    <string name="workout_screen_field_weight_kg">Peso (kg)</string>
+    <string name="workout_screen_field_reps">Reps</string>
+    <string name="workout_screen_initial_values">Inicio: %1$s kg × %2$d reps</string>
+    <string name="workout_screen_finish_exercise">TERMINAR EJERCICIO</string>
+    <string name="workout_screen_rest_done_title">Descanso terminado</string>
+    <string name="workout_screen_rest_done_message">¡Listo para la siguiente serie!</string>
+    <string name="workout_screen_rest_label">Descanso</string>
+    <string name="workout_screen_seconds_left">%1$ds</string>
+    <string name="workout_screen_timer_running">En curso…</string>
+    <string name="workout_screen_timer_start">Iniciar</string>
 
+    <!-- History screen -->
+    <string name="history_screen_title">Historial</string>
+    <string name="history_screen_empty">Sin entrenos completados</string>
+    <string name="history_screen_workout_fallback">Entrenamiento</string>
+    <string name="history_screen_date_today">Hoy</string>
+    <string name="history_screen_date_yesterday">Ayer</string>
+    <string name="history_screen_date_day_month">%1$d de %2$s</string>
+
+    <!-- Profile screen -->
+    <string name="profile_screen_default_user_name">Atleta</string>
+    <string name="profile_screen_total_workouts">Entrenos totales</string>
+    <string name="profile_screen_personal_records">Récords personales</string>
+    <string name="profile_screen_training_streak">Racha de entrenamiento</string>
+    <string name="profile_screen_streak_days">%1$d días</string>
+    <string name="profile_screen_logout">Cerrar sesión</string>
+
+    <!-- Day items -->
+    <string name="day_item_monday">LUN</string>
+    <string name="day_item_tuesday">MAR</string>
+    <string name="day_item_wednesday">MIÉ</string>
+    <string name="day_item_thursday">JUE</string>
+    <string name="day_item_friday">VIE</string>
+    <string name="day_item_saturday">SÁB</string>
+    <string name="day_item_sunday">DOM</string>
+    <string name="format_days_no_days">Sin días asignados</string>
 </resources>

@@ -1,0 +1,624 @@
+package dev.bonygod.gymroutine.routines.ui.screens
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import dev.bonygod.gymroutine.core.utils.Day
+import dev.bonygod.gymroutine.routines.domain.model.Routine
+import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
+import dev.bonygod.gymroutine.routines.ui.interactions.RoutinesEvent
+import dev.bonygod.gymroutine.routines.ui.mapper.toExercise
+import dev.bonygod.gymroutine.routines.ui.mapper.toForm
+import dev.bonygod.gymroutine.routines.ui.model.ExerciseForm
+import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.add_routine_action_add
+import gymroutine.composeapp.generated.resources.add_routine_action_cancel
+import gymroutine.composeapp.generated.resources.add_routine_action_save
+import gymroutine.composeapp.generated.resources.add_routine_button_add_exercise
+import gymroutine.composeapp.generated.resources.add_routine_button_save_changes
+import gymroutine.composeapp.generated.resources.add_routine_button_save_routine
+import gymroutine.composeapp.generated.resources.add_routine_days_label
+import gymroutine.composeapp.generated.resources.add_routine_field_exercise_name
+import gymroutine.composeapp.generated.resources.add_routine_field_exercise_name_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_field_reps
+import gymroutine.composeapp.generated.resources.add_routine_field_reps_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_field_rest_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_field_rest_seconds
+import gymroutine.composeapp.generated.resources.add_routine_field_sets
+import gymroutine.composeapp.generated.resources.add_routine_field_sets_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_field_weight_kg
+import gymroutine.composeapp.generated.resources.add_routine_field_weight_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_form_title_edit_exercise
+import gymroutine.composeapp.generated.resources.add_routine_form_title_new_exercise
+import gymroutine.composeapp.generated.resources.add_routine_meta_reps
+import gymroutine.composeapp.generated.resources.add_routine_meta_sets
+import gymroutine.composeapp.generated.resources.add_routine_meta_weight_kg
+import gymroutine.composeapp.generated.resources.add_routine_name_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_screen_title_edit
+import gymroutine.composeapp.generated.resources.add_routine_screen_title_new
+import gymroutine.composeapp.generated.resources.add_routine_section_exercises
+import gymroutine.composeapp.generated.resources.add_routine_section_name
+import gymroutine.composeapp.generated.resources.common_back_description
+import gymroutine.composeapp.generated.resources.common_delete_description
+import gymroutine.composeapp.generated.resources.common_edit_description
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun AddRoutineScreen(
+    routineId: String? = null,
+    viewModel: RoutinesViewModel = koinViewModel(),
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val state by viewModel.state.collectAsState()
+
+    val existing = routineId?.let {
+        state.routines.firstOrNull { it.id == routineId }
+    }
+
+    val isEdit = routineId != null
+
+    var routineName by remember(existing) { mutableStateOf(existing?.name ?: "") }
+    var routineDays by remember(existing) {
+        mutableStateOf(
+            existing?.days?.split(",")
+                ?.map { it.trim().uppercase() }
+                ?.filter { abbr -> Day.fromAbbr(abbr) != null }
+                ?.toSet() ?: emptySet(),
+        )
+    }
+    val exercises = remember(existing) {
+        mutableStateListOf<ExerciseForm>().also { list ->
+            existing?.exercises?.forEach { list.add(it.toForm()) }
+        }
+    }
+    var showExerciseForm by remember { mutableStateOf(false) }
+    var draft by remember { mutableStateOf(ExerciseForm()) }
+    var editingIndex by remember { mutableStateOf<Int?>(null) }
+
+    val titleNew = stringResource(Res.string.add_routine_screen_title_new)
+    val titleEdit = stringResource(Res.string.add_routine_screen_title_edit)
+    val backDescription = stringResource(Res.string.common_back_description)
+    val sectionNameLabel = stringResource(Res.string.add_routine_section_name)
+    val namePlaceholder = stringResource(Res.string.add_routine_name_placeholder)
+    val sectionExercises = stringResource(Res.string.add_routine_section_exercises)
+    val formTitleNew = stringResource(Res.string.add_routine_form_title_new_exercise)
+    val formTitleEdit = stringResource(Res.string.add_routine_form_title_edit_exercise)
+    val actionCancel = stringResource(Res.string.add_routine_action_cancel)
+    val actionSave = stringResource(Res.string.add_routine_action_save)
+    val actionAdd = stringResource(Res.string.add_routine_action_add)
+    val buttonAddExercise = stringResource(Res.string.add_routine_button_add_exercise)
+    val buttonSaveChanges = stringResource(Res.string.add_routine_button_save_changes)
+    val buttonSaveRoutine = stringResource(Res.string.add_routine_button_save_routine)
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorScheme.background),
+    ) {
+        // ── Header ────────────────────────────────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 56.dp, start = 16.dp, end = 24.dp, bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(colorScheme.surfaceVariant)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { viewModel.onEvent(RoutinesEvent.OnBackClick) },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = backDescription,
+                    tint = colorScheme.onSurface,
+                    modifier = Modifier.size(20.dp),
+                )
+            }
+            Text(
+                text = if (isEdit) titleEdit else titleNew,
+                color = colorScheme.primary,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = (-0.5).sp,
+            )
+        }
+
+        // ── Contenido scrollable ──────────────────────────────────────────────
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .padding(start = 24.dp, end = 24.dp, bottom = 40.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+        ) {
+            // ── Nombre de la rutina ───────────────────────────────────────────
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = sectionNameLabel,
+                    color = colorScheme.onSurfaceVariant,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 1.sp,
+                )
+                OutlinedTextField(
+                    value = routineName,
+                    onValueChange = { routineName = it },
+                    placeholder = {
+                        Text(
+                            text = namePlaceholder,
+                            color = colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = colorScheme.primary,
+                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.3f),
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        cursorColor = colorScheme.primary,
+                        focusedContainerColor = colorScheme.surface,
+                        unfocusedContainerColor = colorScheme.surface,
+                    ),
+                )
+            }
+
+            // ── Días de la rutina ────────────────────────────────────────────
+            DayPickerField(
+                selectedDays = routineDays,
+                onDaysChange = { routineDays = it },
+            )
+
+            // ── Lista de ejercicios añadidos ──────────────────────────────────
+            if (exercises.isNotEmpty()) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = sectionExercises,
+                        color = colorScheme.onSurfaceVariant,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 1.sp,
+                    )
+                    exercises.forEachIndexed { index, exercise ->
+                        ExerciseItem(
+                            exercise = exercise,
+                            onEdit = {
+                                editingIndex = index
+                                draft = exercise
+                                showExerciseForm = true
+                            },
+                            onDelete = { exercises.removeAt(index) },
+                        )
+                    }
+                }
+            }
+
+            // ── Formulario nuevo ejercicio (expandible) ───────────────────────
+            AnimatedVisibility(
+                visible = showExerciseForm,
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(colorScheme.surface)
+                        .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Text(
+                        text = if (editingIndex != null) formTitleEdit else formTitleNew,
+                        color = colorScheme.primary,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 1.sp,
+                    )
+
+                    FormField(
+                        label = stringResource(Res.string.add_routine_field_exercise_name),
+                        value = draft.name,
+                        placeholder = stringResource(Res.string.add_routine_field_exercise_name_placeholder),
+                        onValueChange = { draft = draft.copy(name = it) },
+                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        FormField(
+                            label = stringResource(Res.string.add_routine_field_sets),
+                            value = draft.sets,
+                            placeholder = stringResource(Res.string.add_routine_field_sets_placeholder),
+                            onValueChange = { draft = draft.copy(sets = it) },
+                            keyboard = KeyboardType.Number,
+                            modifier = Modifier.weight(1f),
+                        )
+                        FormField(
+                            label = stringResource(Res.string.add_routine_field_reps),
+                            value = draft.reps,
+                            placeholder = stringResource(Res.string.add_routine_field_reps_placeholder),
+                            onValueChange = { draft = draft.copy(reps = it) },
+                            keyboard = KeyboardType.Number,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        FormField(
+                            label = stringResource(Res.string.add_routine_field_weight_kg),
+                            value = draft.weight,
+                            placeholder = stringResource(Res.string.add_routine_field_weight_placeholder),
+                            onValueChange = { draft = draft.copy(weight = it) },
+                            keyboard = KeyboardType.Decimal,
+                            modifier = Modifier.weight(1f),
+                        )
+                        FormField(
+                            label = stringResource(Res.string.add_routine_field_rest_seconds),
+                            value = draft.restSeconds,
+                            placeholder = stringResource(Res.string.add_routine_field_rest_placeholder),
+                            onValueChange = { draft = draft.copy(restSeconds = it) },
+                            keyboard = KeyboardType.Number,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                    // Acciones del formulario
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(colorScheme.surfaceVariant)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                ) {
+                                    showExerciseForm = false
+                                    editingIndex = null
+                                    draft = ExerciseForm()
+                                }
+                                .padding(vertical = 12.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = actionCancel,
+                                color = colorScheme.onSurfaceVariant,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+                        val canAdd = draft.name.isNotBlank()
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (canAdd) colorScheme.primary else colorScheme.surfaceVariant)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    enabled = canAdd,
+                                ) {
+                                    val idx = editingIndex
+                                    if (idx != null) {
+                                        exercises[idx] = draft
+                                    } else {
+                                        exercises.add(draft)
+                                    }
+                                    editingIndex = null
+                                    draft = ExerciseForm()
+                                    showExerciseForm = false
+                                }
+                                .padding(vertical = 12.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = if (editingIndex != null) actionSave else actionAdd,
+                                color = if (canAdd) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
+                    }
+                }
+            }
+
+            // ── Botón añadir ejercicio ────────────────────────────────────────
+            if (!showExerciseForm) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .border(1.dp, colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) { showExerciseForm = true }
+                        .padding(vertical = 14.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FitnessCenter,
+                            contentDescription = null,
+                            tint = colorScheme.primary,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Text(
+                            text = buttonAddExercise,
+                            color = colorScheme.primary,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
+            }
+
+            // ── Guardar rutina ────────────────────────────────────────────────
+            val canSave = routineName.isNotBlank() && exercises.isNotEmpty()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(if (canSave) colorScheme.primary else colorScheme.surfaceVariant)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        enabled = canSave,
+                    ) {
+                        val routine = Routine(
+                            id = existing?.id ?: "",
+                            name = routineName,
+                            days = Day.entries.filter { it.abbr in routineDays }.joinToString(",") { it.abbr },
+                            exercises = exercises.map { it.toExercise() },
+                        )
+                        if (isEdit) {
+                            viewModel.onEvent(RoutinesEvent.OnUpdateRoutine(routine))
+                        } else {
+                            viewModel.onEvent(RoutinesEvent.OnCreateRoutine(routine))
+                        }
+                    }
+                    .padding(vertical = 16.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = if (isEdit) buttonSaveChanges else buttonSaveRoutine,
+                    color = if (canSave) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+        }
+    }
+}
+
+// ── Componentes ───────────────────────────────────────────────────────────────
+
+@Composable
+private fun ExerciseItem(exercise: ExerciseForm, onEdit: () -> Unit, onDelete: () -> Unit) {
+    val colorScheme = MaterialTheme.colorScheme
+    val editDescription = stringResource(Res.string.common_edit_description)
+    val deleteDescription = stringResource(Res.string.common_delete_description)
+
+    val metaSetsText = if (exercise.sets.isNotBlank()) stringResource(Res.string.add_routine_meta_sets, exercise.sets) else null
+    val metaRepsText = if (exercise.reps.isNotBlank()) stringResource(Res.string.add_routine_meta_reps, exercise.reps) else null
+    val metaWeightText = if (exercise.weight.isNotBlank()) stringResource(Res.string.add_routine_meta_weight_kg, exercise.weight) else null
+    val meta = listOfNotNull(metaSetsText, metaRepsText, metaWeightText).joinToString(" · ")
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(colorScheme.surface)
+            .border(1.dp, colorScheme.outline.copy(alpha = 0.12f), RoundedCornerShape(12.dp))
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(3.dp),
+        ) {
+            Text(
+                text = exercise.name,
+                color = colorScheme.onSurface,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
+            )
+            if (meta.isNotBlank()) {
+                Text(
+                    text = meta,
+                    color = colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp,
+                )
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(colorScheme.surfaceVariant)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { onEdit() },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = editDescription,
+                    tint = colorScheme.primary,
+                    modifier = Modifier.size(16.dp),
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(colorScheme.surfaceVariant)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { onDelete() },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = deleteDescription,
+                    tint = colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(16.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DayPickerField(
+    selectedDays: Set<String>,
+    onDaysChange: (Set<String>) -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            text = stringResource(Res.string.add_routine_days_label),
+            color = colorScheme.onSurfaceVariant,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            Day.entries.forEach { day ->
+                val isSelected = day.abbr in selectedDays
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(
+                            if (isSelected) colorScheme.primary else colorScheme.background,
+                        )
+                        .border(
+                            1.dp,
+                            if (isSelected) colorScheme.primary else colorScheme.outline.copy(alpha = 0.3f),
+                            RoundedCornerShape(8.dp),
+                        )
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) {
+                            onDaysChange(
+                                if (isSelected) selectedDays - day.abbr else selectedDays + day.abbr,
+                            )
+                        }
+                        .padding(vertical = 9.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(day.res),
+                        color = if (isSelected) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+                        fontSize = 11.sp,
+                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FormField(
+    label: String,
+    value: String,
+    placeholder: String,
+    onValueChange: (String) -> Unit,
+    keyboard: KeyboardType = KeyboardType.Text,
+    modifier: Modifier = Modifier.fillMaxWidth(),
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+            text = label,
+            color = colorScheme.onSurfaceVariant,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+        )
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    color = colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                    fontSize = 14.sp,
+                )
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(10.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = keyboard),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorScheme.primary,
+                unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.25f),
+                focusedTextColor = colorScheme.onSurface,
+                unfocusedTextColor = colorScheme.onSurface,
+                cursorColor = colorScheme.primary,
+                focusedContainerColor = colorScheme.background,
+                unfocusedContainerColor = colorScheme.background,
+            ),
+        )
+    }
+}
