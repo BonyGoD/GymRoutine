@@ -93,3 +93,18 @@ No tests exist. There are no test source sets configured anywhere.
 - **`ads/ui/`**, `common/ui/state/`, `core/database/`, `history/data/domain/`, `profile/data/domain/` are empty stubs — don't wire anything to them yet.
 - **AdMob app ID** in `AndroidManifest.xml` is Google's test placeholder (`ca-app-pub-3940256099942544~3347511713`) — replace before release.
 - **`SignInKMP`** (`com.github.BonyGoD.SignInKMP:signin-kmp:2.0.0`) is a first-party KMP library from the repo owner, sourced from JitPack.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+**graphify is MANDATORY for every codebase question or task.** Always run graphify commands before any grep, glob, file read, or subagent exploration. No exceptions.
+
+Rules:
+- **Always start** with `graphify query "<question>"` for any codebase question when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- **Never launch an explore/general subagent** to browse the codebase without first running graphify. Graphify output must inform which files to read before spawning any agent.
+- **Never use grep/glob for exploration** when graphify can answer the question first. Only use grep/glob to verify details that graphify surfaces.
+- Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
