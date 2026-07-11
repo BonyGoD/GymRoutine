@@ -128,6 +128,8 @@
     <string name="workout_screen_seconds_left">%1$ds</string>
     <string name="workout_screen_timer_running">Running…</string>
     <string name="workout_screen_timer_start">Start</string>
+    <string name="workout_screen_skip_exercise">Skip</string>
+    <string name="workout_screen_unskip_exercise">Undo skip</string>
 
     <!-- History screen -->
     <string name="history_screen_title">History</string>

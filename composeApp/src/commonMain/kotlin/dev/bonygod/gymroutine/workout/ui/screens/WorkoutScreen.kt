@@ -23,9 +23,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.AlertDialog
@@ -52,9 +54,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -76,9 +80,11 @@ import gymroutine.composeapp.generated.resources.workout_screen_rest_done_title
 import gymroutine.composeapp.generated.resources.workout_screen_rest_label
 import gymroutine.composeapp.generated.resources.workout_screen_seconds_left
 import gymroutine.composeapp.generated.resources.workout_screen_sets_reps
+import gymroutine.composeapp.generated.resources.workout_screen_skip_exercise
 import gymroutine.composeapp.generated.resources.workout_screen_timer_running
 import gymroutine.composeapp.generated.resources.workout_screen_timer_start
 import gymroutine.composeapp.generated.resources.workout_screen_title
+import gymroutine.composeapp.generated.resources.workout_screen_unskip_exercise
 import gymroutine.composeapp.generated.resources.workout_screen_weight_kg
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
@@ -86,6 +92,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 private val GreenCompleted = Color(0xFF388E3C)
 private val GreenCompletedBg = Color(0xFF1B5E20)
+private val GreySkipped = Color(0xFF9E9E9E)
+private val GreySkippedBg = Color(0xFF1C1C1C)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -151,14 +159,17 @@ fun WorkoutScreen(
                     ),
                     isExpanded = state.expandedExerciseIndex == index,
                     isCompleted = index in state.completedExercises,
+                    isSkipped = index in state.skippedExercises,
                     onToggle = { viewModel.onEvent(WorkoutEvent.OnToggleExercise(index)) },
                     onUpdateWeight = { viewModel.onEvent(WorkoutEvent.OnUpdateWeight(index, it)) },
                     onUpdateReps = { viewModel.onEvent(WorkoutEvent.OnUpdateReps(index, it)) },
                     onComplete = { viewModel.onEvent(WorkoutEvent.OnCompleteExercise(index)) },
+                    onToggleSkip = { viewModel.onEvent(WorkoutEvent.OnToggleSkipExercise(index)) },
+                    onSaveProgress = { viewModel.onEvent(WorkoutEvent.OnSaveExerciseProgress(index)) },
                 )
             }
 
-            if (state.allExercisesCompleted) {
+            if (state.allExercisesResolved) {
                 item {
                     Spacer(Modifier.height(8.dp))
                     Button(
@@ -204,10 +215,13 @@ private fun ExerciseCard(
     form: ExerciseWorkoutForm,
     isExpanded: Boolean,
     isCompleted: Boolean,
+    isSkipped: Boolean,
     onToggle: () -> Unit,
     onUpdateWeight: (String) -> Unit,
     onUpdateReps: (String) -> Unit,
     onComplete: () -> Unit,
+    onToggleSkip: () -> Unit,
+    onSaveProgress: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
     var completedRestSets by remember { mutableIntStateOf(0) }
@@ -234,14 +248,18 @@ private fun ExerciseCard(
     val finishExerciseText = stringResource(Res.string.workout_screen_finish_exercise)
     val fieldWeightLabel = stringResource(Res.string.workout_screen_field_weight_kg)
     val fieldRepsLabel = stringResource(Res.string.workout_screen_field_reps)
+    val skipExerciseText = stringResource(Res.string.workout_screen_skip_exercise)
+    val unskipExerciseText = stringResource(Res.string.workout_screen_unskip_exercise)
 
     val cardBg = when {
         isCompleted -> GreenCompletedBg.copy(alpha = 0.25f)
+        isSkipped -> GreySkippedBg.copy(alpha = 0.3f)
         isExpanded -> colorScheme.surfaceVariant
         else -> colorScheme.surface
     }
     val cardBorder = when {
         isCompleted -> GreenCompleted.copy(alpha = 0.5f)
+        isSkipped -> GreySkipped.copy(alpha = 0.3f)
         isExpanded -> colorScheme.primary.copy(alpha = 0.6f)
         else -> colorScheme.outline.copy(alpha = 0.15f)
     }
@@ -253,7 +271,7 @@ private fun ExerciseCard(
             .background(cardBg)
             .border(1.dp, cardBorder, RoundedCornerShape(20.dp))
             .then(
-                if (!isCompleted) {
+                if (!isCompleted && !isSkipped) {
                     Modifier.clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
@@ -274,7 +292,11 @@ private fun ExerciseCard(
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
                     text = exercise.name,
-                    color = if (isCompleted) GreenCompleted.copy(alpha = 0.9f) else colorScheme.onSurface,
+                    color = when {
+                        isCompleted -> GreenCompleted.copy(alpha = 0.9f)
+                        isSkipped -> GreySkipped.copy(alpha = 0.7f)
+                        else -> colorScheme.onSurface
+                    },
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
@@ -284,25 +306,79 @@ private fun ExerciseCard(
                     fontSize = 13.sp,
                 )
             }
-            if (isCompleted) {
-                Icon(
-                    Icons.Default.CheckCircle,
-                    contentDescription = null,
-                    tint = GreenCompleted,
-                    modifier = Modifier.size(26.dp),
-                )
-            } else {
-                Text(
-                    text = weightKgText,
-                    color = colorScheme.primary,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                )
+
+            when {
+                isCompleted -> {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = GreenCompleted,
+                        modifier = Modifier.size(26.dp),
+                    )
+                }
+                isSkipped -> {
+                    // Tapping the grey icon un-skips the exercise
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = onToggleSkip,
+                            )
+                            .padding(4.dp),
+                    ) {
+                        Icon(
+                            Icons.Default.Cancel,
+                            contentDescription = unskipExerciseText,
+                            tint = GreySkipped,
+                            modifier = Modifier.size(26.dp),
+                        )
+                    }
+                }
+                else -> {
+                    // Default: weight label + "Omitir" chip
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(
+                            text = weightKgText,
+                            color = colorScheme.primary,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .border(
+                                    1.dp,
+                                    colorScheme.outline.copy(alpha = 0.4f),
+                                    RoundedCornerShape(8.dp),
+                                )
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = onToggleSkip,
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = skipExerciseText,
+                                color = colorScheme.onSurfaceVariant,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Medium,
+                                letterSpacing = 0.3.sp,
+                            )
+                        }
+                    }
+                }
             }
         }
 
         AnimatedVisibility(
-            visible = isExpanded && !isCompleted,
+            visible = isExpanded && !isCompleted && !isSkipped,
             enter = expandVertically(),
             exit = shrinkVertically(),
         ) {
@@ -350,6 +426,7 @@ private fun ExerciseCard(
                         label = fieldWeightLabel,
                         value = form.weight,
                         onValueChange = onUpdateWeight,
+                        onSave = onSaveProgress,
                         keyboardType = KeyboardType.Decimal,
                     )
                     WorkoutField(
@@ -357,6 +434,7 @@ private fun ExerciseCard(
                         label = fieldRepsLabel,
                         value = form.reps,
                         onValueChange = onUpdateReps,
+                        onSave = onSaveProgress,
                         keyboardType = KeyboardType.Number,
                     )
                 }
@@ -527,10 +605,27 @@ private fun WorkoutField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
+    onSave: () -> Unit,
     keyboardType: KeyboardType,
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    // Guard: only trigger save on blur if the field was actually focused first,
+    // to avoid spurious saves on initial composition.
+    var wasFocused by remember { mutableStateOf(false) }
+
+    // onFocusChanged is applied to the Column so that focus propagation from the
+    // inner BasicTextField bubbles up correctly without interfering with the
+    // composable-lambda inference of BasicTextField's own parameters.
+    Column(
+        modifier = modifier.onFocusChanged { focusState ->
+            if (focusState.hasFocus) {
+                wasFocused = true
+            } else if (wasFocused) {
+                onSave()
+            }
+        },
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
         Text(
             text = label,
             color = colorScheme.onSurfaceVariant,
@@ -542,7 +637,13 @@ private fun WorkoutField(
             value = value,
             onValueChange = onValueChange,
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType,
+                imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onSave() },
+            ),
             textStyle = TextStyle(
                 color = colorScheme.onSurface,
                 fontSize = 18.sp,

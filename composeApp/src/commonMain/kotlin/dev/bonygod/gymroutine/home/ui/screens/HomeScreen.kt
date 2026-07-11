@@ -499,69 +499,33 @@ private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Bo
                 }
             }
 
-            Button(
-                onClick = onStart,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-                    .height(64.dp),
-                shape = CircleShape,
-                enabled = !isTodayCompleted,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    disabledContainerColor = Color(0xFF1B5E20),
-                ),
-            ) {
-                Icon(
-                    if (isTodayCompleted) Icons.Default.CheckCircle else Icons.Default.PlayArrow,
-                    null,
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp),
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    if (isTodayCompleted) ctaCompletedText else ctaStartText,
-                    color = Color.White,
-                    fontSize = 15.sp,
-                )
-            }
-        }
-
-        // Badge: LISTO / TERMINADO – top-right overlay
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .clip(CircleShape)
-                .background(colorScheme.surfaceVariant)
-                .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), CircleShape)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                if (isTodayCompleted) {
+            if (!isRestDay) {
+                Button(
+                    onClick = onStart,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .height(64.dp),
+                    shape = CircleShape,
+                    enabled = !isTodayCompleted,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.primary,
+                        disabledContainerColor = Color(0xFF1B5E20),
+                    ),
+                ) {
                     Icon(
-                        Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = Color(0xFF4CAF50),
-                        modifier = Modifier.size(10.dp),
+                        if (isTodayCompleted) Icons.Default.CheckCircle else Icons.Default.PlayArrow,
+                        null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp),
                     )
-                } else {
-                    Box(
-                        Modifier
-                            .size(8.dp)
-                            .clip(CircleShape)
-                            .background(colorScheme.primary),
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        if (isTodayCompleted) ctaCompletedText else ctaStartText,
+                        color = Color.White,
+                        fontSize = 15.sp,
                     )
                 }
-                Text(
-                    if (isTodayCompleted) badgeDoneText else badgeReadyText,
-                    color = if (isTodayCompleted) Color(0xFF4CAF50) else colorScheme.onSurface,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = (0.96).sp,
-                )
             }
         }
     }

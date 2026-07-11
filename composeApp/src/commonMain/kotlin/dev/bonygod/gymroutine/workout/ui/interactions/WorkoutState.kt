@@ -8,10 +8,13 @@ data class WorkoutState(
     val exercises: List<Exercise> = emptyList(),
     val expandedExerciseIndex: Int? = null,
     val completedExercises: Set<Int> = emptySet(),
+    val skippedExercises: Set<Int> = emptySet(),
     val exerciseForms: Map<Int, ExerciseWorkoutForm> = emptyMap(),
 ) {
-    val allExercisesCompleted: Boolean
-        get() = exercises.isNotEmpty() && completedExercises.size == exercises.size
+    /** True when every exercise is either completed or explicitly skipped. */
+    val allExercisesResolved: Boolean
+        get() = exercises.isNotEmpty() &&
+            (completedExercises.size + skippedExercises.size) == exercises.size
 
     fun showLogging() = copy(isLogging = true)
 
@@ -31,8 +34,23 @@ data class WorkoutState(
 
     fun completeExercise(index: Int) = copy(
         completedExercises = completedExercises + index,
+        skippedExercises = skippedExercises - index,
         expandedExerciseIndex = null,
     )
+
+    fun toggleSkipExercise(index: Int): WorkoutState =
+        if (index in skippedExercises) {
+            copy(
+                skippedExercises = skippedExercises - index,
+                expandedExerciseIndex = null,
+            )
+        } else {
+            copy(
+                skippedExercises = skippedExercises + index,
+                completedExercises = completedExercises - index,
+                expandedExerciseIndex = null,
+            )
+        }
 
     fun updateWeight(index: Int, weight: String) = copy(
         exerciseForms = exerciseForms + (

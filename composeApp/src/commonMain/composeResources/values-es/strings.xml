@@ -128,6 +128,8 @@
     <string name="workout_screen_seconds_left">%1$ds</string>
     <string name="workout_screen_timer_running">En curso…</string>
     <string name="workout_screen_timer_start">Iniciar</string>
+    <string name="workout_screen_skip_exercise">Omitir</string>
+    <string name="workout_screen_unskip_exercise">Deshacer salto</string>
 
     <!-- History screen -->
     <string name="history_screen_title">Historial</string>
