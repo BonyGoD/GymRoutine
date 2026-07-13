@@ -14,6 +14,7 @@ kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.8.0"
 kotlinx-serialization = "1.8.0"
 ktor = "3.4.3"
+signin-kmp = "2.0.1"
 
 # Navigation 3
 navigation3-multiplatform-adaptive = "1.3.0-alpha02"
@@ -52,6 +53,9 @@ compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.re
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+
+#BonyGoD
+bonygod-signinkmp = { module = "com.github.BonyGoD.SignInKMP:signin-kmp", version.ref = "signin-kmp" }
 
 # Navigation 3
 jetbrains-material3-adaptiveNavigation3 = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation3", version.ref = "navigation3-multiplatform-adaptive" }

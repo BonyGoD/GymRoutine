@@ -62,7 +62,7 @@ kotlin {
             implementation(libs.gitlive.firebase.analytics)
 
             // SignInKMP
-            implementation("com.github.BonyGoD.SignInKMP:signin-kmp:2.0.0")
+            implementation(libs.bonygod.signinkmp)
 
             // Date & Time
             implementation(libs.kotlinx.datetime)
