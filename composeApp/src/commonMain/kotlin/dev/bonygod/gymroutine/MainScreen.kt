@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.navigation.BottomTab
 import dev.bonygod.gymroutine.core.navigation.Navigator
+import dev.bonygod.gymroutine.evolution.ui.screens.EvolutionScreen
 import dev.bonygod.gymroutine.history.ui.screens.HistoryScreen
 import dev.bonygod.gymroutine.home.ui.screens.HomeScreen
 import dev.bonygod.gymroutine.profile.ui.screens.ProfileScreen
@@ -74,6 +75,7 @@ fun MainScreen(userId: String = "", navigator: Navigator = koinInject()) {
                 BottomTab.Home -> HomeScreen(vmKey = "home_$userId")
                 BottomTab.Routines -> RoutinesScreen(vmKey = "routines_$userId")
                 BottomTab.History -> HistoryScreen(vmKey = "history_$userId")
+                BottomTab.Evolution -> EvolutionScreen(vmKey = "evolution_$userId")
                 BottomTab.Profile -> ProfileScreen(vmKey = "profile_$userId")
             }
         }

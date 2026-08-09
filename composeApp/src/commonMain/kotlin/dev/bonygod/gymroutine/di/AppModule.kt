@@ -13,6 +13,9 @@ import dev.bonygod.gymroutine.auth.domain.usecase.RegisterUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.SendPasswordResetUseCase
 import dev.bonygod.gymroutine.auth.ui.AuthViewModel
 import dev.bonygod.gymroutine.core.navigation.Navigator
+import dev.bonygod.gymroutine.evolution.domain.usecase.GetExerciseEvolutionsUseCase
+import dev.bonygod.gymroutine.evolution.domain.usecase.SeedEvolutionDataUseCase
+import dev.bonygod.gymroutine.evolution.ui.EvolutionViewModel
 import dev.bonygod.gymroutine.history.ui.HistoryViewModel
 import dev.bonygod.gymroutine.home.ui.HomeViewModel
 import dev.bonygod.gymroutine.profile.ui.ProfileViewModel
@@ -28,10 +31,17 @@ import dev.bonygod.gymroutine.routines.domain.usecase.UpdateRoutineUseCase
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
 import dev.bonygod.gymroutine.workout.data.datasource.WorkoutLogRemoteDataSource
 import dev.bonygod.gymroutine.workout.data.datasource.WorkoutLogRemoteDataSourceImpl
+import dev.bonygod.gymroutine.workout.data.datasource.WorkoutSessionRemoteDataSource
+import dev.bonygod.gymroutine.workout.data.datasource.WorkoutSessionRemoteDataSourceImpl
 import dev.bonygod.gymroutine.workout.data.repository.WorkoutLogRepositoryImpl
+import dev.bonygod.gymroutine.workout.data.repository.WorkoutSessionRepositoryImpl
 import dev.bonygod.gymroutine.workout.domain.repository.WorkoutLogRepository
+import dev.bonygod.gymroutine.workout.domain.repository.WorkoutSessionRepository
+import dev.bonygod.gymroutine.workout.domain.usecase.ClearWorkoutSessionUseCase
+import dev.bonygod.gymroutine.workout.domain.usecase.GetWorkoutSessionUseCase
 import dev.bonygod.gymroutine.workout.domain.usecase.LogWorkoutUseCase
 import dev.bonygod.gymroutine.workout.domain.usecase.ObserveWorkoutLogsUseCase
+import dev.bonygod.gymroutine.workout.domain.usecase.SaveWorkoutSessionUseCase
 import dev.bonygod.gymroutine.workout.ui.WorkoutViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
@@ -77,6 +87,10 @@ val appModule = module {
     factory { UpdateRoutineUseCase(get()) }
     factory { DeleteRoutineUseCase(get()) }
 
+    // Evolution use cases
+    factory { GetExerciseEvolutionsUseCase(get()) }
+    factory { SeedEvolutionDataUseCase(get(), get()) }
+
     // Workout logs data layer
     single<WorkoutLogRemoteDataSource> { WorkoutLogRemoteDataSourceImpl(get()) }
     single<WorkoutLogRepository> { WorkoutLogRepositoryImpl(get()) }
@@ -85,13 +99,23 @@ val appModule = module {
     factory { LogWorkoutUseCase(get()) }
     factory { ObserveWorkoutLogsUseCase(get()) }
 
+    // Workout sessions data layer
+    single<WorkoutSessionRemoteDataSource> { WorkoutSessionRemoteDataSourceImpl(get()) }
+    single<WorkoutSessionRepository> { WorkoutSessionRepositoryImpl(get()) }
+
+    // Workout sessions use cases
+    factory { GetWorkoutSessionUseCase(get()) }
+    factory { SaveWorkoutSessionUseCase(get()) }
+    factory { ClearWorkoutSessionUseCase(get()) }
+
     // ViewModels
     viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
     viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { HistoryViewModel(get(), get()) }
+    viewModel { EvolutionViewModel(get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get(), get(), get(), get()) }
     viewModel { RoutinesViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModel { WorkoutViewModel(get(), get(), get(), get(), get()) }
+    viewModel { WorkoutViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 }
 
 fun initKoin(config: KoinApplication.() -> Unit = {}) {

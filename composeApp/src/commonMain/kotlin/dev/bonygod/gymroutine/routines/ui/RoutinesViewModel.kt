@@ -59,14 +59,14 @@ class RoutinesViewModel(
                 .onSuccess { user ->
                     currentUserId = user?.uid.orEmpty()
                     getRoutines(currentUserId)
-                        .onSuccess { routines -> setState { showLoading(false).setRoutines(routines) } }
+                        .onSuccess { routines -> setState { finishLoading().setRoutines(routines) } }
                         .onFailure { e ->
-                            setState { showLoading(false) }
+                            setState { finishLoading() }
                             setEffect(RoutinesEffect.ShowError(e.message.orEmpty()))
                         }
                 }
                 .onFailure { e ->
-                    setState { showLoading(false) }
+                    setState { finishLoading() }
                     setEffect(RoutinesEffect.ShowError(e.message.orEmpty()))
                 }
         }

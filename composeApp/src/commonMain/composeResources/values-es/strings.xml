@@ -86,6 +86,7 @@
     <!-- Add routine screen -->
     <string name="add_routine_screen_title_new">Nueva Rutina</string>
     <string name="add_routine_screen_title_edit">Editar Rutina</string>
+    <string name="add_routine_routine_not_found">Esta rutina ya no está disponible.</string>
     <string name="add_routine_section_name">NOMBRE</string>
     <string name="add_routine_name_placeholder">Ej: Push Day</string>
     <string name="add_routine_section_exercises">EJERCICIOS</string>
@@ -121,7 +122,6 @@
     <string name="workout_screen_field_weight_kg">Peso (kg)</string>
     <string name="workout_screen_field_reps">Reps</string>
     <string name="workout_screen_initial_values">Inicio: %1$s kg × %2$d reps</string>
-    <string name="workout_screen_finish_exercise">TERMINAR EJERCICIO</string>
     <string name="workout_screen_rest_done_title">Descanso terminado</string>
     <string name="workout_screen_rest_done_message">¡Listo para la siguiente serie!</string>
     <string name="workout_screen_rest_label">Descanso</string>
@@ -138,6 +138,20 @@
     <string name="history_screen_date_today">Hoy</string>
     <string name="history_screen_date_yesterday">Ayer</string>
     <string name="history_screen_date_day_month">%1$d de %2$s</string>
+
+    <!-- Evolution screen -->
+    <string name="evolution_screen_title">Evolución</string>
+    <string name="evolution_screen_session_count">%1$d registros</string>
+    <string name="evolution_screen_weight_delta">%1$s kg</string>
+    <string name="evolution_screen_empty">Aún no hay progresión registrada</string>
+    <string name="evolution_screen_seed_test_data">Generar datos de prueba</string>
+    <string name="evolution_chart_legend_weight">Peso (kg)</string>
+    <string name="evolution_chart_legend_reps">Repeticiones</string>
+    <string name="evolution_detail_weight_label">PESO</string>
+    <string name="evolution_detail_weight_value">%1$s → %2$s kg</string>
+    <string name="evolution_detail_reps_label">REPS</string>
+    <string name="evolution_detail_reps_value">%1$d → %2$d</string>
+    <string name="evolution_detail_close">Cerrar</string>
 
     <!-- Profile screen -->
     <string name="profile_screen_default_user_name">Atleta</string>

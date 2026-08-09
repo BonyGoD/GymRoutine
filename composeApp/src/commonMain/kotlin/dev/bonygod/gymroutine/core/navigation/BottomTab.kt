@@ -1,6 +1,7 @@
 package dev.bonygod.gymroutine.core.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
@@ -11,5 +12,6 @@ enum class BottomTab(val label: String, val icon: ImageVector) {
     Home("Inicio", Icons.Default.Home),
     Routines("Rutinas", Icons.AutoMirrored.Filled.ViewList),
     History("Historial", Icons.Default.History),
+    Evolution("Evolución", Icons.AutoMirrored.Filled.TrendingUp),
     Profile("Perfil", Icons.Default.Person),
 }

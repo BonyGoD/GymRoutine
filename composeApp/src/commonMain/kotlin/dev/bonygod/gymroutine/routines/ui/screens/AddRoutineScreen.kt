@@ -26,6 +26,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.utils.Day
@@ -76,6 +78,7 @@ import gymroutine.composeapp.generated.resources.add_routine_meta_reps
 import gymroutine.composeapp.generated.resources.add_routine_meta_sets
 import gymroutine.composeapp.generated.resources.add_routine_meta_weight_kg
 import gymroutine.composeapp.generated.resources.add_routine_name_placeholder
+import gymroutine.composeapp.generated.resources.add_routine_routine_not_found
 import gymroutine.composeapp.generated.resources.add_routine_screen_title_edit
 import gymroutine.composeapp.generated.resources.add_routine_screen_title_new
 import gymroutine.composeapp.generated.resources.add_routine_section_exercises
@@ -99,6 +102,10 @@ fun AddRoutineScreen(
     }
 
     val isEdit = routineId != null
+    // Mientras no se haya cargado la lista no sabemos si la rutina existe: spinner.
+    // Si ya se cargó y sigue sin aparecer, es que se borró: mensaje en vez de formulario vacío.
+    val isLoadingExisting = isEdit && existing == null && !state.hasLoaded
+    val isMissingRoutine = isEdit && existing == null && state.hasLoaded
 
     var routineName by remember(existing) { mutableStateOf(existing?.name ?: "") }
     var routineDays by remember(existing) {
@@ -120,6 +127,7 @@ fun AddRoutineScreen(
 
     val titleNew = stringResource(Res.string.add_routine_screen_title_new)
     val titleEdit = stringResource(Res.string.add_routine_screen_title_edit)
+    val routineNotFound = stringResource(Res.string.add_routine_routine_not_found)
     val backDescription = stringResource(Res.string.common_back_description)
     val sectionNameLabel = stringResource(Res.string.add_routine_section_name)
     val namePlaceholder = stringResource(Res.string.add_routine_name_placeholder)
@@ -174,269 +182,298 @@ fun AddRoutineScreen(
         }
 
         // ── Contenido scrollable ──────────────────────────────────────────────
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .imePadding()
-                .padding(start = 24.dp, end = 24.dp, bottom = 40.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-        ) {
-            // ── Nombre de la rutina ───────────────────────────────────────────
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = sectionNameLabel,
-                    color = colorScheme.onSurfaceVariant,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 1.sp,
-                )
-                OutlinedTextField(
-                    value = routineName,
-                    onValueChange = { routineName = it },
-                    placeholder = {
-                        Text(
-                            text = namePlaceholder,
-                            color = colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    singleLine = true,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = colorScheme.primary,
-                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.3f),
-                        focusedTextColor = colorScheme.onSurface,
-                        unfocusedTextColor = colorScheme.onSurface,
-                        cursorColor = colorScheme.primary,
-                        focusedContainerColor = colorScheme.surface,
-                        unfocusedContainerColor = colorScheme.surface,
-                    ),
-                )
-            }
-
-            // ── Días de la rutina ────────────────────────────────────────────
-            DayPickerField(
-                selectedDays = routineDays,
-                onDaysChange = { routineDays = it },
-            )
-
-            // ── Lista de ejercicios añadidos ──────────────────────────────────
-            if (exercises.isNotEmpty()) {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        text = sectionExercises,
-                        color = colorScheme.onSurfaceVariant,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.sp,
-                    )
-                    exercises.forEachIndexed { index, exercise ->
-                        ExerciseItem(
-                            exercise = exercise,
-                            onEdit = {
-                                editingIndex = index
-                                draft = exercise
-                                showExerciseForm = true
-                            },
-                            onDelete = { exercises.removeAt(index) },
-                        )
-                    }
-                }
-            }
-
-            // ── Formulario nuevo ejercicio (expandible) ───────────────────────
-            AnimatedVisibility(
-                visible = showExerciseForm,
-                enter = expandVertically(),
-                exit = shrinkVertically(),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(colorScheme.surface)
-                        .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Text(
-                        text = if (editingIndex != null) formTitleEdit else formTitleNew,
-                        color = colorScheme.primary,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.sp,
-                    )
-
-                    FormField(
-                        label = stringResource(Res.string.add_routine_field_exercise_name),
-                        value = draft.name,
-                        placeholder = stringResource(Res.string.add_routine_field_exercise_name_placeholder),
-                        onValueChange = { draft = draft.copy(name = it) },
-                    )
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        FormField(
-                            label = stringResource(Res.string.add_routine_field_sets),
-                            value = draft.sets,
-                            placeholder = stringResource(Res.string.add_routine_field_sets_placeholder),
-                            onValueChange = { draft = draft.copy(sets = it) },
-                            keyboard = KeyboardType.Number,
-                            modifier = Modifier.weight(1f),
-                        )
-                        FormField(
-                            label = stringResource(Res.string.add_routine_field_reps),
-                            value = draft.reps,
-                            placeholder = stringResource(Res.string.add_routine_field_reps_placeholder),
-                            onValueChange = { draft = draft.copy(reps = it) },
-                            keyboard = KeyboardType.Number,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        FormField(
-                            label = stringResource(Res.string.add_routine_field_weight_kg),
-                            value = draft.weight,
-                            placeholder = stringResource(Res.string.add_routine_field_weight_placeholder),
-                            onValueChange = { draft = draft.copy(weight = it) },
-                            keyboard = KeyboardType.Decimal,
-                            modifier = Modifier.weight(1f),
-                        )
-                        FormField(
-                            label = stringResource(Res.string.add_routine_field_rest_seconds),
-                            value = draft.restSeconds,
-                            placeholder = stringResource(Res.string.add_routine_field_rest_placeholder),
-                            onValueChange = { draft = draft.copy(restSeconds = it) },
-                            keyboard = KeyboardType.Number,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                    // Acciones del formulario
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(colorScheme.surfaceVariant)
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                ) {
-                                    showExerciseForm = false
-                                    editingIndex = null
-                                    draft = ExerciseForm()
-                                }
-                                .padding(vertical = 12.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                text = actionCancel,
-                                color = colorScheme.onSurfaceVariant,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Medium,
-                            )
-                        }
-                        val canAdd = draft.name.isNotBlank()
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(if (canAdd) colorScheme.primary else colorScheme.surfaceVariant)
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                    enabled = canAdd,
-                                ) {
-                                    val idx = editingIndex
-                                    if (idx != null) {
-                                        exercises[idx] = draft
-                                    } else {
-                                        exercises.add(draft)
-                                    }
-                                    editingIndex = null
-                                    draft = ExerciseForm()
-                                    showExerciseForm = false
-                                }
-                                .padding(vertical = 12.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                text = if (editingIndex != null) actionSave else actionAdd,
-                                color = if (canAdd) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.SemiBold,
-                            )
-                        }
-                    }
-                }
-            }
-
-            // ── Botón añadir ejercicio ────────────────────────────────────────
-            if (!showExerciseForm) {
+        when {
+            isLoadingExisting -> {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .border(1.dp, colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                        ) { showExerciseForm = true }
-                        .padding(vertical = 14.dp),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.FitnessCenter,
-                            contentDescription = null,
-                            tint = colorScheme.primary,
-                            modifier = Modifier.size(18.dp),
-                        )
-                        Text(
-                            text = buttonAddExercise,
-                            color = colorScheme.primary,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    }
+                    CircularProgressIndicator()
                 }
             }
 
-            // ── Guardar rutina ────────────────────────────────────────────────
-            val canSave = routineName.isNotBlank() && exercises.isNotEmpty()
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(if (canSave) colorScheme.primary else colorScheme.surfaceVariant)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        enabled = canSave,
-                    ) {
-                        val routine = Routine(
-                            id = existing?.id ?: "",
-                            name = routineName,
-                            days = Day.entries.filter { it.abbr in routineDays }.joinToString(",") { it.abbr },
-                            exercises = exercises.map { it.toExercise() },
+            isMissingRoutine -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = routineNotFound,
+                        color = colorScheme.onSurfaceVariant,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+
+            else -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .imePadding()
+                        .padding(start = 24.dp, end = 24.dp, bottom = 40.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                ) {
+                    // ── Nombre de la rutina ───────────────────────────────────────────
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = sectionNameLabel,
+                            color = colorScheme.onSurfaceVariant,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 1.sp,
                         )
-                        if (isEdit) {
-                            viewModel.onEvent(RoutinesEvent.OnUpdateRoutine(routine))
-                        } else {
-                            viewModel.onEvent(RoutinesEvent.OnCreateRoutine(routine))
+                        OutlinedTextField(
+                            value = routineName,
+                            onValueChange = { routineName = it },
+                            placeholder = {
+                                Text(
+                                    text = namePlaceholder,
+                                    color = colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = colorScheme.primary,
+                                unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.3f),
+                                focusedTextColor = colorScheme.onSurface,
+                                unfocusedTextColor = colorScheme.onSurface,
+                                cursorColor = colorScheme.primary,
+                                focusedContainerColor = colorScheme.surface,
+                                unfocusedContainerColor = colorScheme.surface,
+                            ),
+                        )
+                    }
+
+                    // ── Días de la rutina ────────────────────────────────────────────
+                    DayPickerField(
+                        selectedDays = routineDays,
+                        onDaysChange = { routineDays = it },
+                    )
+
+                    // ── Lista de ejercicios añadidos ──────────────────────────────────
+                    if (exercises.isNotEmpty()) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(
+                                text = sectionExercises,
+                                color = colorScheme.onSurfaceVariant,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 1.sp,
+                            )
+                            exercises.forEachIndexed { index, exercise ->
+                                ExerciseItem(
+                                    exercise = exercise,
+                                    onEdit = {
+                                        editingIndex = index
+                                        draft = exercise
+                                        showExerciseForm = true
+                                    },
+                                    onDelete = { exercises.removeAt(index) },
+                                )
+                            }
                         }
                     }
-                    .padding(vertical = 16.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = if (isEdit) buttonSaveChanges else buttonSaveRoutine,
-                    color = if (canSave) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
+
+                    // ── Formulario nuevo ejercicio (expandible) ───────────────────────
+                    AnimatedVisibility(
+                        visible = showExerciseForm,
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(colorScheme.surface)
+                                .border(1.dp, colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Text(
+                                text = if (editingIndex != null) formTitleEdit else formTitleNew,
+                                color = colorScheme.primary,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 1.sp,
+                            )
+
+                            FormField(
+                                label = stringResource(Res.string.add_routine_field_exercise_name),
+                                value = draft.name,
+                                placeholder = stringResource(Res.string.add_routine_field_exercise_name_placeholder),
+                                onValueChange = { draft = draft.copy(name = it) },
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                FormField(
+                                    label = stringResource(Res.string.add_routine_field_sets),
+                                    value = draft.sets,
+                                    placeholder = stringResource(Res.string.add_routine_field_sets_placeholder),
+                                    onValueChange = { draft = draft.copy(sets = it) },
+                                    keyboard = KeyboardType.Number,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                FormField(
+                                    label = stringResource(Res.string.add_routine_field_reps),
+                                    value = draft.reps,
+                                    placeholder = stringResource(Res.string.add_routine_field_reps_placeholder),
+                                    onValueChange = { draft = draft.copy(reps = it) },
+                                    keyboard = KeyboardType.Number,
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                FormField(
+                                    label = stringResource(Res.string.add_routine_field_weight_kg),
+                                    value = draft.weight,
+                                    placeholder = stringResource(Res.string.add_routine_field_weight_placeholder),
+                                    onValueChange = { draft = draft.copy(weight = it) },
+                                    keyboard = KeyboardType.Decimal,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                FormField(
+                                    label = stringResource(Res.string.add_routine_field_rest_seconds),
+                                    value = draft.restSeconds,
+                                    placeholder = stringResource(Res.string.add_routine_field_rest_placeholder),
+                                    onValueChange = { draft = draft.copy(restSeconds = it) },
+                                    keyboard = KeyboardType.Number,
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+                            // Acciones del formulario
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(colorScheme.surfaceVariant)
+                                        .clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null,
+                                        ) {
+                                            showExerciseForm = false
+                                            editingIndex = null
+                                            draft = ExerciseForm()
+                                        }
+                                        .padding(vertical = 12.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = actionCancel,
+                                        color = colorScheme.onSurfaceVariant,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Medium,
+                                    )
+                                }
+                                val canAdd = draft.isValid
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(if (canAdd) colorScheme.primary else colorScheme.surfaceVariant)
+                                        .clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null,
+                                            enabled = canAdd,
+                                        ) {
+                                            val idx = editingIndex
+                                            if (idx != null) {
+                                                exercises[idx] = draft
+                                            } else {
+                                                exercises.add(draft)
+                                            }
+                                            editingIndex = null
+                                            draft = ExerciseForm()
+                                            showExerciseForm = false
+                                        }
+                                        .padding(vertical = 12.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = if (editingIndex != null) actionSave else actionAdd,
+                                        color = if (canAdd) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // ── Botón añadir ejercicio ────────────────────────────────────────
+                    if (!showExerciseForm) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .border(1.dp, colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                ) { showExerciseForm = true }
+                                .padding(vertical = 14.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.FitnessCenter,
+                                    contentDescription = null,
+                                    tint = colorScheme.primary,
+                                    modifier = Modifier.size(18.dp),
+                                )
+                                Text(
+                                    text = buttonAddExercise,
+                                    color = colorScheme.primary,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium,
+                                )
+                            }
+                        }
+                    }
+
+                    // ── Guardar rutina ────────────────────────────────────────────────
+                    val canSave = routineName.isNotBlank() && exercises.isNotEmpty() && !isLoadingExisting
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(if (canSave) colorScheme.primary else colorScheme.surfaceVariant)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                enabled = canSave,
+                            ) {
+                                val routine = Routine(
+                                    id = existing?.id ?: "",
+                                    name = routineName,
+                                    days = Day.entries.filter { it.abbr in routineDays }.joinToString(",") { it.abbr },
+                                    exercises = exercises.map { it.toExercise() },
+                                )
+                                if (isEdit) {
+                                    viewModel.onEvent(RoutinesEvent.OnUpdateRoutine(routine))
+                                } else {
+                                    viewModel.onEvent(RoutinesEvent.OnCreateRoutine(routine))
+                                }
+                            }
+                            .padding(vertical = 16.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = if (isEdit) buttonSaveChanges else buttonSaveRoutine,
+                            color = if (canSave) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
             }
         }
     }

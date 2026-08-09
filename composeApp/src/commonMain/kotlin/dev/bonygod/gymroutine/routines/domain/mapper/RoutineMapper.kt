@@ -2,21 +2,30 @@ package dev.bonygod.gymroutine.routines.domain.mapper
 
 import dev.bonygod.gymroutine.core.utils.normalizeDayToken
 import dev.bonygod.gymroutine.routines.data.model.ExerciseDto
+import dev.bonygod.gymroutine.routines.data.model.ExerciseProgressDto
 import dev.bonygod.gymroutine.routines.data.model.RoutineDto
 import dev.bonygod.gymroutine.routines.domain.model.Exercise
+import dev.bonygod.gymroutine.routines.domain.model.ExerciseProgress
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 
-fun ExerciseDto.toDomain() = Exercise(
-    name = name,
-    reps = reps,
-    sets = sets,
-    weight = weight,
-    restSeconds = restSeconds,
-    // Si el documento de Firestore no tenía estos campos (ejercicios viejos),
-    // se inicializan con los valores actuales de weight/reps.
-    initialWeight = if (initialWeight == 0f) weight else initialWeight,
-    initialReps = if (initialReps == 0) reps else initialReps,
-)
+fun ExerciseProgressDto.toDomain() = ExerciseProgress(weight, reps, timestamp)
+
+fun ExerciseDto.toDomain(): Exercise {
+    // Migración: los documentos anteriores a `history` traen solo los escalares.
+    val progression = if (history.isNotEmpty()) {
+        history.map { it.toDomain() }
+    } else {
+        val firstWeight = if (initialWeight == 0f) weight else initialWeight
+        val firstReps = if (initialReps == 0) reps else initialReps
+        buildList {
+            add(ExerciseProgress(firstWeight, firstReps, 0L))
+            if (firstWeight != weight || firstReps != reps) {
+                add(ExerciseProgress(weight, reps, 0L))
+            }
+        }
+    }
+    return Exercise(name = name, sets = sets, restSeconds = restSeconds, history = progression)
+}
 
 fun Exercise.toDto() = ExerciseDto(
     name = name,
@@ -26,6 +35,7 @@ fun Exercise.toDto() = ExerciseDto(
     restSeconds = restSeconds,
     initialWeight = initialWeight,
     initialReps = initialReps,
+    history = history.map { ExerciseProgressDto(it.weight, it.reps, it.timestamp) },
 )
 
 fun RoutineDto.toDomain() = Routine(

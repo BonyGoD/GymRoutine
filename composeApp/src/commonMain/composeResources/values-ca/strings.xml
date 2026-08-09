@@ -86,6 +86,7 @@
     <!-- Add routine screen -->
     <string name="add_routine_screen_title_new">Nova rutina</string>
     <string name="add_routine_screen_title_edit">Editar rutina</string>
+    <string name="add_routine_routine_not_found">Aquesta rutina ja no està disponible.</string>
     <string name="add_routine_section_name">NOM</string>
     <string name="add_routine_name_placeholder">Ex: Push Day</string>
     <string name="add_routine_section_exercises">EXERCICIS</string>
@@ -121,7 +122,6 @@
     <string name="workout_screen_field_weight_kg">Pes (kg)</string>
     <string name="workout_screen_field_reps">Reps</string>
     <string name="workout_screen_initial_values">Inici: %1$s kg × %2$d reps</string>
-    <string name="workout_screen_finish_exercise">ACABAR EXERCICI</string>
     <string name="workout_screen_rest_done_title">Descans acabat</string>
     <string name="workout_screen_rest_done_message">Llest per a la següent sèrie!</string>
     <string name="workout_screen_rest_label">Descans</string>
@@ -138,6 +138,20 @@
     <string name="history_screen_date_today">Avui</string>
     <string name="history_screen_date_yesterday">Ahir</string>
     <string name="history_screen_date_day_month">%1$d de %2$s</string>
+
+    <!-- Evolution screen -->
+    <string name="evolution_screen_title">Evolució</string>
+    <string name="evolution_screen_session_count">%1$d registres</string>
+    <string name="evolution_screen_weight_delta">%1$s kg</string>
+    <string name="evolution_screen_empty">Encara no hi ha progressió registrada</string>
+    <string name="evolution_screen_seed_test_data">Generar dades de prova</string>
+    <string name="evolution_chart_legend_weight">Pes (kg)</string>
+    <string name="evolution_chart_legend_reps">Repeticions</string>
+    <string name="evolution_detail_weight_label">PES</string>
+    <string name="evolution_detail_weight_value">%1$s → %2$s kg</string>
+    <string name="evolution_detail_reps_label">REPS</string>
+    <string name="evolution_detail_reps_value">%1$d → %2$d</string>
+    <string name="evolution_detail_close">Tancar</string>
 
     <!-- Profile screen -->
     <string name="profile_screen_default_user_name">Atleta</string>

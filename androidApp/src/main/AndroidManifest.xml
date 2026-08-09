@@ -19,6 +19,7 @@
 
         <activity
             android:exported="true"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:name="dev.bonygod.gymroutine.MainActivity">
             <intent-filter>

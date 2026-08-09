@@ -12,4 +12,5 @@ data class ExerciseDto(
     val days: String = "",
     val initialWeight: Float = 0f,
     val initialReps: Int = 0,
+    val history: List<ExerciseProgressDto> = emptyList(),
 )

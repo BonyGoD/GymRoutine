@@ -72,7 +72,6 @@ import gymroutine.composeapp.generated.resources.common_back_description
 import gymroutine.composeapp.generated.resources.workout_screen_completed_sets
 import gymroutine.composeapp.generated.resources.workout_screen_field_reps
 import gymroutine.composeapp.generated.resources.workout_screen_field_weight_kg
-import gymroutine.composeapp.generated.resources.workout_screen_finish_exercise
 import gymroutine.composeapp.generated.resources.workout_screen_finish_workout
 import gymroutine.composeapp.generated.resources.workout_screen_initial_values
 import gymroutine.composeapp.generated.resources.workout_screen_rest_done_message
@@ -160,10 +159,11 @@ fun WorkoutScreen(
                     isExpanded = state.expandedExerciseIndex == index,
                     isCompleted = index in state.completedExercises,
                     isSkipped = index in state.skippedExercises,
+                    completedSets = state.completedSets[index] ?: 0,
                     onToggle = { viewModel.onEvent(WorkoutEvent.OnToggleExercise(index)) },
                     onUpdateWeight = { viewModel.onEvent(WorkoutEvent.OnUpdateWeight(index, it)) },
                     onUpdateReps = { viewModel.onEvent(WorkoutEvent.OnUpdateReps(index, it)) },
-                    onComplete = { viewModel.onEvent(WorkoutEvent.OnCompleteExercise(index)) },
+                    onSetCompleted = { viewModel.onEvent(WorkoutEvent.OnSetCompleted(index)) },
                     onToggleSkip = { viewModel.onEvent(WorkoutEvent.OnToggleSkipExercise(index)) },
                     onSaveProgress = { viewModel.onEvent(WorkoutEvent.OnSaveExerciseProgress(index)) },
                 )
@@ -216,15 +216,15 @@ private fun ExerciseCard(
     isExpanded: Boolean,
     isCompleted: Boolean,
     isSkipped: Boolean,
+    completedSets: Int,
     onToggle: () -> Unit,
     onUpdateWeight: (String) -> Unit,
     onUpdateReps: (String) -> Unit,
-    onComplete: () -> Unit,
+    onSetCompleted: () -> Unit,
     onToggleSkip: () -> Unit,
     onSaveProgress: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    var completedRestSets by remember { mutableIntStateOf(0) }
 
     val setsRepsText = stringResource(
         Res.string.workout_screen_sets_reps,
@@ -237,7 +237,7 @@ private fun ExerciseCard(
     )
     val completedSetsText = stringResource(
         Res.string.workout_screen_completed_sets,
-        completedRestSets,
+        completedSets,
         exercise.sets,
     )
     val initialValuesText = stringResource(
@@ -245,7 +245,6 @@ private fun ExerciseCard(
         exercise.initialWeight.toString(),
         exercise.initialReps,
     )
-    val finishExerciseText = stringResource(Res.string.workout_screen_finish_exercise)
     val fieldWeightLabel = stringResource(Res.string.workout_screen_field_weight_kg)
     val fieldRepsLabel = stringResource(Res.string.workout_screen_field_reps)
     val skipExerciseText = stringResource(Res.string.workout_screen_skip_exercise)
@@ -396,7 +395,7 @@ private fun ExerciseCard(
                         fontWeight = FontWeight.Medium,
                     )
                     LinearProgressIndicator(
-                        progress = { if (exercise.sets > 0) completedRestSets / exercise.sets.toFloat() else 0f },
+                        progress = { if (exercise.sets > 0) completedSets / exercise.sets.toFloat() else 0f },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(6.dp)
@@ -411,9 +410,8 @@ private fun ExerciseCard(
                     RestTimer(
                         restSeconds = exercise.restSeconds,
                         isVisible = isExpanded,
-                        onRestCompleted = {
-                            completedRestSets = (completedRestSets + 1).coerceAtMost(exercise.sets)
-                        },
+                        isLastSet = completedSets + 1 >= exercise.sets,
+                        onRestCompleted = onSetCompleted,
                     )
                 }
 
@@ -446,30 +444,6 @@ private fun ExerciseCard(
                         fontSize = 12.sp,
                     )
                 }
-
-                if (completedRestSets >= exercise.sets) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(CircleShape)
-                            .background(colorScheme.primary)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = onComplete,
-                            )
-                            .padding(vertical = 14.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = finishExerciseText,
-                            color = colorScheme.onPrimary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.5.sp,
-                        )
-                    }
-                }
             }
         }
     }
@@ -479,6 +453,7 @@ private fun ExerciseCard(
 private fun RestTimer(
     restSeconds: Int,
     isVisible: Boolean,
+    isLastSet: Boolean,
     onRestCompleted: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
@@ -503,7 +478,7 @@ private fun RestTimer(
             isRunning = false
             onRestCompleted()
             timeLeft = restSeconds
-            showDialog = true
+            showDialog = !isLastSet
         }
     }
 

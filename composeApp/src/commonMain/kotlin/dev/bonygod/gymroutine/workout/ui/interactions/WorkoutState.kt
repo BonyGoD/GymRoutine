@@ -10,6 +10,7 @@ data class WorkoutState(
     val completedExercises: Set<Int> = emptySet(),
     val skippedExercises: Set<Int> = emptySet(),
     val exerciseForms: Map<Int, ExerciseWorkoutForm> = emptyMap(),
+    val completedSets: Map<Int, Int> = emptyMap(),
 ) {
     /** True when every exercise is either completed or explicitly skipped. */
     val allExercisesResolved: Boolean
@@ -63,4 +64,13 @@ data class WorkoutState(
             index to (exerciseForms[index]?.copy(reps = reps) ?: ExerciseWorkoutForm(reps = reps))
             ),
     )
+
+    fun setCompletedSets(index: Int, count: Int) = copy(completedSets = completedSets + (index to count))
+
+    /** Restaura una sesión guardada sobre la rutina ya cargada por [setExercises]. */
+    fun restoreSession(
+        completed: Set<Int>,
+        skipped: Set<Int>,
+        sets: Map<Int, Int>,
+    ) = copy(completedExercises = completed, skippedExercises = skipped, completedSets = sets)
 }
