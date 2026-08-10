@@ -124,6 +124,11 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
     val routinePickerSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scrollState = rememberScrollState()
 
+    // Al volver de la pestaña de perfil el peso puede haber cambiado, y el ViewModel no se recrea.
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(HomeEvent.OnScreenShown)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
