@@ -192,6 +192,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
             WorkoutCTASection(
                 todayRoutines = todayRoutines,
                 isTodayCompleted = state.isTodayCompleted,
+                hasOtherRoutines = state.routines.isNotEmpty(),
                 onStart = {
                     val routine = todayRoutines.firstOrNull()
                     viewModel.onEvent(
@@ -530,6 +531,7 @@ private fun RoutinePickerItem(routine: Routine, onClick: () -> Unit) {
 private fun WorkoutCTASection(
     todayRoutines: List<Routine>,
     isTodayCompleted: Boolean,
+    hasOtherRoutines: Boolean,
     onStart: () -> Unit,
     onPickOther: () -> Unit,
 ) {
@@ -629,7 +631,7 @@ private fun WorkoutCTASection(
                 }
             }
 
-            if (isRestDay) {
+            if (isRestDay && hasOtherRoutines) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
