@@ -37,6 +37,16 @@ class AuthRepositoryImpl(
             .mapError()
             .identifyUser()
 
+    override suspend fun updateUserProfile(
+        uid: String,
+        age: String,
+        weight: String,
+        height: String,
+    ): Result<User> =
+        runCatching { dataSource.updateUserProfile(uid, age, weight, height) }
+            .reportFailure("AuthRepository.updateUserProfile")
+            .mapError()
+
     override suspend fun sendPasswordReset(email: String): Result<Unit> =
         runCatching { dataSource.sendPasswordReset(email) }
             .reportFailure("AuthRepository.sendPasswordReset")

@@ -23,6 +23,13 @@ interface AuthRepository {
         credential: ExternalAuthCredential,
     ): Result<User>
 
+    suspend fun updateUserProfile(
+        uid: String,
+        age: String,
+        weight: String,
+        height: String,
+    ): Result<User>
+
     suspend fun sendPasswordReset(email: String): Result<Unit>
 
     suspend fun logout(): Result<Unit>

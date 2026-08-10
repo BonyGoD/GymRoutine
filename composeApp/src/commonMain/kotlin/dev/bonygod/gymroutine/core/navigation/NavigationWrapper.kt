@@ -11,6 +11,7 @@ import dev.bonygod.gymroutine.MainScreen
 import dev.bonygod.gymroutine.auth.ui.screens.ForgotPasswordScreen
 import dev.bonygod.gymroutine.auth.ui.screens.LoginScreen
 import dev.bonygod.gymroutine.auth.ui.screens.RegisterScreen
+import dev.bonygod.gymroutine.onboarding.ui.screens.CompleteProfileScreen
 import dev.bonygod.gymroutine.routines.ui.screens.AddRoutineScreen
 import dev.bonygod.gymroutine.workout.ui.screens.WorkoutScreen
 import org.koin.compose.koinInject
@@ -31,6 +32,9 @@ fun NavigationWrapper() {
             }
             entry<Routes.Register> {
                 RegisterScreen()
+            }
+            entry<Routes.CompleteProfile> { entry ->
+                CompleteProfileScreen(userId = entry.userId)
             }
             entry<Routes.Main> { entry ->
                 MainScreen(userId = entry.userId)

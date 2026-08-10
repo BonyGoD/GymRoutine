@@ -28,6 +28,17 @@
     <string name="register_screen_or_register_with">Or sign up with</string>
     <string name="register_screen_google_register">Sign up with Google</string>
 
+    <!-- Complete profile screen -->
+    <string name="complete_profile_screen_title">Complete your profile</string>
+    <string name="complete_profile_screen_subtitle">We need a few details to personalize your training and calorie estimates</string>
+    <string name="complete_profile_field_age">Age</string>
+    <string name="complete_profile_field_height">Height</string>
+    <string name="complete_profile_field_weight">Weight</string>
+    <string name="complete_profile_unit_years">years</string>
+    <string name="complete_profile_unit_cm">cm</string>
+    <string name="complete_profile_unit_kg">kg</string>
+    <string name="complete_profile_button_save">Save and continue</string>
+
     <!-- Forgot password screen -->
     <string name="forgot_password_screen_topbar_title">Reset password</string>
     <string name="forgot_password_screen_title">Forgot your password?</string>
@@ -51,6 +62,7 @@
     <string name="error_social_no_google_account">No Google account found on this device</string>
     <string name="error_social_invalid_credential">Invalid Google credential</string>
     <string name="error_social_get_credential">Error retrieving Google credentials</string>
+    <string name="error_complete_profile_generic">Error saving your profile</string>
 
     <!-- Common actions -->
     <string name="common_edit_description">Edit</string>
