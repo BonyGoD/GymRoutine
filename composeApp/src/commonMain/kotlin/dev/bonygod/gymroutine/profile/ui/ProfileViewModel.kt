@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.bonygod.gymroutine.auth.domain.usecase.GetCurrentUserUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LogoutUseCase
+import dev.bonygod.gymroutine.auth.domain.usecase.UpdateUserProfileUseCase
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.core.navigation.Routes
 import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEffect
@@ -32,6 +33,7 @@ class ProfileViewModel(
     private val logout: LogoutUseCase,
     private val observeWorkoutLogs: ObserveWorkoutLogsUseCase,
     private val observeRoutines: ObserveRoutinesUseCase,
+    private val updateUserProfile: UpdateUserProfileUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -40,6 +42,8 @@ class ProfileViewModel(
     private val _effect = MutableSharedFlow<ProfileEffect>(replay = 1)
     val effect: SharedFlow<ProfileEffect> = _effect.asSharedFlow()
 
+    private var userId: String = ""
+
     init {
         load()
     }
@@ -47,6 +51,12 @@ class ProfileViewModel(
     fun onEvent(event: ProfileEvent) {
         when (event) {
             is ProfileEvent.OnLogout -> performLogout()
+            is ProfileEvent.OnEditProfileData -> setState { startEditingProfileData() }
+            is ProfileEvent.OnDismissEditProfileData -> setState { dismissEditingProfileData() }
+            is ProfileEvent.OnAgeChange -> setState { setEditingAge(event.value) }
+            is ProfileEvent.OnHeightChange -> setState { setEditingHeight(event.value) }
+            is ProfileEvent.OnWeightChange -> setState { setEditingWeight(event.value) }
+            is ProfileEvent.OnSaveProfileData -> saveProfileData()
         }
     }
 
@@ -54,13 +64,16 @@ class ProfileViewModel(
         viewModelScope.launch {
             getCurrentUser()
                 .onSuccess { user ->
-                    setState { setUser(user?.name.orEmpty(), user?.email.orEmpty()) }
-                    val uid = user?.uid.orEmpty()
-                    if (uid.isEmpty()) return@onSuccess
+                    setState {
+                        setUser(user?.name.orEmpty(), user?.email.orEmpty())
+                            .setProfileData(user?.age.orEmpty(), user?.weight.orEmpty(), user?.height.orEmpty())
+                    }
+                    userId = user?.uid.orEmpty()
+                    if (userId.isEmpty()) return@onSuccess
 
                     combine(
-                        observeWorkoutLogs(uid).catch { emit(emptyList()) },
-                        observeRoutines(uid).catch { emit(emptyList()) },
+                        observeWorkoutLogs(userId).catch { emit(emptyList()) },
+                        observeRoutines(userId).catch { emit(emptyList()) },
                     ) { logs, routines ->
                         val total = logs.count { it.completado }
                         val streak = calculateStreak(logs)
@@ -83,6 +96,27 @@ class ProfileViewModel(
             logout()
                 .onSuccess { navigator.clearAndNavigateTo(Routes.Login) }
                 .onFailure { e -> _effect.emit(ProfileEffect.ShowError(e.message.orEmpty())) }
+        }
+    }
+
+    private fun saveProfileData() {
+        if (userId.isEmpty()) return
+        viewModelScope.launch {
+            val editing = state.value
+            setState { setSavingProfileData(true) }
+            updateUserProfile(
+                uid = userId,
+                age = editing.editingAge.toString(),
+                weight = editing.editingWeight.toString(),
+                height = editing.editingHeight.toString(),
+            ).onSuccess { user ->
+                setState {
+                    setProfileData(user.age, user.weight, user.height).dismissEditingProfileData()
+                }
+            }.onFailure { error ->
+                setState { setSavingProfileData(false) }
+                _effect.emit(ProfileEffect.ShowError(error.message.orEmpty()))
+            }
         }
     }
 

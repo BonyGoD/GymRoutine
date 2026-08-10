@@ -177,6 +177,16 @@
     <string name="profile_screen_training_streak">Racha de entrenamiento</string>
     <string name="profile_screen_streak_days">%1$d días</string>
     <string name="profile_screen_logout">Cerrar sesión</string>
+    <string name="profile_screen_personal_data_title">Datos personales</string>
+    <string name="profile_screen_field_age">Edad</string>
+    <string name="profile_screen_field_height">Altura</string>
+    <string name="profile_screen_field_weight">Peso</string>
+    <string name="profile_screen_unit_years">años</string>
+    <string name="profile_screen_unit_cm">cm</string>
+    <string name="profile_screen_unit_kg">kg</string>
+    <string name="profile_screen_value_placeholder">—</string>
+    <string name="profile_screen_edit_data_title">Edita tus datos</string>
+    <string name="profile_screen_save_button">Guardar</string>
 
     <!-- Day items -->
     <string name="day_item_monday">LUN</string>
