@@ -10,6 +10,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         FirebaseApp.configure()
+        CrashlyticsInitializerKt.configureCrashlytics()
         _ = SignInCallbackHelper.shared
         return true
     }

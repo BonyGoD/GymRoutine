@@ -3,6 +3,7 @@ package dev.bonygod.gymroutine.workout.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.bonygod.gymroutine.auth.domain.usecase.GetCurrentUserUseCase
+import dev.bonygod.gymroutine.core.crashlytics.reportFailure
 import dev.bonygod.gymroutine.core.navigation.BottomTab
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.routines.domain.model.Routine
@@ -223,6 +224,7 @@ class WorkoutViewModel(
             cancelAndFlushSaveJobs()
             saveExerciseProgress()
             runCatching { logWorkout(userId, routineId, routineName, completado = true) }
+                .reportFailure("WorkoutLogRepository.logWorkout", mapOf("routineId" to routineId))
                 .onFailure { e -> setEffect(WorkoutEffect.ShowError(e.message.orEmpty())) }
             clearWorkoutSession(userId, routineId)
                 .onFailure { e -> setEffect(WorkoutEffect.ShowError(e.message.orEmpty())) }

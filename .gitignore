@@ -20,6 +20,9 @@ captures
 **/xcshareddata/WorkspaceSettings.xcsettings
 google-services.json
 GoogleService-Info.plist
+# Keystores de firma: nunca al repositorio.
+*.jks
+*.keystore
 Info.plist
 /composeApp/schemas/*
 

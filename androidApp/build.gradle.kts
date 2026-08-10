@@ -29,8 +29,8 @@ android {
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 6
-        versionName = "0.0.6"
+        versionCode = 7
+        versionName = "0.0.7"
     }
 
     packaging {
@@ -41,7 +41,7 @@ android {
 
     signingConfigs {
         val storeFile = localProps.getProperty("STORE_FILE", "")
-        val storePassword = localProps.getProperty("STORE_PASSWORD", "")
+        val storePassword = localProps.getProperty("KEYSTORE_PASSWORD", "")
         val keyAlias = localProps.getProperty("KEY_ALIAS", "")
         val keyPassword = localProps.getProperty("KEY_PASSWORD", "")
 
@@ -52,6 +52,12 @@ android {
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
             }
+        } else {
+            // Sin aviso, un release sin firmar falla más tarde y con un mensaje que no señala aquí.
+            logger.warn(
+                "AVISO: falta STORE_FILE en local.properties; el release se compilará sin firmar. " +
+                    "Claves necesarias: STORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD.",
+            )
         }
     }
 

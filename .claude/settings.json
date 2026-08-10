@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(graphify *)",
+      "PowerShell(graphify *)",
+      "Bash(keytool -list *)",
+      "Bash(echo *)",
+      "Bash(grep *)",
+      "Bash(head *)",
+      "Bash(cat *)",
+      "Bash(find *)",
+      "Bash(wc *)",
+      "Bash(ls *)",
+      "Bash(sort *)",
+      "Bash(tail *)",
+      "Bash(awk *)",
+      "Bash(cp *)",
+      "Bash(mkdir *)",
+      "Bash(git diff *)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git rev-parse *)",
+      "Bash(git ls-files *)",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(Get-Content *)",
+      "PowerShell(Select-String *)",
+      "PowerShell(Test-Path *)"
+    ]
+  }
+}

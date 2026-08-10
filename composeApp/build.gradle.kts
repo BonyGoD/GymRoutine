@@ -64,6 +64,9 @@ kotlin {
             // SignInKMP
             implementation(libs.bonygod.signinkmp)
 
+            // CrashlyticsKMP
+            implementation(libs.bonygod.crashlyticskmp)
+
             // Date & Time
             implementation(libs.kotlinx.datetime)
         }
