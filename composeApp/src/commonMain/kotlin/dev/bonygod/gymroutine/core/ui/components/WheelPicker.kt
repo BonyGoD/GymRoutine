@@ -49,20 +49,32 @@ fun WheelPicker(
     val listState = rememberLazyListState()
     val sidePadding = itemHeight * (visibleItems / 2)
 
+    // El elemento centrado no es "el primero visible": con visibleItems = 5 el centrado
+    // queda dos posiciones por debajo de firstVisibleItemIndex. En vez de asumir esa
+    // aritmética (que se rompe si cambian itemHeight, visibleItems o el contentPadding),
+    // se busca el elemento cuyo centro está más cerca del centro real del viewport.
+    val centerIndex by remember {
+        derivedStateOf {
+            val info = listState.layoutInfo
+            val viewportCenter = (info.viewportStartOffset + info.viewportEndOffset) / 2
+            info.visibleItemsInfo.minByOrNull { abs((it.offset + it.size / 2) - viewportCenter) }?.index ?: 0
+        }
+    }
+
     LaunchedEffect(Unit) {
         val initialIndex = values.indexOf(selectedValue).coerceAtLeast(0)
-        listState.scrollToItem(initialIndex)
+        // scrollToItem posiciona el índice como primero visible, no como centrado: hay que
+        // restarle la mitad de los elementos visibles para que el valor inicial quede en el centro.
+        listState.scrollToItem((initialIndex - visibleItems / 2).coerceAtLeast(0))
     }
 
     LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex }
+        snapshotFlow { centerIndex }
             .distinctUntilChanged()
             .collect { index ->
                 values.getOrNull(index)?.let(onValueChange)
             }
     }
-
-    val centerIndex by remember { derivedStateOf { listState.firstVisibleItemIndex } }
 
     Box(
         modifier = modifier.height(itemHeight * visibleItems),
