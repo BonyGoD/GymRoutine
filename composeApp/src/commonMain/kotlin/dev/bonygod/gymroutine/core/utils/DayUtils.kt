@@ -10,6 +10,7 @@ import gymroutine.composeapp.generated.resources.day_item_thursday
 import gymroutine.composeapp.generated.resources.day_item_tuesday
 import gymroutine.composeapp.generated.resources.day_item_wednesday
 import gymroutine.composeapp.generated.resources.format_days_no_days
+import kotlinx.datetime.DayOfWeek
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -51,6 +52,19 @@ fun normalizeDayToken(token: String): String? = when (token.trim().uppercase()) 
     "DS", "DISSABTE" -> "SÁB"
     "DG", "DIUMENGE" -> "DOM"
     else -> null
+}
+
+/** Abreviatura española de un [DayOfWeek] ("LUN", "MAR"...), en el mismo formato que
+ *  usa `Routine.days` y que acepta [normalizeDayToken]. */
+fun DayOfWeek.toSpanishAbbr(): String = when (this) {
+    DayOfWeek.MONDAY -> "LUN"
+    DayOfWeek.TUESDAY -> "MAR"
+    DayOfWeek.WEDNESDAY -> "MIÉ"
+    DayOfWeek.THURSDAY -> "JUE"
+    DayOfWeek.FRIDAY -> "VIE"
+    DayOfWeek.SATURDAY -> "SÁB"
+    DayOfWeek.SUNDAY -> "DOM"
+    else -> ""
 }
 
 fun dayAbbrToFullName(abbr: String): String = when (abbr.uppercase()) {

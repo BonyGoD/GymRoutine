@@ -5,6 +5,10 @@ import androidx.lifecycle.viewModelScope
 import dev.bonygod.gymroutine.auth.domain.usecase.GetCurrentUserUseCase
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.core.navigation.Routes
+import dev.bonygod.gymroutine.core.utils.toSpanishAbbr
+import dev.bonygod.gymroutine.home.domain.model.PendingWorkout
+import dev.bonygod.gymroutine.home.domain.pendingWorkoutKey
+import dev.bonygod.gymroutine.home.domain.pendingWorkoutsForWeek
 import dev.bonygod.gymroutine.home.ui.interactions.HomeEffect
 import dev.bonygod.gymroutine.home.ui.interactions.HomeEvent
 import dev.bonygod.gymroutine.home.ui.interactions.HomeState
@@ -22,7 +26,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
@@ -65,6 +68,9 @@ class HomeViewModel(
                                             .setConsistency(calculateConsistency(routines, workoutLogs))
                                             .setIsTodayCompleted(calculateIsTodayCompleted(workoutLogs))
                                             .setWeekRecords(records.first, records.second)
+                                            .setPendingWorkouts(
+                                                calculatePendingWorkouts(routines, workoutLogs, dismissedPending),
+                                            )
                                     }
                                 }
                         }
@@ -79,6 +85,9 @@ class HomeViewModel(
                                             .setConsistency(calculateConsistency(routines, logs))
                                             .setIsTodayCompleted(calculateIsTodayCompleted(logs))
                                             .setWeekRecords(records.first, records.second)
+                                            .setPendingWorkouts(
+                                                calculatePendingWorkouts(routines, logs, dismissedPending),
+                                            )
                                     }
                                 }
                         }
@@ -97,6 +106,19 @@ class HomeViewModel(
             )
             is HomeEvent.OnPickOtherRoutine -> setState { setRoutinePickerVisible(true) }
             is HomeEvent.OnDismissRoutinePicker -> setState { setRoutinePickerVisible(false) }
+            is HomeEvent.OnRecoverWorkout -> navigator.navigateTo(
+                Routes.Workout(
+                    routineId = event.pending.routine.id,
+                    routineName = event.pending.routine.name,
+                    recoveredFrom = event.pending.plannedDate,
+                ),
+            )
+            is HomeEvent.OnDismissPending -> setState {
+                val updatedDismissed = dismissedPending +
+                    pendingWorkoutKey(event.pending.plannedDate, event.pending.routine.id)
+                setDismissedPending(updatedDismissed)
+                    .setPendingWorkouts(calculatePendingWorkouts(routines, workoutLogs, updatedDismissed))
+            }
         }
     }
 
@@ -187,24 +209,21 @@ class HomeViewModel(
         return Pair(recordExercises.size, subtitle)
     }
 
+    // ── Pendientes de recuperar ──────────────────────────────────────────────
+
+    private fun calculatePendingWorkouts(
+        routines: List<Routine>,
+        logs: List<WorkoutLog>,
+        dismissed: Set<String>,
+    ): List<PendingWorkout> = pendingWorkoutsForWeek(routines, logs, todayDate(), dismissed)
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private fun todayDayAbbr(): String = Clock.System.now()
+    private fun todayDate(): LocalDate = Clock.System.now()
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .date
-        .dayOfWeek
-        .toSpanishAbbr()
 
-    private fun DayOfWeek.toSpanishAbbr(): String = when (this) {
-        DayOfWeek.MONDAY -> "LUN"
-        DayOfWeek.TUESDAY -> "MAR"
-        DayOfWeek.WEDNESDAY -> "MIÉ"
-        DayOfWeek.THURSDAY -> "JUE"
-        DayOfWeek.FRIDAY -> "VIE"
-        DayOfWeek.SATURDAY -> "SÁB"
-        DayOfWeek.SUNDAY -> "DOM"
-        else -> ""
-    }
+    private fun todayDayAbbr(): String = todayDate().dayOfWeek.toSpanishAbbr()
 
     private fun setState(reducer: HomeState.() -> HomeState) {
         _state.value = _state.value.reducer()

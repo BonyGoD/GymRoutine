@@ -1,5 +1,6 @@
 package dev.bonygod.gymroutine.home.ui.interactions
 
+import dev.bonygod.gymroutine.home.domain.model.PendingWorkout
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 import dev.bonygod.gymroutine.workout.domain.model.WorkoutLog
 
@@ -14,6 +15,8 @@ data class HomeState(
     val weekRecordCount: Int = 0,
     val weekRecordSubtitle: String = "",
     val showRoutinePicker: Boolean = false,
+    val pendingWorkouts: List<PendingWorkout> = emptyList(),
+    val dismissedPending: Set<String> = emptySet(),
 ) {
     fun setUserName(name: String) = copy(userName = name)
     fun setRoutines(routines: List<Routine>) = copy(routines = routines)
@@ -24,4 +27,6 @@ data class HomeState(
     fun setIsTodayCompleted(completed: Boolean) = copy(isTodayCompleted = completed)
     fun setWeekRecords(count: Int, subtitle: String) = copy(weekRecordCount = count, weekRecordSubtitle = subtitle)
     fun setRoutinePickerVisible(visible: Boolean) = copy(showRoutinePicker = visible)
+    fun setPendingWorkouts(pending: List<PendingWorkout>) = copy(pendingWorkouts = pending)
+    fun setDismissedPending(dismissed: Set<String>) = copy(dismissedPending = dismissed)
 }

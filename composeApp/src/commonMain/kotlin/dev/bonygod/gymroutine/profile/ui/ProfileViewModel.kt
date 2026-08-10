@@ -86,10 +86,14 @@ class ProfileViewModel(
         }
     }
 
-    /** Días consecutivos con al menos un entreno completado, contando desde hoy hacia atrás. */
+    /**
+     * Días consecutivos con al menos un entreno completado, contando desde hoy hacia atrás.
+     * Un log recuperado ([WorkoutLog.recoveredFrom]) cuenta en su fecha planificada original,
+     * no en la fecha real en la que se hizo.
+     */
     private fun calculateStreak(logs: List<WorkoutLog>): Int {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val completedDates = logs.filter { it.completado }.map { it.date }.toSet()
+        val completedDates = logs.filter { it.completado }.map { it.recoveredFrom ?: it.date }.toSet()
         var streak = 0
         var checkDate = today
         while (completedDates.contains(checkDate.toString())) {

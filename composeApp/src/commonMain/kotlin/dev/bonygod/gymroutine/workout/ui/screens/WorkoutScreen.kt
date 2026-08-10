@@ -99,6 +99,7 @@ private val GreySkippedBg = Color(0xFF1C1C1C)
 fun WorkoutScreen(
     routineId: String = "",
     routineName: String = "",
+    recoveredFrom: String? = null,
     viewModel: WorkoutViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
@@ -174,7 +175,7 @@ fun WorkoutScreen(
                     Spacer(Modifier.height(8.dp))
                     Button(
                         onClick = {
-                            viewModel.onEvent(WorkoutEvent.OnFinishWorkout(routineId, routineName))
+                            viewModel.onEvent(WorkoutEvent.OnFinishWorkout(routineId, routineName, recoveredFrom))
                         },
                         modifier = Modifier
                             .fillMaxWidth()

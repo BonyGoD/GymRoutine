@@ -18,5 +18,7 @@ sealed class Routes {
     data class Workout(
         val routineId: String = "",
         val routineName: String = "",
+        /** Fecha ISO-8601 "YYYY-MM-DD" del día planificado que se recupera, o null si no lo es. */
+        val recoveredFrom: String? = null,
     ) : Routes()
 }

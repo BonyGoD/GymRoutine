@@ -9,4 +9,5 @@ fun WorkoutLogDto.toDomain() = WorkoutLog(
     routineName = routineName,
     date = date,
     completado = completado,
+    recoveredFrom = recoveredFrom.ifBlank { null },
 )
