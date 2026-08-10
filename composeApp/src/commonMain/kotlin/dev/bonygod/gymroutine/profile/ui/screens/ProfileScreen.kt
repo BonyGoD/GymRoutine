@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Logout
@@ -58,6 +59,12 @@ import gymroutine.composeapp.generated.resources.profile_screen_total_workouts
 import gymroutine.composeapp.generated.resources.profile_screen_training_streak
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+
+/**
+ * El bloque de diagnóstico solo se dibuja para esta cuenta, así que puede quedarse en el código y
+ * viajar en las builds de release sin que ningún tester llegue a verlo.
+ */
+private const val DEVELOPER_EMAIL = "bonygod.dev@gmail.com"
 
 @Composable
 fun ProfileScreen(
@@ -207,6 +214,49 @@ fun ProfileScreen(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                         )
+                    }
+                }
+
+                // ── Diagnóstico (solo cuenta de desarrollador) ────────────────
+                if (state.userEmail == DEVELOPER_EMAIL) {
+                    Spacer(Modifier.height(12.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(CircleShape)
+                            .background(colorScheme.surfaceVariant)
+                            .border(1.dp, colorScheme.outline.copy(alpha = 0.2f), CircleShape)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                            ) {
+                                // Se lanza sin capturar a propósito: tiene que llegar al handler de
+                                // excepciones no capturadas para que Crashlytics lo registre como
+                                // fatal. El reporte se sube al siguiente arranque, no al instante.
+                                throw RuntimeException("Test Crash - verificación de Crashlytics")
+                            }
+                            .padding(vertical = 16.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            Icon(
+                                Icons.Default.BugReport,
+                                contentDescription = null,
+                                tint = colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            // Sin stringResource: no lo ve ningún usuario, y así no hay que
+                            // arrastrar la cadena a values/, values-es/ y values-ca/.
+                            Text(
+                                "Forzar crash de prueba",
+                                color = colorScheme.onSurfaceVariant,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
                     }
                 }
 
