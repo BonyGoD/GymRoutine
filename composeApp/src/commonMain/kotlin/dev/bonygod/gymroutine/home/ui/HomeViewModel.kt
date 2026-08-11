@@ -101,7 +101,6 @@ class HomeViewModel(
 
     fun onEvent(event: HomeEvent) {
         when (event) {
-            is HomeEvent.OnScreenShown -> refreshUserWeight()
             is HomeEvent.OnStartWorkout -> navigator.navigateTo(
                 Routes.Workout(routineId = event.routineId, routineName = event.routineName),
             )
@@ -119,24 +118,6 @@ class HomeViewModel(
                     pendingWorkoutKey(event.pending.plannedDate, event.pending.routine.id)
                 setDismissedPending(updatedDismissed)
                     .setPendingWorkouts(calculatePendingWorkouts(routines, workoutLogs, updatedDismissed))
-            }
-        }
-    }
-
-    /**
-     * El peso se lee una sola vez en [init], pero desde que es editable en el perfil puede cambiar
-     * sin que este ViewModel se recree: `MainScreen` alterna pestañas con un `when`, sin navegación,
-     * así que sobrevive al cambio de pestaña. Se vuelve a leer cada vez que la pantalla entra en
-     * composición, y se recalculan las kcal, que son el único dato que depende del peso.
-     */
-    private fun refreshUserWeight() {
-        viewModelScope.launch {
-            getCurrentUser().onSuccess { user ->
-                val weightKg = user?.weight?.toFloatOrNull() ?: 70f
-                setState {
-                    setUserWeight(weightKg)
-                        .setTodayKcal(calculateTodayKcal(routines, workoutLogs, weightKg))
-                }
             }
         }
     }
