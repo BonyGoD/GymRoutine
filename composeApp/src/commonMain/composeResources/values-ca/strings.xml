@@ -45,7 +45,7 @@
     <string name="forgot_password_screen_subtitle">Escriu el teu correu i t\'enviarem un enllaç.</string>
     <string name="forgot_password_screen_send_button">Enviar enllaç</string>
     <string name="forgot_password_screen_dialog_title">Correu enviat</string>
-    <string name="forgot_password_screen_dialog_message">Revisa la teva bústia per l\'enllaç de restabliment.</string>
+    <string name="forgot_password_screen_dialog_message">Revisa la teva bústia per l\'enllaç de restabliment. Si no el trobes, mira a la carpeta de correu brossa o no desitjat.</string>
 
     <!-- Validation errors -->
     <string name="error_invalid_email">Introdueix un correu electrònic vàlid</string>

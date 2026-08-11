@@ -45,7 +45,7 @@
     <string name="forgot_password_screen_subtitle">Enter your email and we\'ll send you a reset link.</string>
     <string name="forgot_password_screen_send_button">Send link</string>
     <string name="forgot_password_screen_dialog_title">Email sent</string>
-    <string name="forgot_password_screen_dialog_message">Check your inbox for the reset link.</string>
+    <string name="forgot_password_screen_dialog_message">Check your inbox for the reset link. If you can\'t find it, look in your spam or junk folder.</string>
 
     <!-- Validation errors -->
     <string name="error_invalid_email">Enter a valid email address</string>

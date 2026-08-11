@@ -45,7 +45,7 @@
     <string name="forgot_password_screen_subtitle">Escribe tu correo y te enviaremos un enlace.</string>
     <string name="forgot_password_screen_send_button">Enviar enlace</string>
     <string name="forgot_password_screen_dialog_title">Correo enviado</string>
-    <string name="forgot_password_screen_dialog_message">Revisa tu bandeja para el enlace de restablecimiento.</string>
+    <string name="forgot_password_screen_dialog_message">Revisa tu bandeja para el enlace de restablecimiento. Si no lo encuentras, mira en la carpeta de spam o correo no deseado.</string>
 
     <!-- Validation errors -->
     <string name="error_invalid_email">Introduce un correo electrónico válido</string>
