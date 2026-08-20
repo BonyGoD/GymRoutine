@@ -63,6 +63,8 @@
     <string name="home_screen_rest_day">Dia de descans</string>
     <string name="home_screen_meta_minutes">%1$d min</string>
     <string name="home_screen_meta_exercises_other">%1$d Exercicis</string>
+    <string name="home_screen_pick_other_routine">Entrenar una altra rutina</string>
+    <string name="home_screen_pick_other_title">Tria una rutina</string>
     <string name="home_screen_cta_start">INICIAR ENTRENAMENT</string>
     <string name="home_screen_cta_completed">ENTRENAMENT COMPLETAT</string>
     <string name="home_screen_badge_ready">LLEST</string>

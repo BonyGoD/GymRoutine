@@ -3,6 +3,7 @@ package dev.bonygod.gymroutine.home.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,6 +84,8 @@ import gymroutine.composeapp.generated.resources.home_screen_exercise_sets_reps
 import gymroutine.composeapp.generated.resources.home_screen_greeting_morning
 import gymroutine.composeapp.generated.resources.home_screen_meta_exercises_other
 import gymroutine.composeapp.generated.resources.home_screen_meta_minutes
+import gymroutine.composeapp.generated.resources.home_screen_pick_other_routine
+import gymroutine.composeapp.generated.resources.home_screen_pick_other_title
 import gymroutine.composeapp.generated.resources.home_screen_rest_day
 import gymroutine.composeapp.generated.resources.home_screen_stats_consistency_label
 import gymroutine.composeapp.generated.resources.home_screen_stats_consistency_subtitle
@@ -114,6 +117,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
 
     var selectedDay by remember { mutableStateOf<DayItem?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val routinePickerSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     Column(
         modifier = Modifier
@@ -188,6 +192,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
             WorkoutCTASection(
                 todayRoutines = todayRoutines,
                 isTodayCompleted = state.isTodayCompleted,
+                hasOtherRoutines = state.routines.isNotEmpty(),
                 onStart = {
                     val routine = todayRoutines.firstOrNull()
                     viewModel.onEvent(
@@ -197,6 +202,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
                         ),
                     )
                 },
+                onPickOther = { viewModel.onEvent(HomeEvent.OnPickOtherRoutine) },
             )
             QuickStatsBento(
                 todayKcal = state.todayKcal,
@@ -215,6 +221,24 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
             containerColor = MaterialTheme.colorScheme.surface,
         ) {
             RoutineDayBottomSheet(day = day, routines = state.routines)
+        }
+    }
+
+    if (state.showRoutinePicker) {
+        ModalBottomSheet(
+            onDismissRequest = { viewModel.onEvent(HomeEvent.OnDismissRoutinePicker) },
+            sheetState = routinePickerSheetState,
+            containerColor = MaterialTheme.colorScheme.surface,
+        ) {
+            RoutinePickerBottomSheet(
+                routines = state.routines,
+                onSelect = { routine ->
+                    viewModel.onEvent(
+                        HomeEvent.OnStartWorkout(routineId = routine.id, routineName = routine.name),
+                    )
+                },
+                onDismiss = { viewModel.onEvent(HomeEvent.OnDismissRoutinePicker) },
+            )
         }
     }
 }
@@ -430,9 +454,87 @@ private fun ExerciseRow(exercise: Exercise) {
     }
 }
 
+// ── Bottom Sheet: selector de rutina (día de descanso) ───────────────────────
+
+@Composable
+private fun RoutinePickerBottomSheet(
+    routines: List<Routine>,
+    onSelect: (Routine) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 48.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+        Text(
+            text = stringResource(Res.string.home_screen_pick_other_title),
+            color = colorScheme.onSurface,
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = (-0.52).sp,
+        )
+
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            routines.forEach { routine ->
+                RoutinePickerItem(
+                    routine = routine,
+                    onClick = {
+                        onDismiss()
+                        onSelect(routine)
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RoutinePickerItem(routine: Routine, onClick: () -> Unit) {
+    val colorScheme = MaterialTheme.colorScheme
+    val exercisesText = stringResource(Res.string.home_screen_meta_exercises_other, routine.exercises.size)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(colorScheme.surfaceVariant)
+            .border(1.dp, colorScheme.outline.copy(alpha = 0.12f), RoundedCornerShape(20.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick,
+            )
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = routine.name,
+            color = colorScheme.onSurface,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold,
+        )
+        Text(
+            text = exercisesText,
+            color = colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+        )
+    }
+}
+
 // ── Section 3: Workout CTA ────────────────────────────────────────────────────
 @Composable
-private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Boolean, onStart: () -> Unit) {
+private fun WorkoutCTASection(
+    todayRoutines: List<Routine>,
+    isTodayCompleted: Boolean,
+    hasOtherRoutines: Boolean,
+    onStart: () -> Unit,
+    onPickOther: () -> Unit,
+) {
     val colorScheme = MaterialTheme.colorScheme
     val routine = todayRoutines.firstOrNull()
     val isRestDay = routine == null
@@ -450,6 +552,7 @@ private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Bo
     val badgeDoneText = stringResource(Res.string.home_screen_badge_done)
     val minutesText = stringResource(Res.string.home_screen_meta_minutes, estimatedMinutes)
     val exercisesText = stringResource(Res.string.home_screen_meta_exercises_other, exerciseCount)
+    val pickOtherText = stringResource(Res.string.home_screen_pick_other_routine)
 
     Box(
         modifier = Modifier
@@ -525,6 +628,42 @@ private fun WorkoutCTASection(todayRoutines: List<Routine>, isTodayCompleted: Bo
                         color = Color.White,
                         fontSize = 15.sp,
                     )
+                }
+            }
+
+            if (isRestDay && hasOtherRoutines) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .clip(CircleShape)
+                        .background(colorScheme.surfaceVariant)
+                        .border(1.dp, colorScheme.outline.copy(alpha = 0.2f), CircleShape)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = onPickOther,
+                        )
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Icon(
+                            Icons.Default.FitnessCenter,
+                            null,
+                            tint = colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Text(
+                            pickOtherText,
+                            color = colorScheme.onSurfaceVariant,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
                 }
             }
         }

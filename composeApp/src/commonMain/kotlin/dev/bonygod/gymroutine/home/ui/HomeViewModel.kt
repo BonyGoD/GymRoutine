@@ -95,6 +95,8 @@ class HomeViewModel(
             is HomeEvent.OnStartWorkout -> navigator.navigateTo(
                 Routes.Workout(routineId = event.routineId, routineName = event.routineName),
             )
+            is HomeEvent.OnPickOtherRoutine -> setState { setRoutinePickerVisible(true) }
+            is HomeEvent.OnDismissRoutinePicker -> setState { setRoutinePickerVisible(false) }
         }
     }
 

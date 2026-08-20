@@ -29,8 +29,8 @@ android {
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 7
-        versionName = "0.0.7"
+        versionCode = 8
+        versionName = "0.0.8"
     }
 
     packaging {

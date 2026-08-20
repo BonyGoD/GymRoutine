@@ -13,6 +13,7 @@ data class HomeState(
     val isTodayCompleted: Boolean = false,
     val weekRecordCount: Int = 0,
     val weekRecordSubtitle: String = "",
+    val showRoutinePicker: Boolean = false,
 ) {
     fun setUserName(name: String) = copy(userName = name)
     fun setRoutines(routines: List<Routine>) = copy(routines = routines)
@@ -22,4 +23,5 @@ data class HomeState(
     fun setConsistency(pct: Int) = copy(consistency = pct)
     fun setIsTodayCompleted(completed: Boolean) = copy(isTodayCompleted = completed)
     fun setWeekRecords(count: Int, subtitle: String) = copy(weekRecordCount = count, weekRecordSubtitle = subtitle)
+    fun setRoutinePickerVisible(visible: Boolean) = copy(showRoutinePicker = visible)
 }
