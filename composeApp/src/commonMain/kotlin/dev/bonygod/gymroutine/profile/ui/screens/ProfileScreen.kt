@@ -79,12 +79,12 @@ import gymroutine.composeapp.generated.resources.profile_screen_value_placeholde
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-// Mismos rangos que el onboarding (CompleteProfileScreen): edad 18-100, altura 80-300, peso 0-300.
+// Mismos rangos que el onboarding (CompleteProfileScreen): edad 18-100, altura 80-300, peso 30-300.
 private const val MIN_AGE = 18
 private const val MAX_AGE = 100
 private const val MIN_HEIGHT = 80
 private const val MAX_HEIGHT = 300
-private const val MIN_WEIGHT = 0
+private const val MIN_WEIGHT = 30
 private const val MAX_WEIGHT = 300
 
 /**
