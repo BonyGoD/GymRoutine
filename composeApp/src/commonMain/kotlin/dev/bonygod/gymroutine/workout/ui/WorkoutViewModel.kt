@@ -83,7 +83,7 @@ class WorkoutViewModel(
                 persistSession()
             }
             is WorkoutEvent.OnSaveExerciseProgress -> scheduleSave(event.index)
-            is WorkoutEvent.OnFinishWorkout -> finishWorkout(event.routineId, event.routineName)
+            is WorkoutEvent.OnFinishWorkout -> finishWorkout(event.routineId, event.routineName, event.recoveredFrom)
             is WorkoutEvent.OnBackClick -> onBackClick()
         }
     }
@@ -217,13 +217,13 @@ class WorkoutViewModel(
 
     // ── Finish ────────────────────────────────────────────────────────────────
 
-    private fun finishWorkout(routineId: String, routineName: String) {
+    private fun finishWorkout(routineId: String, routineName: String, recoveredFrom: String? = null) {
         if (userId.isEmpty()) return
         viewModelScope.launch {
             setState { showLogging() }
             cancelAndFlushSaveJobs()
             saveExerciseProgress()
-            runCatching { logWorkout(userId, routineId, routineName, completado = true) }
+            runCatching { logWorkout(userId, routineId, routineName, completado = true, recoveredFrom = recoveredFrom) }
                 .reportFailure("WorkoutLogRepository.logWorkout", mapOf("routineId" to routineId))
                 .onFailure { e -> setEffect(WorkoutEffect.ShowError(e.message.orEmpty())) }
             clearWorkoutSession(userId, routineId)

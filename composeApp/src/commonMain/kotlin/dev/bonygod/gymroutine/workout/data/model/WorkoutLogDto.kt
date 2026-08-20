@@ -11,4 +11,6 @@ data class WorkoutLogDto(
     /** ISO-8601 date: "YYYY-MM-DD" */
     val date: String = "",
     val completado: Boolean = false,
+    /** Fecha planificada original si es una recuperación; "" si no lo es. */
+    val recoveredFrom: String = "",
 )

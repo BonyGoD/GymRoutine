@@ -67,6 +67,7 @@ import dev.bonygod.gymroutine.core.utils.DayItem
 import dev.bonygod.gymroutine.core.utils.buildCalendarDays
 import dev.bonygod.gymroutine.core.utils.dayAbbrToFullName
 import dev.bonygod.gymroutine.core.utils.monthName
+import dev.bonygod.gymroutine.home.domain.model.PendingWorkout
 import dev.bonygod.gymroutine.home.ui.HomeViewModel
 import dev.bonygod.gymroutine.home.ui.interactions.HomeEvent
 import dev.bonygod.gymroutine.routines.domain.mapper.hasRoutineForDay
@@ -80,12 +81,15 @@ import gymroutine.composeapp.generated.resources.home_screen_bottom_sheet_date_f
 import gymroutine.composeapp.generated.resources.home_screen_brand
 import gymroutine.composeapp.generated.resources.home_screen_cta_completed
 import gymroutine.composeapp.generated.resources.home_screen_cta_start
+import gymroutine.composeapp.generated.resources.home_screen_dismiss_pending
 import gymroutine.composeapp.generated.resources.home_screen_exercise_sets_reps
 import gymroutine.composeapp.generated.resources.home_screen_greeting_morning
 import gymroutine.composeapp.generated.resources.home_screen_meta_exercises_other
 import gymroutine.composeapp.generated.resources.home_screen_meta_minutes
+import gymroutine.composeapp.generated.resources.home_screen_pending_label
 import gymroutine.composeapp.generated.resources.home_screen_pick_other_routine
 import gymroutine.composeapp.generated.resources.home_screen_pick_other_title
+import gymroutine.composeapp.generated.resources.home_screen_recover_workout
 import gymroutine.composeapp.generated.resources.home_screen_rest_day
 import gymroutine.composeapp.generated.resources.home_screen_stats_consistency_label
 import gymroutine.composeapp.generated.resources.home_screen_stats_consistency_subtitle
@@ -193,6 +197,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
                 todayRoutines = todayRoutines,
                 isTodayCompleted = state.isTodayCompleted,
                 hasOtherRoutines = state.routines.isNotEmpty(),
+                oldestPending = state.pendingWorkouts.firstOrNull(),
                 onStart = {
                     val routine = todayRoutines.firstOrNull()
                     viewModel.onEvent(
@@ -203,6 +208,8 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
                     )
                 },
                 onPickOther = { viewModel.onEvent(HomeEvent.OnPickOtherRoutine) },
+                onRecover = { pending -> viewModel.onEvent(HomeEvent.OnRecoverWorkout(pending)) },
+                onDismissPending = { pending -> viewModel.onEvent(HomeEvent.OnDismissPending(pending)) },
             )
             QuickStatsBento(
                 todayKcal = state.todayKcal,
@@ -532,14 +539,17 @@ private fun WorkoutCTASection(
     todayRoutines: List<Routine>,
     isTodayCompleted: Boolean,
     hasOtherRoutines: Boolean,
+    oldestPending: PendingWorkout?,
     onStart: () -> Unit,
     onPickOther: () -> Unit,
+    onRecover: (PendingWorkout) -> Unit,
+    onDismissPending: (PendingWorkout) -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val routine = todayRoutines.firstOrNull()
     val isRestDay = routine == null
     val restDayText = stringResource(Res.string.home_screen_rest_day)
-    val routineName = routine?.name ?: restDayText
+    val routineName = routine?.name ?: oldestPending?.routine?.name ?: restDayText
     val exerciseCount = routine?.exercises?.size ?: 0
     val estimatedMinutes = routine?.exercises?.sumOf { ex ->
         val rest = ex.restSeconds.coerceAtLeast(60)
@@ -552,7 +562,11 @@ private fun WorkoutCTASection(
     val badgeDoneText = stringResource(Res.string.home_screen_badge_done)
     val minutesText = stringResource(Res.string.home_screen_meta_minutes, estimatedMinutes)
     val exercisesText = stringResource(Res.string.home_screen_meta_exercises_other, exerciseCount)
-    val pickOtherText = stringResource(Res.string.home_screen_pick_other_routine)
+    val recoverText = stringResource(Res.string.home_screen_recover_workout)
+    val dismissText = stringResource(Res.string.home_screen_dismiss_pending)
+    val pendingLabelText = oldestPending?.let {
+        stringResource(Res.string.home_screen_pending_label, dayAbbrToFullName(it.dayAbbr).lowercase())
+    }
 
     Box(
         modifier = Modifier
@@ -574,6 +588,14 @@ private fun WorkoutCTASection(
                 letterSpacing = (-0.56).sp,
                 modifier = Modifier.fillMaxWidth(),
             )
+
+            if (isRestDay && oldestPending != null && pendingLabelText != null) {
+                Text(
+                    text = pendingLabelText,
+                    color = colorScheme.onSurfaceVariant,
+                    fontSize = 14.sp,
+                )
+            }
 
             if (!isRestDay) {
                 Row(
@@ -631,41 +653,92 @@ private fun WorkoutCTASection(
                 }
             }
 
-            if (isRestDay && hasOtherRoutines) {
-                Box(
+            if (isRestDay && oldestPending != null) {
+                Button(
+                    onClick = { onRecover(oldestPending) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
-                        .clip(CircleShape)
-                        .background(colorScheme.surfaceVariant)
-                        .border(1.dp, colorScheme.outline.copy(alpha = 0.2f), CircleShape)
+                        .height(64.dp),
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
+                ) {
+                    Icon(Icons.Default.PlayArrow, null, tint = Color.White, modifier = Modifier.size(20.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(recoverText, color = Color.White, fontSize = 15.sp)
+                }
+
+                if (hasOtherRoutines) {
+                    TrainOtherRoutineButton(
+                        onClick = onPickOther,
+                        modifier = Modifier.padding(top = 12.dp),
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            onClick = onPickOther,
+                            onClick = { onDismissPending(oldestPending) },
                         )
-                        .padding(vertical = 16.dp),
+                        .padding(vertical = 8.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    ) {
-                        Icon(
-                            Icons.Default.FitnessCenter,
-                            null,
-                            tint = colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(18.dp),
-                        )
-                        Text(
-                            pickOtherText,
-                            color = colorScheme.onSurfaceVariant,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                    }
+                    Text(
+                        dismissText,
+                        color = colorScheme.onSurfaceVariant,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium,
+                    )
                 }
+            } else if (isRestDay && hasOtherRoutines) {
+                TrainOtherRoutineButton(
+                    onClick = onPickOther,
+                    modifier = Modifier.padding(top = 16.dp),
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun TrainOtherRoutineButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val colorScheme = MaterialTheme.colorScheme
+    val pickOtherText = stringResource(Res.string.home_screen_pick_other_routine)
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(CircleShape)
+            .background(colorScheme.surfaceVariant)
+            .border(1.dp, colorScheme.outline.copy(alpha = 0.2f), CircleShape)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick,
+            )
+            .padding(vertical = 16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Icon(
+                Icons.Default.FitnessCenter,
+                null,
+                tint = colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp),
+            )
+            Text(
+                pickOtherText,
+                color = colorScheme.onSurfaceVariant,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
         }
     }
 }

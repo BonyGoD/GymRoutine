@@ -7,4 +7,5 @@ internal fun WorkoutLog.toMap(): Map<String, Any> = mapOf(
     "routineName" to routineName,
     "date" to date,
     "completado" to completado,
+    "recoveredFrom" to recoveredFrom.orEmpty(),
 )

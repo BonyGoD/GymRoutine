@@ -13,6 +13,7 @@ class LogWorkoutUseCase(private val repository: WorkoutLogRepository) {
         routineId: String,
         routineName: String,
         completado: Boolean = false,
+        recoveredFrom: String? = null,
     ) {
         val today = Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault())
@@ -24,6 +25,7 @@ class LogWorkoutUseCase(private val repository: WorkoutLogRepository) {
             routineName = routineName,
             date = today,
             completado = completado,
+            recoveredFrom = recoveredFrom,
         )
         repository.logWorkout(userId, log)
     }

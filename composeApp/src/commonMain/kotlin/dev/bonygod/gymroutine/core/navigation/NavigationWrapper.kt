@@ -42,7 +42,11 @@ fun NavigationWrapper() {
                 AddRoutineScreen(routineId = entry.routineId)
             }
             entry<Routes.Workout> { entry ->
-                WorkoutScreen(routineId = entry.routineId, routineName = entry.routineName)
+                WorkoutScreen(
+                    routineId = entry.routineId,
+                    routineName = entry.routineName,
+                    recoveredFrom = entry.recoveredFrom,
+                )
             }
         },
         transitionSpec = {

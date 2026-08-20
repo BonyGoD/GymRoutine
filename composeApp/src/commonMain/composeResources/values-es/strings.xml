@@ -65,6 +65,9 @@
     <string name="home_screen_meta_exercises_other">%1$d Ejercicios</string>
     <string name="home_screen_pick_other_routine">Entrenar otra rutina</string>
     <string name="home_screen_pick_other_title">Elige una rutina</string>
+    <string name="home_screen_pending_label">Pendiente del %1$s</string>
+    <string name="home_screen_recover_workout">Recuperar entreno</string>
+    <string name="home_screen_dismiss_pending">Descartar</string>
     <string name="home_screen_cta_start">INICIAR ENTRENAMIENTO</string>
     <string name="home_screen_cta_completed">ENTRENAMIENTO COMPLETADO</string>
     <string name="home_screen_badge_ready">LISTO</string>

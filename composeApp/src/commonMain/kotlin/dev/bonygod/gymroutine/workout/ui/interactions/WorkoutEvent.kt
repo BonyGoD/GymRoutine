@@ -8,6 +8,10 @@ sealed class WorkoutEvent {
     data class OnSetCompleted(val index: Int) : WorkoutEvent()
     data class OnToggleSkipExercise(val index: Int) : WorkoutEvent()
     data class OnSaveExerciseProgress(val index: Int) : WorkoutEvent()
-    data class OnFinishWorkout(val routineId: String, val routineName: String) : WorkoutEvent()
+    data class OnFinishWorkout(
+        val routineId: String,
+        val routineName: String,
+        val recoveredFrom: String? = null,
+    ) : WorkoutEvent()
     data object OnBackClick : WorkoutEvent()
 }
