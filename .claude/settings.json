@@ -1,9 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(graphify query *)",
-      "Bash(graphify explain *)",
-      "Bash(graphify path *)",
+      "Bash(graphify *)",
+      "PowerShell(graphify *)",
       "Bash(keytool -list *)",
       "Bash(echo *)",
       "Bash(grep *)",
@@ -15,9 +14,14 @@
       "Bash(sort *)",
       "Bash(tail *)",
       "Bash(awk *)",
+      "Bash(cp *)",
+      "Bash(mkdir *)",
       "Bash(git diff *)",
       "Bash(git status *)",
       "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git rev-parse *)",
+      "Bash(git ls-files *)",
       "PowerShell(Get-ChildItem *)",
       "PowerShell(Get-Content *)",
       "PowerShell(Select-String *)",
