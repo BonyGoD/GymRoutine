@@ -56,7 +56,7 @@ private const val MIN_AGE = 18
 private const val MAX_AGE = 100
 private const val MIN_HEIGHT = 80
 private const val MAX_HEIGHT = 300
-private const val MIN_WEIGHT = 0
+private const val MIN_WEIGHT = 30
 private const val MAX_WEIGHT = 300
 
 @Composable
