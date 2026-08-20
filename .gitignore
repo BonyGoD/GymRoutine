@@ -25,6 +25,9 @@ GoogleService-Info.plist
 *.keystore
 Info.plist
 /composeApp/schemas/*
+# Documentos de trabajo para publicar en Play: se redactan aquí pero no son código.
+RELEASE_NOTES.md
+PR-*.md
 
 # OpenCode config (contains API keys and tokens)
 opencode.json

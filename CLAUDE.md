@@ -90,5 +90,7 @@ Rules:
 ## Hard rules — never break these
 
 1. **NEVER run any build, compile, assemble, package, install or Gradle command.** No `./gradlew` anything — not `assembleDebug`, not `build`, not `spotlessApply`, not `spotlessCheck`, not `--dry-run`. The user compiles manually. Formatting is matched by hand.
-2. **NEVER run `git commit`, `git push`, `git add`, `git stash`, `git reset`, `git checkout -- `, or any other command that changes git state.** Leave all work as uncommitted changes in the working tree.
-3. Read-only git commands (`git status`, `git diff`, `git log`) are fine.
+2. **By default, NEVER run `git commit`, `git push`, `git add`, `git stash`, `git reset`, `git checkout -- `, or any other command that changes git state.** Leave all work as uncommitted changes in the working tree.
+3. **Exception — Play Store release branches (re-authorised 11 Aug 2026).** While the stacked release plan is in progress, `git checkout -b`, `git switch`, `git add` (explicit paths only), `git commit` and `git push origin` are allowed. Ask before committing anything outside that workflow, and remove this rule once the plan is finished.
+4. **Never, not even under the exception:** `--force` pushes, `git rebase`, `git reset --hard`, `git stash`, `git checkout -- <file>`. Each of them can destroy uncommitted work; ask first, every time.
+5. Read-only git commands (`git status`, `git diff`, `git log`) are fine.
