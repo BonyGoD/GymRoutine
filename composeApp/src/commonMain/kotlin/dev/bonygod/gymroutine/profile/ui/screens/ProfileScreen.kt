@@ -101,10 +101,11 @@ fun ProfileScreen(
                 color = colorScheme.primary,
             )
         } else {
+            val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState, enabled = scrollState.maxValue > 0)
                     .padding(horizontal = 24.dp, vertical = 0.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -260,7 +261,7 @@ fun ProfileScreen(
                     }
                 }
 
-                Spacer(Modifier.height(120.dp))
+                Spacer(Modifier.height(88.dp))
             }
         }
 

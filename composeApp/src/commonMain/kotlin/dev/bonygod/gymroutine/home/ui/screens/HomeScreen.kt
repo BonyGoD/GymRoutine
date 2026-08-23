@@ -122,6 +122,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
     var selectedDay by remember { mutableStateOf<DayItem?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val routinePickerSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
@@ -189,8 +190,8 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 128.dp),
+                .verticalScroll(scrollState, enabled = scrollState.maxValue > 0)
+                .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 88.dp),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
             WorkoutCTASection(

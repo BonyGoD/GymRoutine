@@ -2,6 +2,8 @@ package dev.bonygod.gymroutine.auth.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.bonygod.gymroutine.auth.domain.model.User
+import dev.bonygod.gymroutine.auth.domain.model.hasCompleteProfile
 import dev.bonygod.gymroutine.auth.domain.usecase.LoginUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LoginWithSocialProviderUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.RegisterUseCase
@@ -82,7 +84,7 @@ class AuthViewModel(
             loginUseCase(email = email, password = password)
                 .onSuccess { user ->
                     setState { showLoading(false) }
-                    navigator.clearAndNavigateTo(Routes.Main(user.uid))
+                    navigateAfterAuth(user)
                 }
                 .onFailure { error ->
                     setState { showLoading(false) }
@@ -116,7 +118,9 @@ class AuthViewModel(
                 height = "",
             ).onSuccess { user ->
                 setState { showLoading(false) }
-                navigator.clearAndNavigateTo(Routes.Main(user.uid))
+                // El registro siempre deja age/weight/height vacíos: la pantalla de completar
+                // perfil es obligatoria aquí, nunca condicional como en login().
+                navigator.clearAndNavigateTo(Routes.CompleteProfile(user.uid))
             }.onFailure { error ->
                 setState { showLoading(false) }
                 setEffect(AuthEffect.ShowError(error.message ?: getString(Res.string.error_register_generic)))
@@ -148,7 +152,7 @@ class AuthViewModel(
             loginWithSocialProviderUseCase(uid = uid, displayName = displayName, email = email)
                 .onSuccess { user ->
                     setState { showLoading(false) }
-                    navigator.clearAndNavigateTo(Routes.Main(user.uid))
+                    navigateAfterAuth(user)
                 }
                 .onFailure { error ->
                     setState { showLoading(false) }
@@ -160,6 +164,18 @@ class AuthViewModel(
     private fun handleGoogleSignInError(errorMessage: String) {
         viewModelScope.launch {
             setEffect(AuthEffect.ShowError(translateSocialError(errorMessage)))
+        }
+    }
+
+    /**
+     * Login y login social comparten destino: si al usuario ya le faltan datos de perfil
+     * (típico en un alta con Google) pasa por [Routes.CompleteProfile] antes de la home.
+     */
+    private fun navigateAfterAuth(user: User) {
+        if (user.hasCompleteProfile()) {
+            navigator.clearAndNavigateTo(Routes.Main(user.uid))
+        } else {
+            navigator.clearAndNavigateTo(Routes.CompleteProfile(user.uid))
         }
     }
 

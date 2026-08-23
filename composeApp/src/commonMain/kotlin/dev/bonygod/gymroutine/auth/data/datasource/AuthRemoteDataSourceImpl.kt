@@ -1,5 +1,8 @@
 package dev.bonygod.gymroutine.auth.data.datasource
 
+import dev.bonygod.gymroutine.auth.data.mapper.FIELD_AGE
+import dev.bonygod.gymroutine.auth.data.mapper.FIELD_HEIGHT
+import dev.bonygod.gymroutine.auth.data.mapper.FIELD_WEIGHT
 import dev.bonygod.gymroutine.auth.data.mapper.toMap
 import dev.bonygod.gymroutine.auth.data.mapper.toUserDto
 import dev.bonygod.gymroutine.auth.domain.error.AuthError
@@ -52,6 +55,23 @@ class AuthRemoteDataSourceImpl(
         )
         saveUser(newUser)
         return newUser
+    }
+
+    // set(..., merge = true) escribe solo estos tres campos sin sobrescribir el documento
+    // entero: un .set(map) plano aquí borraría name/email/uid, que no forman parte del mapa.
+    override suspend fun updateUserProfile(
+        uid: String,
+        age: String,
+        weight: String,
+        height: String,
+    ): User {
+        val updates = mapOf(
+            FIELD_AGE to age,
+            FIELD_WEIGHT to weight,
+            FIELD_HEIGHT to height,
+        )
+        usersCollection.document(uid).set(updates, merge = true)
+        return fetchUser(uid)
     }
 
     override suspend fun sendPasswordReset(email: String) {

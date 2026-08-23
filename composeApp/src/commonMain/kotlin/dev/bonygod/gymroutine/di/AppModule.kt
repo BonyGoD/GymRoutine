@@ -11,6 +11,7 @@ import dev.bonygod.gymroutine.auth.domain.usecase.LoginWithSocialProviderUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LogoutUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.RegisterUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.SendPasswordResetUseCase
+import dev.bonygod.gymroutine.auth.domain.usecase.UpdateUserProfileUseCase
 import dev.bonygod.gymroutine.auth.ui.AuthViewModel
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.evolution.domain.usecase.GetExerciseEvolutionsUseCase
@@ -18,6 +19,7 @@ import dev.bonygod.gymroutine.evolution.domain.usecase.SeedEvolutionDataUseCase
 import dev.bonygod.gymroutine.evolution.ui.EvolutionViewModel
 import dev.bonygod.gymroutine.history.ui.HistoryViewModel
 import dev.bonygod.gymroutine.home.ui.HomeViewModel
+import dev.bonygod.gymroutine.onboarding.ui.CompleteProfileViewModel
 import dev.bonygod.gymroutine.profile.ui.ProfileViewModel
 import dev.bonygod.gymroutine.routines.data.datasource.RoutineRemoteDataSource
 import dev.bonygod.gymroutine.routines.data.datasource.RoutineRemoteDataSourceImpl
@@ -75,6 +77,7 @@ val appModule = module {
     factory { LogoutUseCase(get()) }
     factory { LoginWithSocialProviderUseCase(get()) }
     factory { GetCurrentUserUseCase(get()) }
+    factory { UpdateUserProfileUseCase(get()) }
 
     // Routines data layer
     single<RoutineRemoteDataSource> { RoutineRemoteDataSourceImpl(get()) }
@@ -110,6 +113,7 @@ val appModule = module {
 
     // ViewModels
     viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
+    viewModel { CompleteProfileViewModel(get(), get()) }
     viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { HistoryViewModel(get(), get()) }
     viewModel { EvolutionViewModel(get(), get(), get()) }

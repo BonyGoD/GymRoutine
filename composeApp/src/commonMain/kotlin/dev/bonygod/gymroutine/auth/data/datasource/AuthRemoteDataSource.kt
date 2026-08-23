@@ -18,6 +18,13 @@ interface AuthRemoteDataSource {
 
     suspend fun loginWithExternalProvider(credential: ExternalAuthCredential): User
 
+    suspend fun updateUserProfile(
+        uid: String,
+        age: String,
+        weight: String,
+        height: String,
+    ): User
+
     suspend fun sendPasswordReset(email: String)
 
     suspend fun logout()

@@ -7,6 +7,10 @@ sealed class Routes {
 
     data object Register : Routes()
 
+    data class CompleteProfile(
+        val userId: String,
+    ) : Routes()
+
     data class Main(
         val userId: String,
     ) : Routes()
