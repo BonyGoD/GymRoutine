@@ -50,6 +50,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,6 +89,9 @@ import gymroutine.composeapp.generated.resources.workout_screen_weight_kg
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+
+private const val MILLIS_PER_SECOND = 1_000L
 
 private val GreenCompleted = Color(0xFF388E3C)
 private val GreenCompletedBg = Color(0xFF1B5E20)
@@ -458,9 +462,10 @@ private fun RestTimer(
     onRestCompleted: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    var isRunning by remember(isVisible) { mutableStateOf(false) }
-    var timeLeft by remember(isVisible) { mutableIntStateOf(restSeconds) }
-    var showDialog by remember(isVisible) { mutableStateOf(false) }
+    var endsAtMillis by rememberSaveable(isVisible) { mutableStateOf<Long?>(null) }
+    var timeLeft by rememberSaveable(isVisible) { mutableIntStateOf(restSeconds) }
+    var showDialog by rememberSaveable(isVisible) { mutableStateOf(false) }
+    val isRunning = endsAtMillis != null
 
     val restDoneTitle = stringResource(Res.string.workout_screen_rest_done_title)
     val restDoneMessage = stringResource(Res.string.workout_screen_rest_done_message)
@@ -470,17 +475,18 @@ private fun RestTimer(
     val timerStartText = stringResource(Res.string.workout_screen_timer_start)
     val secondsLeftText = stringResource(Res.string.workout_screen_seconds_left, timeLeft)
 
-    LaunchedEffect(isRunning) {
-        if (isRunning) {
-            while (timeLeft > 0) {
-                delay(1000L)
-                timeLeft--
-            }
-            isRunning = false
-            onRestCompleted()
-            timeLeft = restSeconds
-            showDialog = !isLastSet
+    LaunchedEffect(endsAtMillis) {
+        val endsAt = endsAtMillis ?: return@LaunchedEffect
+        while (true) {
+            val millisLeft = endsAt - Clock.System.now().toEpochMilliseconds()
+            if (millisLeft <= 0) break
+            timeLeft = ((millisLeft + MILLIS_PER_SECOND - 1) / MILLIS_PER_SECOND).toInt()
+            delay(minOf(millisLeft, MILLIS_PER_SECOND))
         }
+        endsAtMillis = null
+        onRestCompleted()
+        timeLeft = restSeconds
+        showDialog = !isLastSet
     }
 
     if (showDialog) {
@@ -558,7 +564,10 @@ private fun RestTimer(
                         Modifier.clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                        ) { isRunning = true }
+                        ) {
+                            endsAtMillis = Clock.System.now().toEpochMilliseconds() +
+                                restSeconds * MILLIS_PER_SECOND
+                        }
                     } else {
                         Modifier
                     },
