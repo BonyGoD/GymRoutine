@@ -63,7 +63,13 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            // R8 elimina el código no usado y ofusca los nombres. Las reglas propias —lo que R8 no
+            // puede deducir solo— viven en proguard-rules.pro, cada una con su motivo.
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
             val releaseSigning = signingConfigs.findByName("release")
             if (releaseSigning != null) {
                 signingConfig = releaseSigning
