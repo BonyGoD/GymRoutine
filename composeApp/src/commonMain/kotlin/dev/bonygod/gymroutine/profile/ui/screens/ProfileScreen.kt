@@ -20,18 +20,25 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Height
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,18 +54,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.theme.GoldIcon
 import dev.bonygod.gymroutine.core.theme.OrangeIcon
+import dev.bonygod.gymroutine.core.ui.components.ProfileWheelColumn
 import dev.bonygod.gymroutine.profile.ui.ProfileViewModel
 import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEffect
 import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEvent
 import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.common_edit_description
 import gymroutine.composeapp.generated.resources.profile_screen_default_user_name
+import gymroutine.composeapp.generated.resources.profile_screen_edit_data_title
+import gymroutine.composeapp.generated.resources.profile_screen_field_age
+import gymroutine.composeapp.generated.resources.profile_screen_field_height
+import gymroutine.composeapp.generated.resources.profile_screen_field_weight
 import gymroutine.composeapp.generated.resources.profile_screen_logout
+import gymroutine.composeapp.generated.resources.profile_screen_personal_data_title
 import gymroutine.composeapp.generated.resources.profile_screen_personal_records
+import gymroutine.composeapp.generated.resources.profile_screen_save_button
 import gymroutine.composeapp.generated.resources.profile_screen_streak_days
 import gymroutine.composeapp.generated.resources.profile_screen_total_workouts
 import gymroutine.composeapp.generated.resources.profile_screen_training_streak
+import gymroutine.composeapp.generated.resources.profile_screen_unit_cm
+import gymroutine.composeapp.generated.resources.profile_screen_unit_kg
+import gymroutine.composeapp.generated.resources.profile_screen_unit_years
+import gymroutine.composeapp.generated.resources.profile_screen_value_placeholder
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+
+// Mismos rangos que el onboarding (CompleteProfileScreen): edad 18-100, altura 80-300, peso 30-300.
+private const val MIN_AGE = 18
+private const val MAX_AGE = 100
+private const val MIN_HEIGHT = 80
+private const val MAX_HEIGHT = 300
+private const val MIN_WEIGHT = 30
+private const val MAX_WEIGHT = 300
 
 /**
  * El bloque de diagnóstico solo se dibuja para esta cuenta, así que puede quedarse en el código y
@@ -66,6 +93,7 @@ import org.koin.compose.viewmodel.koinViewModel
  */
 private const val DEVELOPER_EMAIL = "bonygod.dev@gmail.com"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     vmKey: String = "",
@@ -74,6 +102,7 @@ fun ProfileScreen(
     val state by viewModel.state.collectAsState()
     val colorScheme = MaterialTheme.colorScheme
     val snackbarHostState = remember { SnackbarHostState() }
+    val editSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -89,6 +118,17 @@ fun ProfileScreen(
     val trainingStreakLabel = stringResource(Res.string.profile_screen_training_streak)
     val streakDaysText = stringResource(Res.string.profile_screen_streak_days, state.streak)
     val logoutText = stringResource(Res.string.profile_screen_logout)
+    val personalDataTitle = stringResource(Res.string.profile_screen_personal_data_title)
+    val ageLabel = stringResource(Res.string.profile_screen_field_age)
+    val heightLabel = stringResource(Res.string.profile_screen_field_height)
+    val weightLabel = stringResource(Res.string.profile_screen_field_weight)
+    val yearsUnit = stringResource(Res.string.profile_screen_unit_years)
+    val cmUnit = stringResource(Res.string.profile_screen_unit_cm)
+    val kgUnit = stringResource(Res.string.profile_screen_unit_kg)
+    val valuePlaceholder = stringResource(Res.string.profile_screen_value_placeholder)
+    val ageValue = if (state.age.isBlank()) valuePlaceholder else "${state.age} $yearsUnit"
+    val heightValue = if (state.height.isBlank()) valuePlaceholder else "${state.height} $cmUnit"
+    val weightValue = if (state.weight.isBlank()) valuePlaceholder else "${state.weight} $kgUnit"
 
     Box(
         modifier = Modifier
@@ -183,6 +223,64 @@ fun ProfileScreen(
                     )
                 }
 
+                Spacer(Modifier.height(32.dp))
+
+                // ── Datos personales ─────────────────────────────────────────
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = personalDataTitle,
+                            color = colorScheme.onSurface,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = (-0.32).sp,
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .background(colorScheme.surfaceVariant)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                ) { viewModel.onEvent(ProfileEvent.OnEditProfileData) },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                Icons.Default.Edit,
+                                contentDescription = stringResource(Res.string.common_edit_description),
+                                tint = colorScheme.primary,
+                                modifier = Modifier.size(16.dp),
+                            )
+                        }
+                    }
+                    StatRow(
+                        icon = Icons.Default.Cake,
+                        iconTint = colorScheme.primary,
+                        label = ageLabel,
+                        value = ageValue,
+                    )
+                    StatRow(
+                        icon = Icons.Default.Height,
+                        iconTint = colorScheme.primary,
+                        label = heightLabel,
+                        value = heightValue,
+                    )
+                    StatRow(
+                        icon = Icons.Default.MonitorWeight,
+                        iconTint = colorScheme.primary,
+                        label = weightLabel,
+                        value = weightValue,
+                    )
+                }
+
                 Spacer(Modifier.height(40.dp))
 
                 // ── Cerrar sesión ─────────────────────────────────────────────
@@ -274,6 +372,116 @@ fun ProfileScreen(
                 containerColor = colorScheme.surfaceVariant,
                 contentColor = colorScheme.onSurface,
             )
+        }
+    }
+
+    if (state.isEditingProfileData) {
+        ModalBottomSheet(
+            onDismissRequest = { viewModel.onEvent(ProfileEvent.OnDismissEditProfileData) },
+            sheetState = editSheetState,
+            containerColor = colorScheme.surface,
+        ) {
+            EditProfileDataSheet(
+                age = state.editingAge,
+                height = state.editingHeight,
+                weight = state.editingWeight,
+                isSaving = state.isSavingProfileData,
+                onAgeChange = { viewModel.onEvent(ProfileEvent.OnAgeChange(it)) },
+                onHeightChange = { viewModel.onEvent(ProfileEvent.OnHeightChange(it)) },
+                onWeightChange = { viewModel.onEvent(ProfileEvent.OnWeightChange(it)) },
+                onSaveClick = { viewModel.onEvent(ProfileEvent.OnSaveProfileData) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun EditProfileDataSheet(
+    age: Int,
+    height: Int,
+    weight: Int,
+    isSaving: Boolean,
+    onAgeChange: (Int) -> Unit,
+    onHeightChange: (Int) -> Unit,
+    onWeightChange: (Int) -> Unit,
+    onSaveClick: () -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val ageValues = remember { (MIN_AGE..MAX_AGE).toList() }
+    val heightValues = remember { (MIN_HEIGHT..MAX_HEIGHT).toList() }
+    val weightValues = remember { (MIN_WEIGHT..MAX_WEIGHT).toList() }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = stringResource(Res.string.profile_screen_edit_data_title),
+            color = colorScheme.onSurface,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = (-0.4).sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            ProfileWheelColumn(
+                label = stringResource(Res.string.profile_screen_field_age),
+                unit = stringResource(Res.string.profile_screen_unit_years),
+                values = ageValues,
+                selectedValue = age,
+                onValueChange = onAgeChange,
+            )
+            ProfileWheelColumn(
+                label = stringResource(Res.string.profile_screen_field_height),
+                unit = stringResource(Res.string.profile_screen_unit_cm),
+                values = heightValues,
+                selectedValue = height,
+                onValueChange = onHeightChange,
+            )
+            ProfileWheelColumn(
+                label = stringResource(Res.string.profile_screen_field_weight),
+                unit = stringResource(Res.string.profile_screen_unit_kg),
+                values = weightValues,
+                selectedValue = weight,
+                onValueChange = onWeightChange,
+            )
+        }
+
+        Spacer(Modifier.height(32.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .clip(CircleShape)
+                .background(if (isSaving) colorScheme.surfaceVariant else colorScheme.primary)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    enabled = !isSaving,
+                    onClick = onSaveClick,
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (isSaving) {
+                CircularProgressIndicator(color = colorScheme.primary)
+            } else {
+                Text(
+                    text = stringResource(Res.string.profile_screen_save_button),
+                    color = colorScheme.onPrimary,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
         }
     }
 }

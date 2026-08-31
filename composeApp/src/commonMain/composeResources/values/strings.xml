@@ -177,6 +177,16 @@
     <string name="profile_screen_training_streak">Training streak</string>
     <string name="profile_screen_streak_days">%1$d days</string>
     <string name="profile_screen_logout">Sign out</string>
+    <string name="profile_screen_personal_data_title">Personal data</string>
+    <string name="profile_screen_field_age">Age</string>
+    <string name="profile_screen_field_height">Height</string>
+    <string name="profile_screen_field_weight">Weight</string>
+    <string name="profile_screen_unit_years">years</string>
+    <string name="profile_screen_unit_cm">cm</string>
+    <string name="profile_screen_unit_kg">kg</string>
+    <string name="profile_screen_value_placeholder">—</string>
+    <string name="profile_screen_edit_data_title">Edit your data</string>
+    <string name="profile_screen_save_button">Save</string>
 
     <!-- Day items -->
     <string name="day_item_monday">MON</string>

@@ -177,6 +177,16 @@
     <string name="profile_screen_training_streak">Ratxa d'entrenament</string>
     <string name="profile_screen_streak_days">%1$d dies</string>
     <string name="profile_screen_logout">Tancar sessió</string>
+    <string name="profile_screen_personal_data_title">Dades personals</string>
+    <string name="profile_screen_field_age">Edat</string>
+    <string name="profile_screen_field_height">Alçada</string>
+    <string name="profile_screen_field_weight">Pes</string>
+    <string name="profile_screen_unit_years">anys</string>
+    <string name="profile_screen_unit_cm">cm</string>
+    <string name="profile_screen_unit_kg">kg</string>
+    <string name="profile_screen_value_placeholder">—</string>
+    <string name="profile_screen_edit_data_title">Edita les teves dades</string>
+    <string name="profile_screen_save_button">Desar</string>
 
     <!-- Day items -->
     <string name="day_item_monday">DL</string>
