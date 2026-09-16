@@ -19,6 +19,7 @@ import dev.bonygod.gymroutine.workout.domain.usecase.SaveWorkoutSessionUseCase
 import dev.bonygod.gymroutine.workout.ui.interactions.WorkoutEffect
 import dev.bonygod.gymroutine.workout.ui.interactions.WorkoutEvent
 import dev.bonygod.gymroutine.workout.ui.interactions.WorkoutState
+import dev.bonygod.gymroutine.workout.ui.model.ActiveRest
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,6 +31,8 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
+
+private const val REST_TICK_MILLIS = 1_000L
 
 class WorkoutViewModel(
     private val navigator: Navigator,
@@ -77,7 +80,8 @@ class WorkoutViewModel(
             }
             is WorkoutEvent.OnUpdateWeight -> setState { updateWeight(event.index, event.weight) }
             is WorkoutEvent.OnUpdateReps -> setState { updateReps(event.index, event.reps) }
-            is WorkoutEvent.OnSetCompleted -> onSetCompleted(event.index)
+            is WorkoutEvent.OnStartRest -> onStartRest(event.index)
+            is WorkoutEvent.OnDismissRestDone -> setState { dismissRestDone() }
             is WorkoutEvent.OnToggleSkipExercise -> {
                 setState { toggleSkipExercise(event.index) }
                 persistSession()
@@ -137,6 +141,42 @@ class WorkoutViewModel(
         }
         persistSession()
     }
+
+    private var restTicker: Job? = null
+
+    private fun onStartRest(index: Int) {
+        val state = _state.value
+        val exercise = state.exercises.getOrNull(index) ?: return
+        if (exercise.restSeconds <= 0 || index in state.activeRests) return
+        setState { startRest(index, ActiveRest.start(nowMillis(), exercise.restSeconds)) }
+        if (restTicker?.isActive != true) {
+            restTicker = viewModelScope.launch { runRestTicker() }
+        }
+    }
+
+    private suspend fun runRestTicker() {
+        while (_state.value.activeRests.isNotEmpty()) {
+            val now = nowMillis()
+            _state.value.activeRests
+                .filterValues { it.isFinished(now) }
+                .keys
+                .forEach(::finishRest)
+            setState { tickRests(now) }
+            val nextEnd = _state.value.activeRests.values.minOfOrNull { it.endsAtMillis } ?: break
+            delay(minOf(nextEnd - now, REST_TICK_MILLIS))
+        }
+    }
+
+    private fun finishRest(index: Int) {
+        val state = _state.value
+        val exercise = state.exercises.getOrNull(index)
+        val isLastSet = exercise != null && (state.completedSets[index] ?: 0) + 1 >= exercise.sets
+        setState { stopRest(index) }
+        onSetCompleted(index)
+        if (!isLastSet) setState { showRestDone() }
+    }
+
+    private fun nowMillis(): Long = Clock.System.now().toEpochMilliseconds()
 
     /**
      * Vuelca el progreso de la sesión actual (series completadas, ejercicios completados/omitidos).

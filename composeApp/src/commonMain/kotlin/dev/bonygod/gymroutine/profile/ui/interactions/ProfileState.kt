@@ -23,6 +23,9 @@ data class ProfileState(
     val editingAge: Int = DEFAULT_AGE,
     val editingHeight: Int = DEFAULT_HEIGHT,
     val editingWeight: Int = DEFAULT_WEIGHT,
+    val isEditingName: Boolean = false,
+    val isSavingName: Boolean = false,
+    val editingName: String = "",
 ) {
     fun setUser(name: String, email: String) = copy(userName = name, userEmail = email, isLoading = false)
     fun setStats(total: Int, records: Int, streak: Int) = copy(
@@ -53,4 +56,12 @@ data class ProfileState(
     fun setEditingWeight(value: Int) = copy(editingWeight = value)
 
     fun setSavingProfileData(saving: Boolean) = copy(isSavingProfileData = saving)
+
+    fun startEditingName() = copy(isEditingName = true, editingName = userName)
+
+    fun dismissEditingName() = copy(isEditingName = false, isSavingName = false)
+
+    fun setEditingName(value: String) = copy(editingName = value)
+
+    fun setSavingName(saving: Boolean) = copy(isSavingName = saving)
 }

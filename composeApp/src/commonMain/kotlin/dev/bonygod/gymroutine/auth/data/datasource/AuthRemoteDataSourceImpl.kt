@@ -2,6 +2,7 @@ package dev.bonygod.gymroutine.auth.data.datasource
 
 import dev.bonygod.gymroutine.auth.data.mapper.FIELD_AGE
 import dev.bonygod.gymroutine.auth.data.mapper.FIELD_HEIGHT
+import dev.bonygod.gymroutine.auth.data.mapper.FIELD_NAME
 import dev.bonygod.gymroutine.auth.data.mapper.FIELD_WEIGHT
 import dev.bonygod.gymroutine.auth.data.mapper.toMap
 import dev.bonygod.gymroutine.auth.data.mapper.toUserDto
@@ -12,6 +13,9 @@ import dev.bonygod.gymroutine.auth.domain.model.ExternalAuthCredential
 import dev.bonygod.gymroutine.auth.domain.model.User
 import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.seconds
 
 class AuthRemoteDataSourceImpl(
     private val auth: FirebaseAuth,
@@ -74,6 +78,11 @@ class AuthRemoteDataSourceImpl(
         return fetchUser(uid)
     }
 
+    override suspend fun updateUserName(uid: String, name: String): User {
+        usersCollection.document(uid).set(mapOf(FIELD_NAME to name), merge = true)
+        return fetchUser(uid)
+    }
+
     override suspend fun sendPasswordReset(email: String) {
         auth.sendPasswordResetEmail(email)
     }
@@ -85,6 +94,13 @@ class AuthRemoteDataSourceImpl(
     override suspend fun getCurrentUser(): User? {
         val uid = auth.currentUser?.uid ?: return null
         return fetchUserOrNull(uid)
+    }
+
+    override suspend fun hasActiveSession(): Boolean {
+        val restoredUser = withTimeoutOrNull(3.seconds) {
+            auth.authStateChanged.first()
+        }
+        return (restoredUser ?: auth.currentUser) != null
     }
 
     private suspend fun fetchUser(uid: String): User = fetchUserOrNull(uid) ?: throw AuthError.UserNotFound()

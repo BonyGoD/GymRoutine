@@ -47,6 +47,11 @@ class AuthRepositoryImpl(
             .reportFailure("AuthRepository.updateUserProfile")
             .mapError()
 
+    override suspend fun updateUserName(uid: String, name: String): Result<User> =
+        runCatching { dataSource.updateUserName(uid, name) }
+            .reportFailure("AuthRepository.updateUserName")
+            .mapError()
+
     override suspend fun sendPasswordReset(email: String): Result<Unit> =
         runCatching { dataSource.sendPasswordReset(email) }
             .reportFailure("AuthRepository.sendPasswordReset")
@@ -63,6 +68,11 @@ class AuthRepositoryImpl(
             .reportFailure("AuthRepository.getCurrentUser")
             .mapError()
             .identifyUser()
+
+    override suspend fun hasActiveSession(): Result<Boolean> =
+        runCatching { dataSource.hasActiveSession() }
+            .reportFailure("AuthRepository.hasActiveSession")
+            .mapError()
 
     private fun <T> Result<T>.mapError(): Result<T> = recoverCatching { throwable ->
         throw when (throwable) {

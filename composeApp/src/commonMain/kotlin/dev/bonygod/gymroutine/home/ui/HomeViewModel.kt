@@ -101,6 +101,7 @@ class HomeViewModel(
 
     fun onEvent(event: HomeEvent) {
         when (event) {
+            is HomeEvent.OnScreenShown -> refreshUser()
             is HomeEvent.OnStartWorkout -> navigator.navigateTo(
                 Routes.Workout(routineId = event.routineId, routineName = event.routineName),
             )
@@ -118,6 +119,20 @@ class HomeViewModel(
                     pendingWorkoutKey(event.pending.plannedDate, event.pending.routine.id)
                 setDismissedPending(updatedDismissed)
                     .setPendingWorkouts(calculatePendingWorkouts(routines, workoutLogs, updatedDismissed))
+            }
+        }
+    }
+
+    private fun refreshUser() {
+        viewModelScope.launch {
+            getCurrentUser().onSuccess { user ->
+                if (user == null) return@onSuccess
+                val weightKg = user.weight.toFloatOrNull() ?: 70f
+                setState {
+                    setUserName(user.name)
+                        .setUserWeight(weightKg)
+                        .setTodayKcal(calculateTodayKcal(routines, workoutLogs, weightKg))
+                }
             }
         }
     }

@@ -6,7 +6,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import dev.bonygod.crashlytics.kmp.core.CrashlyticsKMP
 
 class Navigator {
-    private val _backStack: SnapshotStateList<Any> = mutableStateListOf(Routes.Login)
+    private val _backStack: SnapshotStateList<Any> = mutableStateListOf(Routes.Splash)
 
     val backStack: SnapshotStateList<Any>
         get() = _backStack

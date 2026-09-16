@@ -10,9 +10,12 @@ import dev.bonygod.gymroutine.auth.domain.usecase.LoginUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LoginWithSocialProviderUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LogoutUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.RegisterUseCase
+import dev.bonygod.gymroutine.auth.domain.usecase.ResolveSessionUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.SendPasswordResetUseCase
+import dev.bonygod.gymroutine.auth.domain.usecase.UpdateUserNameUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.UpdateUserProfileUseCase
 import dev.bonygod.gymroutine.auth.ui.AuthViewModel
+import dev.bonygod.gymroutine.auth.ui.SplashViewModel
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.evolution.domain.usecase.GetExerciseEvolutionsUseCase
 import dev.bonygod.gymroutine.evolution.domain.usecase.SeedEvolutionDataUseCase
@@ -78,6 +81,8 @@ val appModule = module {
     factory { LoginWithSocialProviderUseCase(get()) }
     factory { GetCurrentUserUseCase(get()) }
     factory { UpdateUserProfileUseCase(get()) }
+    factory { UpdateUserNameUseCase(get()) }
+    factory { ResolveSessionUseCase(get()) }
 
     // Routines data layer
     single<RoutineRemoteDataSource> { RoutineRemoteDataSourceImpl(get()) }
@@ -113,11 +118,12 @@ val appModule = module {
 
     // ViewModels
     viewModel { AuthViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SplashViewModel(get(), get()) }
     viewModel { CompleteProfileViewModel(get(), get()) }
     viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { HistoryViewModel(get(), get()) }
     viewModel { EvolutionViewModel(get(), get(), get()) }
-    viewModel { ProfileViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { ProfileViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RoutinesViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { WorkoutViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 }

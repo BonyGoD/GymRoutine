@@ -30,9 +30,13 @@ interface AuthRepository {
         height: String,
     ): Result<User>
 
+    suspend fun updateUserName(uid: String, name: String): Result<User>
+
     suspend fun sendPasswordReset(email: String): Result<Unit>
 
     suspend fun logout(): Result<Unit>
 
     suspend fun getCurrentUser(): Result<User?>
+
+    suspend fun hasActiveSession(): Result<Boolean>
 }

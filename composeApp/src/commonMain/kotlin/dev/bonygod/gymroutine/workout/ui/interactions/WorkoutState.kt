@@ -1,6 +1,7 @@
 package dev.bonygod.gymroutine.workout.ui.interactions
 
 import dev.bonygod.gymroutine.routines.domain.model.Exercise
+import dev.bonygod.gymroutine.workout.ui.model.ActiveRest
 import dev.bonygod.gymroutine.workout.ui.model.ExerciseWorkoutForm
 
 data class WorkoutState(
@@ -11,6 +12,8 @@ data class WorkoutState(
     val skippedExercises: Set<Int> = emptySet(),
     val exerciseForms: Map<Int, ExerciseWorkoutForm> = emptyMap(),
     val completedSets: Map<Int, Int> = emptyMap(),
+    val activeRests: Map<Int, ActiveRest> = emptyMap(),
+    val showRestDoneDialog: Boolean = false,
 ) {
     /** True when every exercise is either completed or explicitly skipped. */
     val allExercisesResolved: Boolean
@@ -36,7 +39,7 @@ data class WorkoutState(
     fun completeExercise(index: Int) = copy(
         completedExercises = completedExercises + index,
         skippedExercises = skippedExercises - index,
-        expandedExerciseIndex = null,
+        expandedExerciseIndex = expandedExerciseIndex.takeIf { it != index },
     )
 
     fun toggleSkipExercise(index: Int): WorkoutState =
@@ -50,6 +53,7 @@ data class WorkoutState(
                 skippedExercises = skippedExercises + index,
                 completedExercises = completedExercises - index,
                 expandedExerciseIndex = null,
+                activeRests = activeRests - index,
             )
         }
 
@@ -66,6 +70,16 @@ data class WorkoutState(
     )
 
     fun setCompletedSets(index: Int, count: Int) = copy(completedSets = completedSets + (index to count))
+
+    fun startRest(index: Int, rest: ActiveRest) = copy(activeRests = activeRests + (index to rest))
+
+    fun tickRests(nowMillis: Long) = copy(activeRests = activeRests.mapValues { (_, rest) -> rest.tick(nowMillis) })
+
+    fun stopRest(index: Int) = copy(activeRests = activeRests - index)
+
+    fun showRestDone() = copy(showRestDoneDialog = true)
+
+    fun dismissRestDone() = copy(showRestDoneDialog = false)
 
     /** Restaura una sesión guardada sobre la rutina ya cargada por [setExercises]. */
     fun restoreSession(

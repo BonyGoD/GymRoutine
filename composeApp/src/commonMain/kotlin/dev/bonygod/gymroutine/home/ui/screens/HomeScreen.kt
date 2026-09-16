@@ -124,6 +124,10 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
     val routinePickerSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scrollState = rememberScrollState()
 
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(HomeEvent.OnScreenShown)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -47,10 +47,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.routines.domain.model.Exercise
 import dev.bonygod.gymroutine.workout.ui.WorkoutViewModel
 import dev.bonygod.gymroutine.workout.ui.interactions.WorkoutEvent
+import dev.bonygod.gymroutine.workout.ui.model.ActiveRest
 import dev.bonygod.gymroutine.workout.ui.model.ExerciseWorkoutForm
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.common_accept
@@ -89,9 +88,6 @@ import gymroutine.composeapp.generated.resources.workout_screen_weight_kg
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.Clock
-
-private const val MILLIS_PER_SECOND = 1_000L
 
 private val GreenCompleted = Color(0xFF388E3C)
 private val GreenCompletedBg = Color(0xFF1B5E20)
@@ -116,6 +112,33 @@ fun WorkoutScreen(
     val titleText = stringResource(Res.string.workout_screen_title)
     val backDescription = stringResource(Res.string.common_back_description)
     val finishWorkoutText = stringResource(Res.string.workout_screen_finish_workout)
+    val restDoneTitle = stringResource(Res.string.workout_screen_rest_done_title)
+    val restDoneMessage = stringResource(Res.string.workout_screen_rest_done_message)
+    val acceptText = stringResource(Res.string.common_accept)
+
+    if (state.showRestDoneDialog) {
+        LaunchedEffect(Unit) {
+            delay(5000L)
+            viewModel.onEvent(WorkoutEvent.OnDismissRestDone)
+        }
+        AlertDialog(
+            onDismissRequest = { viewModel.onEvent(WorkoutEvent.OnDismissRestDone) },
+            title = {
+                Text(
+                    text = restDoneTitle,
+                    fontWeight = FontWeight.Bold,
+                )
+            },
+            text = {
+                Text(text = restDoneMessage)
+            },
+            confirmButton = {
+                TextButton(onClick = { viewModel.onEvent(WorkoutEvent.OnDismissRestDone) }) {
+                    Text(acceptText)
+                }
+            },
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -165,10 +188,11 @@ fun WorkoutScreen(
                     isCompleted = index in state.completedExercises,
                     isSkipped = index in state.skippedExercises,
                     completedSets = state.completedSets[index] ?: 0,
+                    activeRest = state.activeRests[index],
                     onToggle = { viewModel.onEvent(WorkoutEvent.OnToggleExercise(index)) },
                     onUpdateWeight = { viewModel.onEvent(WorkoutEvent.OnUpdateWeight(index, it)) },
                     onUpdateReps = { viewModel.onEvent(WorkoutEvent.OnUpdateReps(index, it)) },
-                    onSetCompleted = { viewModel.onEvent(WorkoutEvent.OnSetCompleted(index)) },
+                    onStartRest = { viewModel.onEvent(WorkoutEvent.OnStartRest(index)) },
                     onToggleSkip = { viewModel.onEvent(WorkoutEvent.OnToggleSkipExercise(index)) },
                     onSaveProgress = { viewModel.onEvent(WorkoutEvent.OnSaveExerciseProgress(index)) },
                 )
@@ -222,10 +246,11 @@ private fun ExerciseCard(
     isCompleted: Boolean,
     isSkipped: Boolean,
     completedSets: Int,
+    activeRest: ActiveRest?,
     onToggle: () -> Unit,
     onUpdateWeight: (String) -> Unit,
     onUpdateReps: (String) -> Unit,
-    onSetCompleted: () -> Unit,
+    onStartRest: () -> Unit,
     onToggleSkip: () -> Unit,
     onSaveProgress: () -> Unit,
 ) {
@@ -414,9 +439,8 @@ private fun ExerciseCard(
                 if (exercise.restSeconds > 0) {
                     RestTimer(
                         restSeconds = exercise.restSeconds,
-                        isVisible = isExpanded,
-                        isLastSet = completedSets + 1 >= exercise.sets,
-                        onRestCompleted = onSetCompleted,
+                        activeRest = activeRest,
+                        onStart = onStartRest,
                     )
                 }
 
@@ -457,61 +481,19 @@ private fun ExerciseCard(
 @Composable
 private fun RestTimer(
     restSeconds: Int,
-    isVisible: Boolean,
-    isLastSet: Boolean,
-    onRestCompleted: () -> Unit,
+    activeRest: ActiveRest?,
+    onStart: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    var endsAtMillis by rememberSaveable(isVisible) { mutableStateOf<Long?>(null) }
-    var timeLeft by rememberSaveable(isVisible) { mutableIntStateOf(restSeconds) }
-    var showDialog by rememberSaveable(isVisible) { mutableStateOf(false) }
-    val isRunning = endsAtMillis != null
+    val isRunning = activeRest != null
 
-    val restDoneTitle = stringResource(Res.string.workout_screen_rest_done_title)
-    val restDoneMessage = stringResource(Res.string.workout_screen_rest_done_message)
-    val acceptText = stringResource(Res.string.common_accept)
     val restLabel = stringResource(Res.string.workout_screen_rest_label)
     val timerRunningText = stringResource(Res.string.workout_screen_timer_running)
     val timerStartText = stringResource(Res.string.workout_screen_timer_start)
-    val secondsLeftText = stringResource(Res.string.workout_screen_seconds_left, timeLeft)
-
-    LaunchedEffect(endsAtMillis) {
-        val endsAt = endsAtMillis ?: return@LaunchedEffect
-        while (true) {
-            val millisLeft = endsAt - Clock.System.now().toEpochMilliseconds()
-            if (millisLeft <= 0) break
-            timeLeft = ((millisLeft + MILLIS_PER_SECOND - 1) / MILLIS_PER_SECOND).toInt()
-            delay(minOf(millisLeft, MILLIS_PER_SECOND))
-        }
-        endsAtMillis = null
-        onRestCompleted()
-        timeLeft = restSeconds
-        showDialog = !isLastSet
-    }
-
-    if (showDialog) {
-        LaunchedEffect(showDialog) {
-            delay(5000L)
-            showDialog = false
-        }
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = {
-                Text(
-                    text = restDoneTitle,
-                    fontWeight = FontWeight.Bold,
-                )
-            },
-            text = {
-                Text(text = restDoneMessage)
-            },
-            confirmButton = {
-                TextButton(onClick = { showDialog = false }) {
-                    Text(acceptText)
-                }
-            },
-        )
-    }
+    val secondsLeftText = stringResource(
+        Res.string.workout_screen_seconds_left,
+        activeRest?.secondsLeft ?: restSeconds,
+    )
 
     val timerColor = if (isRunning) colorScheme.primary else colorScheme.onSurfaceVariant
 
@@ -564,10 +546,8 @@ private fun RestTimer(
                         Modifier.clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                        ) {
-                            endsAtMillis = Clock.System.now().toEpochMilliseconds() +
-                                restSeconds * MILLIS_PER_SECOND
-                        }
+                            onClick = onStart,
+                        )
                     } else {
                         Modifier
                     },

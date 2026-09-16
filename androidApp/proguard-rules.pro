@@ -72,3 +72,5 @@
 # mantiene entera de forma preventiva hasta comprobar en un release firmado qué necesita de
 # verdad; entonces se puede acotar.
 -keep class dev.bonygod.signin.kmp.** { *; }
+
+-repackageclasses

@@ -25,9 +25,13 @@ interface AuthRemoteDataSource {
         height: String,
     ): User
 
+    suspend fun updateUserName(uid: String, name: String): User
+
     suspend fun sendPasswordReset(email: String)
 
     suspend fun logout()
 
     suspend fun getCurrentUser(): User?
+
+    suspend fun hasActiveSession(): Boolean
 }

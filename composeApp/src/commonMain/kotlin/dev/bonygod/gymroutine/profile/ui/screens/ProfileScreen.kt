@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
@@ -34,6 +36,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -50,6 +53,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.theme.GoldIcon
@@ -60,8 +65,11 @@ import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEffect
 import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEvent
 import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.common_edit_description
+import gymroutine.composeapp.generated.resources.common_name_label
+import gymroutine.composeapp.generated.resources.error_name_empty
 import gymroutine.composeapp.generated.resources.profile_screen_default_user_name
 import gymroutine.composeapp.generated.resources.profile_screen_edit_data_title
+import gymroutine.composeapp.generated.resources.profile_screen_edit_name_title
 import gymroutine.composeapp.generated.resources.profile_screen_field_age
 import gymroutine.composeapp.generated.resources.profile_screen_field_height
 import gymroutine.composeapp.generated.resources.profile_screen_field_weight
@@ -103,6 +111,7 @@ fun ProfileScreen(
     val colorScheme = MaterialTheme.colorScheme
     val snackbarHostState = remember { SnackbarHostState() }
     val editSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val nameSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -180,13 +189,38 @@ fun ProfileScreen(
                 Spacer(Modifier.height(16.dp))
 
                 // ── Nombre y email ────────────────────────────────────────────
-                Text(
-                    text = state.userName.ifBlank { defaultUserName },
-                    color = colorScheme.onSurface,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = (-0.48).sp,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Spacer(Modifier.size(28.dp))
+                    Text(
+                        text = state.userName.ifBlank { defaultUserName },
+                        color = colorScheme.onSurface,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = (-0.48).sp,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    Box(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .background(colorScheme.surfaceVariant)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                            ) { viewModel.onEvent(ProfileEvent.OnEditName) },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = stringResource(Res.string.common_edit_description),
+                            tint = colorScheme.primary,
+                            modifier = Modifier.size(14.dp),
+                        )
+                    }
+                }
                 if (state.userEmail.isNotBlank()) {
                     Spacer(Modifier.height(4.dp))
                     Text(
@@ -391,6 +425,100 @@ fun ProfileScreen(
                 onWeightChange = { viewModel.onEvent(ProfileEvent.OnWeightChange(it)) },
                 onSaveClick = { viewModel.onEvent(ProfileEvent.OnSaveProfileData) },
             )
+        }
+    }
+
+    if (state.isEditingName) {
+        ModalBottomSheet(
+            onDismissRequest = { viewModel.onEvent(ProfileEvent.OnDismissEditName) },
+            sheetState = nameSheetState,
+            containerColor = colorScheme.surface,
+        ) {
+            EditNameSheet(
+                name = state.editingName,
+                isSaving = state.isSavingName,
+                onNameChange = { viewModel.onEvent(ProfileEvent.OnNameChange(it)) },
+                onSaveClick = { viewModel.onEvent(ProfileEvent.OnSaveName) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun EditNameSheet(
+    name: String,
+    isSaving: Boolean,
+    onNameChange: (String) -> Unit,
+    onSaveClick: () -> Unit,
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val isBlank = name.isBlank()
+    val canSave = !isBlank && !isSaving
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = stringResource(Res.string.profile_screen_edit_name_title),
+            color = colorScheme.onSurface,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = (-0.4).sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+        )
+
+        OutlinedTextField(
+            value = name,
+            onValueChange = onNameChange,
+            label = { Text(stringResource(Res.string.common_name_label)) },
+            singleLine = true,
+            enabled = !isSaving,
+            isError = isBlank,
+            supportingText = if (isBlank) {
+                { Text(stringResource(Res.string.error_name_empty)) }
+            } else {
+                null
+            },
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(onDone = { if (canSave) onSaveClick() }),
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(Modifier.height(24.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .clip(CircleShape)
+                .background(if (canSave) colorScheme.primary else colorScheme.surfaceVariant)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    enabled = canSave,
+                    onClick = onSaveClick,
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (isSaving) {
+                CircularProgressIndicator(color = colorScheme.primary)
+            } else {
+                Text(
+                    text = stringResource(Res.string.profile_screen_save_button),
+                    color = if (canSave) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
         }
     }
 }
