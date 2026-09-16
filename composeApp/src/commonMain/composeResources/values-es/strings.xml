@@ -8,6 +8,9 @@
     <string name="common_back_description">Atrás</string>
     <string name="common_accept">Aceptar</string>
 
+    <string name="splash_screen_error_message">No se pudo cargar tu sesión. Revisa tu conexión y vuelve a intentarlo.</string>
+    <string name="splash_screen_retry_button">Reintentar</string>
+
     <!-- Login screen -->
     <string name="login_screen_title">¡Bienvenido a GymRoutine!</string>
     <string name="login_screen_subtitle">Controla tus entrenamientos y crea tus propias rutinas</string>
@@ -186,6 +189,7 @@
     <string name="profile_screen_unit_kg">kg</string>
     <string name="profile_screen_value_placeholder">—</string>
     <string name="profile_screen_edit_data_title">Edita tus datos</string>
+    <string name="profile_screen_edit_name_title">Edita tu nombre</string>
     <string name="profile_screen_save_button">Guardar</string>
 
     <!-- Day items -->

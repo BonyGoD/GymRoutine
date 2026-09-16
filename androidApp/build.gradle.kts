@@ -29,8 +29,8 @@ android {
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 13
-        versionName = "0.0.13"
+        versionCode = 14
+        versionName = "0.0.14"
     }
 
     packaging {
@@ -66,6 +66,7 @@ android {
             // R8 elimina el código no usado y ofusca los nombres. Las reglas propias —lo que R8 no
             // puede deducir solo— viven en proguard-rules.pro, cada una con su motivo.
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",

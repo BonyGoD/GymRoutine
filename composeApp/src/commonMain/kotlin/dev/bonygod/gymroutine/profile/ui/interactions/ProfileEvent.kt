@@ -8,4 +8,8 @@ sealed class ProfileEvent {
     data class OnHeightChange(val value: Int) : ProfileEvent()
     data class OnWeightChange(val value: Int) : ProfileEvent()
     data object OnSaveProfileData : ProfileEvent()
+    data object OnEditName : ProfileEvent()
+    data object OnDismissEditName : ProfileEvent()
+    data class OnNameChange(val value: String) : ProfileEvent()
+    data object OnSaveName : ProfileEvent()
 }

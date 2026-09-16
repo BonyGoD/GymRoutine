@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.bonygod.gymroutine.auth.domain.usecase.GetCurrentUserUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LogoutUseCase
+import dev.bonygod.gymroutine.auth.domain.usecase.UpdateUserNameUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.UpdateUserProfileUseCase
 import dev.bonygod.gymroutine.core.navigation.Navigator
 import dev.bonygod.gymroutine.core.navigation.Routes
@@ -34,6 +35,7 @@ class ProfileViewModel(
     private val observeWorkoutLogs: ObserveWorkoutLogsUseCase,
     private val observeRoutines: ObserveRoutinesUseCase,
     private val updateUserProfile: UpdateUserProfileUseCase,
+    private val updateUserName: UpdateUserNameUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -57,6 +59,10 @@ class ProfileViewModel(
             is ProfileEvent.OnHeightChange -> setState { setEditingHeight(event.value) }
             is ProfileEvent.OnWeightChange -> setState { setEditingWeight(event.value) }
             is ProfileEvent.OnSaveProfileData -> saveProfileData()
+            is ProfileEvent.OnEditName -> setState { startEditingName() }
+            is ProfileEvent.OnDismissEditName -> setState { dismissEditingName() }
+            is ProfileEvent.OnNameChange -> setState { setEditingName(event.value) }
+            is ProfileEvent.OnSaveName -> saveName()
         }
     }
 
@@ -117,6 +123,25 @@ class ProfileViewModel(
                 setState { setSavingProfileData(false) }
                 _effect.emit(ProfileEffect.ShowError(error.message.orEmpty()))
             }
+        }
+    }
+
+    private fun saveName() {
+        val name = state.value.editingName.trim()
+        if (userId.isEmpty() || name.isEmpty()) return
+        if (name == state.value.userName) {
+            setState { dismissEditingName() }
+            return
+        }
+        viewModelScope.launch {
+            setState { setSavingName(true) }
+            updateUserName(uid = userId, name = name)
+                .onSuccess { user ->
+                    setState { setUser(user.name, user.email).dismissEditingName() }
+                }.onFailure { error ->
+                    setState { setSavingName(false) }
+                    _effect.emit(ProfileEffect.ShowError(error.message.orEmpty()))
+                }
         }
     }
 
