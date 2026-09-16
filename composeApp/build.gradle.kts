@@ -67,6 +67,8 @@ kotlin {
             // CrashlyticsKMP
             implementation(libs.bonygod.crashlyticskmp)
 
+            implementation(libs.bonygod.admobkmp)
+
             // Date & Time
             implementation(libs.kotlinx.datetime)
         }
@@ -129,4 +131,16 @@ buildConfig {
 
     buildConfigField("FIREBASE_API_KEY", apiKey)
     buildConfigField("CLIENT_ID", clientId)
+
+    val admobAndroidBanner = properties.getProperty("ADMOB_ANDROID_BANNER", "")
+    val admobAndroidInterstitial = properties.getProperty("ADMOB_ANDROID_INTERSTITIAL", "")
+    val admobIosBanner = properties.getProperty("ADMOB_IOS_BANNER", "")
+    val admobIosInterstitial = properties.getProperty("ADMOB_IOS_INTERSTITIAL", "")
+    val admobUseTestAds = properties.getProperty("ADMOB_USE_TEST_ADS").orEmpty().ifBlank { "true" }.toBoolean()
+
+    buildConfigField("ADMOB_ANDROID_BANNER", admobAndroidBanner)
+    buildConfigField("ADMOB_ANDROID_INTERSTITIAL", admobAndroidInterstitial)
+    buildConfigField("ADMOB_IOS_BANNER", admobIosBanner)
+    buildConfigField("ADMOB_IOS_INTERSTITIAL", admobIosInterstitial)
+    buildConfigField("ADMOB_USE_TEST_ADS", admobUseTestAds)
 }

@@ -34,7 +34,8 @@ credentialsPlayServicesAuth = "1.5.0"
 firebaseAuthKtx = "23.2.1"
 
 # AdMob
-playServicesAds = "23.6.0"
+admob-kmp = "1.0.0"
+playServicesAds = "25.4.0"
 
 # BuildConfig
 buildConfig = "6.0.7"
@@ -56,6 +57,7 @@ compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.re
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 
 #BonyGoD
+bonygod-admobkmp = { module = "com.github.BonyGoD.AdMobKMP:admob-kmp", version.ref = "admob-kmp" }
 bonygod-crashlyticskmp = { module = "com.github.BonyGoD.CrashlyticsKMP:crashlytics-kmp", version.ref = "crashlytics-kmp" }
 bonygod-signinkmp = { module = "com.github.BonyGoD.SignInKMP:signin-kmp", version.ref = "signin-kmp" }
 

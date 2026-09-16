@@ -29,8 +29,11 @@ android {
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 14
-        versionName = "0.0.14"
+        versionCode = 15
+        versionName = "0.0.15"
+
+        val admobAppId = localProps.getProperty("ADMOB_ANDROID_APP_ID").orEmpty().ifBlank { "ca-app-pub-3940256099942544~3347511713" }
+        manifestPlaceholders["admobAppId"] = admobAppId
     }
 
     packaging {
