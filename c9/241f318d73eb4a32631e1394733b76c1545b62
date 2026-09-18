@@ -1,0 +1,45 @@
+.gitignore
+  s_c5514e2af5e24b::t_d6d62ca810df95 8,36-37
+composeApp/build.gradle.kts
+  s_c5514e2af5e24b::t_41941bb6937887 139-140
+composeApp/src/androidMain/kotlin/dev/bonygod/gymroutine/GymRoutineApp.kt
+  s_c5514e2af5e24b::t_755134b608e495 15,27
+composeApp/src/androidMain/kotlin/dev/bonygod/gymroutine/MainActivity.kt
+  s_c5514e2af5e24b::t_43c337640f92bb 18-19
+composeApp/src/commonMain/kotlin/dev/bonygod/gymroutine/home/ui/HomeViewModel.kt
+  s_151b79a5fb9bc7::t_7f8ef063a6c43b 69,86,150,188-197
+composeApp/src/commonMain/kotlin/dev/bonygod/gymroutine/home/ui/screens/HomeScreen.kt
+  s_151b79a5fb9bc7::t_365c3f63031e71 62,813-833,867,871,876-878,880-883,885-890,892-899,907-908
+composeApp/src/iosMain/kotlin/dev/bonygod/gymroutine/AdsInitializer.kt
+  s_c5514e2af5e24b::t_ecdfe44ee22463 1-17
+composeApp/src/iosMain/kotlin/dev/bonygod/gymroutine/MainViewController.kt
+  s_151b79a5fb9bc7::t_dcc2e5f3eeb996 5
+composeApp/src/iosMain/kotlin/dev/bonygod/gymroutine/Platform.ios.kt
+  s_151b79a5fb9bc7::t_ef08a5bc0f5c0e 4,10,14
+iosApp/iosApp/iOSApp.swift
+  s_151b79a5fb9bc7::t_06f413495de43b 5,33-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c9241f318d73eb4a32631e1394733b76c1545b62",
+  "prompts": {},
+  "sessions": {
+    "s_151b79a5fb9bc7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f25a39f3-e1a7-4124-8752-8da28dc95962",
+        "model": "claude-opus-5"
+      },
+      "human_author": "BonyGoD <bonygod.dev@gmail.com>"
+    },
+    "s_c5514e2af5e24b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "41766cee-06e1-4ea2-899d-181304014b82",
+        "model": "claude-opus-5"
+      },
+      "human_author": "BonyGoD <bonygod.dev@gmail.com>"
+    }
+  }
+}
