@@ -2,6 +2,7 @@ import SwiftUI
 import Firebase
 import GoogleSignIn
 import SignInKMPSwift
+import AdMobKMPSwift
 import ComposeApp
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -29,7 +30,9 @@ struct iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
-        AppModuleKt.doInitKoin()
+        AppModuleKt.doInitKoin(config: { _ in })
+        AdMobKMPBridge.start()
+        AdsInitializerKt.configureAds()
     }
 
     var body: some Scene {

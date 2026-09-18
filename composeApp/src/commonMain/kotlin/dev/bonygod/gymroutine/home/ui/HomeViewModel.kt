@@ -66,7 +66,7 @@ class HomeViewModel(
                                         setRoutines(routines)
                                             .setTodayKcal(calculateTodayKcal(routines, workoutLogs, userWeightKg))
                                             .setConsistency(calculateConsistency(routines, workoutLogs))
-                                            .setIsTodayCompleted(calculateIsTodayCompleted(workoutLogs))
+                                            .setIsTodayCompleted(calculateIsTodayCompleted(routines, workoutLogs))
                                             .setWeekRecords(records.first, records.second)
                                             .setPendingWorkouts(
                                                 calculatePendingWorkouts(routines, workoutLogs, dismissedPending),
@@ -83,7 +83,7 @@ class HomeViewModel(
                                         setWorkoutLogs(logs)
                                             .setTodayKcal(calculateTodayKcal(routines, logs, userWeightKg))
                                             .setConsistency(calculateConsistency(routines, logs))
-                                            .setIsTodayCompleted(calculateIsTodayCompleted(logs))
+                                            .setIsTodayCompleted(calculateIsTodayCompleted(routines, logs))
                                             .setWeekRecords(records.first, records.second)
                                             .setPendingWorkouts(
                                                 calculatePendingWorkouts(routines, logs, dismissedPending),
@@ -144,12 +144,10 @@ class HomeViewModel(
      * Fórmula: kcal ≈ peso(kg) × minutos × 0.125
      */
     private fun calculateTodayKcal(routines: List<Routine>, logs: List<WorkoutLog>, weightKg: Float): Int {
-        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
-        if (logs.none { it.date == today && it.completado }) return 0
-
         val todayAbbr = todayDayAbbr()
         val todayRoutines = routines.routinesForDay(todayAbbr)
         if (todayRoutines.isEmpty()) return 0
+        if (!isTodayRoutineCompleted(todayRoutines, logs)) return 0
 
         val totalSeconds = todayRoutines
             .flatMap { it.exercises }
@@ -187,9 +185,16 @@ class HomeViewModel(
 
     // ── Completado hoy ────────────────────────────────────────────────────────
 
-    private fun calculateIsTodayCompleted(logs: List<WorkoutLog>): Boolean {
-        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
-        return logs.any { it.date == today && it.completado }
+    private fun calculateIsTodayCompleted(routines: List<Routine>, logs: List<WorkoutLog>): Boolean =
+        isTodayRoutineCompleted(routines.routinesForDay(todayDayAbbr()), logs)
+
+    private fun isTodayRoutineCompleted(todayRoutines: List<Routine>, logs: List<WorkoutLog>): Boolean {
+        if (todayRoutines.isEmpty()) return false
+        val today = todayDate().toString()
+        val todayRoutineIds = todayRoutines.map { it.id }.toSet()
+        return logs.any {
+            it.date == today && it.completado && it.recoveredFrom == null && it.routineId in todayRoutineIds
+        }
     }
 
     // ── Récords semanales ─────────────────────────────────────────────────────

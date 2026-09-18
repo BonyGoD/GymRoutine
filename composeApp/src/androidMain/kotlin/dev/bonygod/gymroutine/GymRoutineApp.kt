@@ -12,6 +12,7 @@ import org.koin.core.logger.Level
 class GymRoutineApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        initPlatform(this)
         initKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@GymRoutineApp)
@@ -23,7 +24,7 @@ class GymRoutineApp : Application() {
                 androidInterstitialId = BuildConfig.ADMOB_ANDROID_INTERSTITIAL,
                 iosBannerId = BuildConfig.ADMOB_IOS_BANNER,
                 iosInterstitialId = BuildConfig.ADMOB_IOS_INTERSTITIAL,
-                useTestAds = BuildConfig.ADMOB_USE_TEST_ADS,
+                useTestAds = getPlatform().isDebugBuild || BuildConfig.ADMOB_USE_TEST_ADS,
                 interstitialEnabled = true,
             ),
         )

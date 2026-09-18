@@ -136,7 +136,8 @@ buildConfig {
     val admobAndroidInterstitial = properties.getProperty("ADMOB_ANDROID_INTERSTITIAL", "")
     val admobIosBanner = properties.getProperty("ADMOB_IOS_BANNER", "")
     val admobIosInterstitial = properties.getProperty("ADMOB_IOS_INTERSTITIAL", "")
-    val admobUseTestAds = properties.getProperty("ADMOB_USE_TEST_ADS").orEmpty().ifBlank { "true" }.toBoolean()
+    // Debug usa siempre anuncios de prueba; esto solo los fuerza también en release.
+    val admobUseTestAds = properties.getProperty("ADMOB_USE_TEST_ADS").orEmpty().ifBlank { "false" }.toBoolean()
 
     buildConfigField("ADMOB_ANDROID_BANNER", admobAndroidBanner)
     buildConfigField("ADMOB_ANDROID_INTERSTITIAL", admobAndroidInterstitial)
