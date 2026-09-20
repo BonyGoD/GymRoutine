@@ -27,4 +27,6 @@ sealed class Routes {
         /** Fecha ISO-8601 "YYYY-MM-DD" del día planificado que se recupera, o null si no lo es. */
         val recoveredFrom: String? = null,
     ) : Routes()
+
+    data object WorkoutFinishedAd : Routes()
 }

@@ -59,6 +59,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.theme.GoldIcon
@@ -810,6 +811,27 @@ private fun QuickStatsBento(
 }
 
 @Composable
+private fun AutoShrinkLabel(text: String, color: Color) {
+    var fontSize by remember(text) { mutableStateOf(12.sp) }
+
+    Text(
+        text = text,
+        color = color,
+        fontSize = fontSize,
+        fontWeight = FontWeight.SemiBold,
+        letterSpacing = (0.08 * fontSize.value).sp,
+        lineHeight = (fontSize.value * 1.33f).sp,
+        softWrap = false,
+        overflow = TextOverflow.Clip,
+        onTextLayout = { result ->
+            if (result.hasVisualOverflow && fontSize > 8.sp) {
+                fontSize = (fontSize.value - 0.5f).sp
+            }
+        },
+    )
+}
+
+@Composable
 private fun IntrinsicHeightRow(content: @Composable RowScope.() -> Unit) {
     Row(
         modifier = Modifier
@@ -842,39 +864,39 @@ private fun StatCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             icon()
-            Text(
+            AutoShrinkLabel(
                 text = label,
                 color = colorScheme.onSurfaceVariant,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = (0.96).sp,
-                lineHeight = 16.sp,
             )
         }
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            itemVerticalAlignment = Alignment.Bottom,
+        Box(
+            modifier = Modifier.fillMaxWidth().weight(1f),
+            contentAlignment = Alignment.Center,
         ) {
-            Text(
-                text = bigNumber,
-                color = colorScheme.onSurface,
-                fontSize = 48.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = (-1.92).sp,
-                lineHeight = 52.8.sp,
-            )
-            if (bigUnit != null) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                itemVerticalAlignment = Alignment.Bottom,
+            ) {
                 Text(
-                    text = bigUnit,
-                    color = colorScheme.onSurfaceVariant,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(bottom = 8.dp),
+                    text = bigNumber,
+                    color = colorScheme.onSurface,
+                    fontSize = 48.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-1.92).sp,
+                    lineHeight = 52.8.sp,
                 )
+                if (bigUnit != null) {
+                    Text(
+                        text = bigUnit,
+                        color = colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                    )
+                }
             }
         }
         Text(
@@ -882,6 +904,8 @@ private fun StatCard(
             color = colorScheme.onSurfaceVariant,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

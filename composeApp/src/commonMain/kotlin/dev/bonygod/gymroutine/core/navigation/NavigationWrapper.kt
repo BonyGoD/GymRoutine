@@ -14,6 +14,7 @@ import dev.bonygod.gymroutine.auth.ui.screens.RegisterScreen
 import dev.bonygod.gymroutine.auth.ui.screens.SplashScreen
 import dev.bonygod.gymroutine.onboarding.ui.screens.CompleteProfileScreen
 import dev.bonygod.gymroutine.routines.ui.screens.AddRoutineScreen
+import dev.bonygod.gymroutine.workout.ui.screens.WorkoutFinishedAdScreen
 import dev.bonygod.gymroutine.workout.ui.screens.WorkoutScreen
 import org.koin.compose.koinInject
 
@@ -55,6 +56,9 @@ fun NavigationWrapper() {
                     routineName = entry.routineName,
                     recoveredFrom = entry.recoveredFrom,
                 )
+            }
+            entry<Routes.WorkoutFinishedAd> {
+                WorkoutFinishedAdScreen()
             }
         },
         transitionSpec = {

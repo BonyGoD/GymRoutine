@@ -15,9 +15,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         Firebase.initialize(this)
-        // CrashlyticsKMP.initialize() necesita Firebase ya inicializado. initPlatform(this) va antes
-        // porque isDebugBuild de AndroidPlatform lee el appContext que initPlatform acaba de guardar.
-        initPlatform(this)
+        // CrashlyticsKMP.initialize() necesita Firebase ya inicializado. initPlatform() ya se llamó
+        // en GymRoutineApp, así que isDebugBuild de AndroidPlatform tiene su appContext.
         val platform = getPlatform()
         CrashlyticsKMP.initialize(
             CrashlyticsConfig(

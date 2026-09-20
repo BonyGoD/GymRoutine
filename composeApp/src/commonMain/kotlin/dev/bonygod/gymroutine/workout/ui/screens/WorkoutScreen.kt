@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -53,14 +56,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.bonygod.admob.kmp.ui.BannerAd
+import dev.bonygod.admob.kmp.ui.rememberInterstitialAd
+import dev.bonygod.gymroutine.getPlatform
 import dev.bonygod.gymroutine.routines.domain.model.Exercise
 import dev.bonygod.gymroutine.workout.ui.WorkoutViewModel
 import dev.bonygod.gymroutine.workout.ui.interactions.WorkoutEvent
@@ -107,6 +115,11 @@ fun WorkoutScreen(
 
     LaunchedEffect(routineId) {
         viewModel.onEvent(WorkoutEvent.OnInit(routineId))
+    }
+
+    val interstitialAd = rememberInterstitialAd()
+    LaunchedEffect(Unit) {
+        interstitialAd.preload()
     }
 
     val titleText = stringResource(Res.string.workout_screen_title)
@@ -166,6 +179,7 @@ fun WorkoutScreen(
                 ),
             )
         },
+        bottomBar = { WorkoutBanner() },
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -233,6 +247,33 @@ fun WorkoutScreen(
             } else {
                 item { Spacer(Modifier.height(32.dp)) }
             }
+        }
+    }
+}
+
+@Composable
+private fun WorkoutBanner() {
+    if (!getPlatform().adsEnabled) return
+    var failed by remember { mutableStateOf(false) }
+    val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+
+    if (!failed) {
+        Box(
+            modifier = if (imeVisible) {
+                Modifier
+                    .fillMaxWidth()
+                    .height(0.dp)
+                    .clipToBounds()
+            } else {
+                Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+            },
+        ) {
+            BannerAd(
+                modifier = Modifier.fillMaxWidth(),
+                onAdFailedToLoad = { failed = true },
+            )
         }
     }
 }
