@@ -29,8 +29,8 @@ android {
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 14
-        versionName = "0.0.14"
+        versionCode = 16
+        versionName = "0.0.16"
     }
 
     packaging {

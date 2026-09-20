@@ -7,6 +7,7 @@ data class User(
     val weight: String,
     val height: String,
     val email: String,
+    val tutorialSeen: Boolean,
 )
 
 /**

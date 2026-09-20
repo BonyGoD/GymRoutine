@@ -9,6 +9,7 @@ internal const val FIELD_AGE = "age"
 internal const val FIELD_WEIGHT = "weight"
 internal const val FIELD_HEIGHT = "height"
 internal const val FIELD_EMAIL = "email"
+internal const val FIELD_TUTORIAL_SEEN = "tutorialSeen"
 
 internal fun DocumentSnapshot.toUserDto(fallbackUid: String): UserDto = UserDto(
     uid = get(FIELD_UID) as? String ?: fallbackUid,
@@ -17,6 +18,7 @@ internal fun DocumentSnapshot.toUserDto(fallbackUid: String): UserDto = UserDto(
     weight = get(FIELD_WEIGHT) as? String ?: "",
     height = get(FIELD_HEIGHT) as? String ?: "",
     email = get(FIELD_EMAIL) as? String ?: "",
+    tutorialSeen = get(FIELD_TUTORIAL_SEEN) as? Boolean ?: false,
 )
 
 internal fun UserDto.toMap(): Map<String, Any> = mapOf(
@@ -26,4 +28,5 @@ internal fun UserDto.toMap(): Map<String, Any> = mapOf(
     FIELD_WEIGHT to weight,
     FIELD_HEIGHT to height,
     FIELD_EMAIL to email,
+    FIELD_TUTORIAL_SEEN to tutorialSeen,
 )

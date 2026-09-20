@@ -99,6 +99,8 @@
 
     <!-- Routines screen -->
     <string name="routines_screen_title">Les teves rutines</string>
+    <string name="routines_screen_empty_title">Encara no tens rutines</string>
+    <string name="routines_screen_empty_description">Crea la teva primera rutina amb el botó de sota: tria els exercicis, les sèries i els dies que entrenes.</string>
     <string name="routines_screen_create_custom">Crear rutina personalitzada</string>
     <string name="routines_screen_exercise_count_other">%1$d exercicis</string>
     <string name="routines_screen_start">Començar</string>
@@ -191,6 +193,24 @@
     <string name="profile_screen_edit_data_title">Edita les teves dades</string>
     <string name="profile_screen_edit_name_title">Edita el teu nom</string>
     <string name="profile_screen_save_button">Desar</string>
+
+    <string name="tutorial_skip">Omet</string>
+    <string name="tutorial_next">Següent</string>
+    <string name="tutorial_create_routine">Crea la meva primera rutina</string>
+    <string name="tutorial_welcome_title">Benvingut a GymRoutine!</string>
+    <string name="tutorial_welcome_description">T\'ensenyem en un minut tot el que pots fer. Pots ometre-ho quan vulguis.</string>
+    <string name="tutorial_home_title">El teu dia d\'un cop d\'ull</string>
+    <string name="tutorial_home_description">A Inici veus la rutina d\'avui, el calendari de la setmana, les kcal estimades, la teva constància i els teus rècords. Si t\'has saltat un entrenament, et proposa recuperar-lo.</string>
+    <string name="tutorial_routines_title">Crea les teves rutines</string>
+    <string name="tutorial_routines_description">Crea rutines amb els seus exercicis, sèries, repeticions, pes i descans, i tria quins dies de la setmana toquen.</string>
+    <string name="tutorial_workout_title">Entrena pas a pas</string>
+    <string name="tutorial_workout_description">Durant l\'entrenament marca cada sèrie, fes servir el cronòmetre de descans i actualitza el pes. Si un dia no pots amb un exercici, omet-lo.</string>
+    <string name="tutorial_history_title">El teu historial</string>
+    <string name="tutorial_history_description">Consulta tots els entrenaments que has completat, dia a dia.</string>
+    <string name="tutorial_evolution_title">Mesura el teu progrés</string>
+    <string name="tutorial_evolution_description">Segueix en gràfiques com evolucionen el pes i les repeticions de cada exercici.</string>
+    <string name="tutorial_profile_title">El teu perfil</string>
+    <string name="tutorial_profile_description">Revisa els teus entrenaments totals, rècords i ratxa, i edita el teu nom, edat, alçada i pes.</string>
 
     <!-- Day items -->
     <string name="day_item_monday">DL</string>

@@ -57,6 +57,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.bonygod.gymroutine.core.config.DEVELOPER_EMAIL
 import dev.bonygod.gymroutine.core.theme.GoldIcon
 import dev.bonygod.gymroutine.core.theme.OrangeIcon
 import dev.bonygod.gymroutine.core.ui.components.ProfileWheelColumn
@@ -94,12 +95,6 @@ private const val MIN_HEIGHT = 80
 private const val MAX_HEIGHT = 300
 private const val MIN_WEIGHT = 30
 private const val MAX_WEIGHT = 300
-
-/**
- * El bloque de diagnóstico solo se dibuja para esta cuenta, así que puede quedarse en el código y
- * viajar en las builds de release sin que ningún tester llegue a verlo.
- */
-private const val DEVELOPER_EMAIL = "bonygod.dev@gmail.com"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
