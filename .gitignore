@@ -5,7 +5,7 @@
 xcuserdata
 !src/**/build/
 local.properties
-/iosApp/Configuration/Config.xconfig
+/iosApp/Configuration/Config.xcconfig
 .idea
 .fleet
 .DS_Store
@@ -34,3 +34,4 @@ opencode.json
 
 # graphify cache and generated output
 graphify-out/
+.graphify/

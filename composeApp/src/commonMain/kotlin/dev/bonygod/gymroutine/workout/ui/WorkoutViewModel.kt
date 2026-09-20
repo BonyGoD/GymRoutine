@@ -6,6 +6,7 @@ import dev.bonygod.gymroutine.auth.domain.usecase.GetCurrentUserUseCase
 import dev.bonygod.gymroutine.core.crashlytics.reportFailure
 import dev.bonygod.gymroutine.core.navigation.BottomTab
 import dev.bonygod.gymroutine.core.navigation.Navigator
+import dev.bonygod.gymroutine.core.navigation.Routes
 import dev.bonygod.gymroutine.routines.domain.model.Routine
 import dev.bonygod.gymroutine.routines.domain.model.withProgress
 import dev.bonygod.gymroutine.routines.domain.usecase.GetRoutinesUseCase
@@ -215,6 +216,14 @@ class WorkoutViewModel(
             .onFailure { e -> setEffect(WorkoutEffect.ShowError(e.message.orEmpty())) }
     }
 
+    private fun resetSession() {
+        restTicker?.cancel()
+        restTicker = null
+        cancelAndFlushSaveJobs()
+        currentRoutine = null
+        setState { WorkoutState() }
+    }
+
     private fun today(): String = Clock.System.now()
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .date
@@ -224,6 +233,7 @@ class WorkoutViewModel(
 
     private fun loadExercises(routineId: String) {
         if (routineId.isBlank()) return
+        resetSession()
         viewModelScope.launch {
             getCurrentUser().onSuccess { user ->
                 val uid = user?.uid.orEmpty()
@@ -269,7 +279,7 @@ class WorkoutViewModel(
             clearWorkoutSession(userId, routineId)
                 .onFailure { e -> setEffect(WorkoutEffect.ShowError(e.message.orEmpty())) }
             navigator.currentTab.value = BottomTab.Home
-            navigator.goBack()
+            navigator.replaceTo(Routes.WorkoutFinishedAd)
         }
     }
 

@@ -13,6 +13,8 @@ class AndroidPlatform : Platform {
     // No requiere habilitar buildFeatures.buildConfig: el flag ya lo lleva el propio paquete instalado.
     override val isDebugBuild: Boolean
         get() = appContext.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+
+    override val adsEnabled: Boolean = true
 }
 
 actual fun getPlatform(): Platform = AndroidPlatform()
