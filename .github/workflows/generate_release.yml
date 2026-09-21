@@ -1,0 +1,103 @@
+name: Release on version bump
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current versionName from androidApp/build.gradle.kts
+        id: gradle_version
+        run: |
+          VERSION=$(grep 'versionName[[:space:]]*=' androidApp/build.gradle.kts | head -1 | sed 's/.*versionName[[:space:]]*=[[:space:]]*//;s/\"//g')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📱 Current version: $VERSION"
+
+      - name: Get previous versionName from parent commit
+        id: previous_version
+        run: |
+          git show HEAD^:androidApp/build.gradle.kts > old_build.gradle.kts || touch old_build.gradle.kts
+          PREV_VERSION=$(grep 'versionName[[:space:]]*=' old_build.gradle.kts | head -1 | sed 's/.*versionName[[:space:]]*=[[:space:]]*//;s/\"//g')
+          echo "prev_version=$PREV_VERSION" >> $GITHUB_OUTPUT
+          echo "📱 Previous version: $PREV_VERSION"
+
+      - name: Compare versionNames
+        id: version_compare
+        run: |
+          echo "📱 Current version: ${{ steps.gradle_version.outputs.version }}"
+          echo "📱 Previous version: ${{ steps.previous_version.outputs.prev_version }}"
+
+          if [ -z "${{ steps.gradle_version.outputs.version }}" ]; then
+            echo "❌ ERROR: No se pudo leer la versión actual"
+            exit 1
+          fi
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "👀 Vista previa manual: no se creará release ni tag"
+            echo "bump=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [ "${{ steps.gradle_version.outputs.version }}" = "${{ steps.previous_version.outputs.prev_version }}" ]; then
+            echo "ℹ️  No version bump detected - skipping release"
+            echo "bump=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Version bump: ${{ steps.previous_version.outputs.prev_version }} → ${{ steps.gradle_version.outputs.version }}"
+            echo "bump=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate changelog
+        if: steps.version_compare.outputs.bump == 'true'
+        env:
+          NEW_VERSION: ${{ steps.gradle_version.outputs.version }}
+          PREV_VERSION: ${{ steps.previous_version.outputs.prev_version }}
+          REPO: ${{ github.repository }}
+        run: |
+          PREV_TAG="v${PREV_VERSION}"
+          if ! git rev-parse -q --verify "refs/tags/${PREV_TAG}" >/dev/null; then
+            PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]' | head -1)
+            PREV_VERSION="${PREV_TAG#v}"
+          fi
+
+          if [ -n "$PREV_TAG" ]; then
+            RANGE="${PREV_TAG}..HEAD"
+          else
+            echo "⚠️  No hay ningún tag v*; uso los commits que introduce este commit"
+            RANGE="HEAD^..HEAD"
+            PREV_VERSION=""
+          fi
+
+          echo "📜 Rango: ${RANGE}"
+          export RANGE PREV_VERSION
+
+          python3 .github/scripts/release_notes.py > changelog.txt
+          cat changelog.txt
+
+          {
+            echo "## Notas de la v${NEW_VERSION}"
+            echo ""
+            cat changelog.txt
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create Release
+        if: steps.version_compare.outputs.bump == 'true' && github.event_name != 'workflow_dispatch'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ steps.gradle_version.outputs.version }}"
+          name: "v${{ steps.gradle_version.outputs.version }}"
+          body_path: changelog.txt
+          draft: false
+          prerelease: false
