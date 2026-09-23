@@ -1,5 +1,5 @@
 {
-  "originHash" : "abc0caf2efe0cfc68ce492d10c742bcd135d6461447d0ffe8f5cbb5537b57093",
+  "originHash" : "38e665218a2ce903296dd72bf4ea4934877188d2b949bb3015b90e127929d641",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -15,7 +15,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BonyGoD/AdMobKMP.git",
       "state" : {
-        "revision" : "9106a1b4569986757d0d87643b22ef6170ab3830",
+        "revision" : "5c11f14bc9ac1d556ddf31ff237becb9d03cc49b",
         "version" : "1.0.0"
       }
     },

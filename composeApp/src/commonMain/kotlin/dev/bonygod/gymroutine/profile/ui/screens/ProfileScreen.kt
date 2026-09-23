@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -167,10 +168,13 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState, enabled = scrollState.maxValue > 0)
+                    // El hueco de arriba lo marca la barra de estado, no una medida fija:
+                    // en un iPhone con Dynamic Island son ~59 pt.
+                    .statusBarsPadding()
                     .padding(horizontal = 24.dp, vertical = 0.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(Modifier.height(96.dp))
+                Spacer(Modifier.height(8.dp))
 
                 // ── Avatar ────────────────────────────────────────────────────
                 Box(

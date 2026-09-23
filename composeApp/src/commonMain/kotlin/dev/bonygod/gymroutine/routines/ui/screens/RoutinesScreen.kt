@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -97,7 +98,10 @@ fun RoutinesScreen(
                 letterSpacing = (-0.56).sp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 96.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
+                    // El hueco de arriba lo marca la barra de estado, no una medida fija:
+                    // en un iPhone con Dynamic Island son ~59 pt.
+                    .statusBarsPadding()
+                    .padding(top = 8.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
             )
 
             // ── Contenido ─────────────────────────────────────────────────────
