@@ -34,4 +34,8 @@ interface AuthRemoteDataSource {
     suspend fun getCurrentUser(): User?
 
     suspend fun hasActiveSession(): Boolean
+
+    suspend fun hasRecentLogin(): Boolean
+
+    suspend fun deleteAccount()
 }

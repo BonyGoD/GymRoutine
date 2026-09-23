@@ -39,4 +39,8 @@ interface AuthRepository {
     suspend fun getCurrentUser(): Result<User?>
 
     suspend fun hasActiveSession(): Result<Boolean>
+
+    suspend fun hasRecentLogin(): Result<Boolean>
+
+    suspend fun deleteAccount(): Result<Unit>
 }

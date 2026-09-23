@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,6 +42,7 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,6 +57,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.theme.GoldIcon
@@ -64,10 +67,15 @@ import dev.bonygod.gymroutine.profile.ui.ProfileViewModel
 import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEffect
 import dev.bonygod.gymroutine.profile.ui.interactions.ProfileEvent
 import gymroutine.composeapp.generated.resources.Res
+import gymroutine.composeapp.generated.resources.add_routine_action_cancel
 import gymroutine.composeapp.generated.resources.common_edit_description
 import gymroutine.composeapp.generated.resources.common_name_label
 import gymroutine.composeapp.generated.resources.error_name_empty
 import gymroutine.composeapp.generated.resources.profile_screen_default_user_name
+import gymroutine.composeapp.generated.resources.profile_screen_delete_account
+import gymroutine.composeapp.generated.resources.profile_screen_delete_account_confirm
+import gymroutine.composeapp.generated.resources.profile_screen_delete_account_message
+import gymroutine.composeapp.generated.resources.profile_screen_delete_account_title
 import gymroutine.composeapp.generated.resources.profile_screen_edit_data_title
 import gymroutine.composeapp.generated.resources.profile_screen_edit_name_title
 import gymroutine.composeapp.generated.resources.profile_screen_field_age
@@ -76,6 +84,8 @@ import gymroutine.composeapp.generated.resources.profile_screen_field_weight
 import gymroutine.composeapp.generated.resources.profile_screen_logout
 import gymroutine.composeapp.generated.resources.profile_screen_personal_data_title
 import gymroutine.composeapp.generated.resources.profile_screen_personal_records
+import gymroutine.composeapp.generated.resources.profile_screen_relogin_message
+import gymroutine.composeapp.generated.resources.profile_screen_relogin_title
 import gymroutine.composeapp.generated.resources.profile_screen_save_button
 import gymroutine.composeapp.generated.resources.profile_screen_streak_days
 import gymroutine.composeapp.generated.resources.profile_screen_total_workouts
@@ -135,6 +145,13 @@ fun ProfileScreen(
     val cmUnit = stringResource(Res.string.profile_screen_unit_cm)
     val kgUnit = stringResource(Res.string.profile_screen_unit_kg)
     val valuePlaceholder = stringResource(Res.string.profile_screen_value_placeholder)
+    val deleteAccountText = stringResource(Res.string.profile_screen_delete_account)
+    val deleteAccountTitle = stringResource(Res.string.profile_screen_delete_account_title)
+    val deleteAccountMessage = stringResource(Res.string.profile_screen_delete_account_message)
+    val deleteAccountConfirmText = stringResource(Res.string.profile_screen_delete_account_confirm)
+    val reloginTitle = stringResource(Res.string.profile_screen_relogin_title)
+    val reloginMessage = stringResource(Res.string.profile_screen_relogin_message)
+    val cancelText = stringResource(Res.string.add_routine_action_cancel)
     val ageValue = if (state.age.isBlank()) valuePlaceholder else "${state.age} $yearsUnit"
     val heightValue = if (state.height.isBlank()) valuePlaceholder else "${state.height} $cmUnit"
     val weightValue = if (state.weight.isBlank()) valuePlaceholder else "${state.weight} $kgUnit"
@@ -350,6 +367,20 @@ fun ProfileScreen(
                     }
                 }
 
+                Text(
+                    text = deleteAccountText,
+                    color = Color(0xFFEF5350),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) { viewModel.onEvent(ProfileEvent.OnDeleteAccountClick) }
+                        .padding(vertical = 12.dp),
+                )
+
                 // ── Diagnóstico (solo cuenta de desarrollador) ────────────────
                 if (state.userEmail == DEVELOPER_EMAIL) {
                     Spacer(Modifier.height(12.dp))
@@ -441,6 +472,55 @@ fun ProfileScreen(
                 onSaveClick = { viewModel.onEvent(ProfileEvent.OnSaveName) },
             )
         }
+    }
+
+    if (state.showDeleteAccountConfirm) {
+        AlertDialog(
+            onDismissRequest = {
+                if (!state.isDeletingAccount) viewModel.onEvent(ProfileEvent.OnDismissDeleteAccount)
+            },
+            title = { Text(deleteAccountTitle, fontWeight = FontWeight.Bold) },
+            text = { Text(deleteAccountMessage) },
+            confirmButton = {
+                if (state.isDeletingAccount) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp,
+                        color = Color(0xFFEF5350),
+                    )
+                } else {
+                    TextButton(onClick = { viewModel.onEvent(ProfileEvent.OnConfirmDeleteAccount) }) {
+                        Text(deleteAccountConfirmText, color = Color(0xFFEF5350))
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { viewModel.onEvent(ProfileEvent.OnDismissDeleteAccount) },
+                    enabled = !state.isDeletingAccount,
+                ) {
+                    Text(cancelText)
+                }
+            },
+        )
+    }
+
+    if (state.showReloginRequired) {
+        AlertDialog(
+            onDismissRequest = { viewModel.onEvent(ProfileEvent.OnDismissRelogin) },
+            title = { Text(reloginTitle, fontWeight = FontWeight.Bold) },
+            text = { Text(reloginMessage) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.onEvent(ProfileEvent.OnReloginClick) }) {
+                    Text(logoutText)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onEvent(ProfileEvent.OnDismissRelogin) }) {
+                    Text(cancelText)
+                }
+            },
+        )
     }
 }
 

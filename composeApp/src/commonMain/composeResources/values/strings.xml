@@ -191,6 +191,12 @@
     <string name="profile_screen_edit_data_title">Edit your data</string>
     <string name="profile_screen_edit_name_title">Edit your name</string>
     <string name="profile_screen_save_button">Save</string>
+    <string name="profile_screen_delete_account">Delete account</string>
+    <string name="profile_screen_delete_account_title">Delete your account?</string>
+    <string name="profile_screen_delete_account_message">Your account, your routines and your whole workout history will be deleted. This can\'t be undone.</string>
+    <string name="profile_screen_delete_account_confirm">Delete</string>
+    <string name="profile_screen_relogin_title">Sign in again</string>
+    <string name="profile_screen_relogin_message">For security, you need to have signed in recently to delete your account. Sign out, sign back in and try again.</string>
 
     <!-- Day items -->
     <string name="day_item_monday">MON</string>

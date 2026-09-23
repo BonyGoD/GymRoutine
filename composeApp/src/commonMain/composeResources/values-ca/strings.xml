@@ -191,6 +191,12 @@
     <string name="profile_screen_edit_data_title">Edita les teves dades</string>
     <string name="profile_screen_edit_name_title">Edita el teu nom</string>
     <string name="profile_screen_save_button">Desar</string>
+    <string name="profile_screen_delete_account">Elimina el compte</string>
+    <string name="profile_screen_delete_account_title">Vols eliminar el teu compte?</string>
+    <string name="profile_screen_delete_account_message">S\'esborraran el teu compte, les teves rutines i tot l\'historial d\'entrenaments. Aquesta acció no es pot desfer.</string>
+    <string name="profile_screen_delete_account_confirm">Elimina</string>
+    <string name="profile_screen_relogin_title">Torna a iniciar sessió</string>
+    <string name="profile_screen_relogin_message">Per seguretat, per eliminar el compte has d\'haver iniciat sessió fa poc. Tanca la sessió, torna a entrar i repeteix l\'esborrat.</string>
 
     <!-- Day items -->
     <string name="day_item_monday">DL</string>

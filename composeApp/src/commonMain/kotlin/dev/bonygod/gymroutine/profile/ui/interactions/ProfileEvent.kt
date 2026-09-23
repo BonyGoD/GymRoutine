@@ -12,4 +12,9 @@ sealed class ProfileEvent {
     data object OnDismissEditName : ProfileEvent()
     data class OnNameChange(val value: String) : ProfileEvent()
     data object OnSaveName : ProfileEvent()
+    data object OnDeleteAccountClick : ProfileEvent()
+    data object OnDismissDeleteAccount : ProfileEvent()
+    data object OnConfirmDeleteAccount : ProfileEvent()
+    data object OnDismissRelogin : ProfileEvent()
+    data object OnReloginClick : ProfileEvent()
 }

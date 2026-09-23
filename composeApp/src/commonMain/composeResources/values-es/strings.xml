@@ -191,6 +191,12 @@
     <string name="profile_screen_edit_data_title">Edita tus datos</string>
     <string name="profile_screen_edit_name_title">Edita tu nombre</string>
     <string name="profile_screen_save_button">Guardar</string>
+    <string name="profile_screen_delete_account">Eliminar cuenta</string>
+    <string name="profile_screen_delete_account_title">¿Eliminar tu cuenta?</string>
+    <string name="profile_screen_delete_account_message">Se borrarán tu cuenta, tus rutinas y todo tu historial de entrenamientos. Esta acción no se puede deshacer.</string>
+    <string name="profile_screen_delete_account_confirm">Eliminar</string>
+    <string name="profile_screen_relogin_title">Vuelve a iniciar sesión</string>
+    <string name="profile_screen_relogin_message">Por seguridad, para eliminar tu cuenta tienes que haber iniciado sesión hace poco. Cierra sesión, vuelve a entrar y repite el borrado.</string>
 
     <!-- Day items -->
     <string name="day_item_monday">LUN</string>
