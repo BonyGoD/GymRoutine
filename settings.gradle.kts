@@ -18,6 +18,9 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        mavenLocal {
+            content { includeGroupAndSubgroups("com.github.BonyGoD") }
+        }
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")

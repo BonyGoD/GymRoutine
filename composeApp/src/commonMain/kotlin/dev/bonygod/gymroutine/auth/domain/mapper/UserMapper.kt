@@ -10,6 +10,7 @@ fun UserDto.toDomain(): User = User(
     weight = weight,
     height = height,
     email = email,
+    tutorialSeen = tutorialSeen,
 )
 
 fun User.toDto(): UserDto = UserDto(
@@ -19,4 +20,5 @@ fun User.toDto(): UserDto = UserDto(
     weight = weight,
     height = height,
     email = email,
+    tutorialSeen = tutorialSeen,
 )

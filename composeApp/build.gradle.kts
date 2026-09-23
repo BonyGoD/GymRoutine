@@ -19,7 +19,8 @@ kotlin {
         }
     }
 
-    iosX64()
+    // Sin iosX64 (simulador de los Mac Intel): AdMobKMP no publica ese target, igual que
+    // Compose Multiplatform 1.11 y lifecycle 2.11. Con él declarado, la dependencia no resuelve.
     iosArm64()
     iosSimulatorArm64()
 

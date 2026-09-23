@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -100,12 +101,12 @@ import gymroutine.composeapp.generated.resources.home_screen_stats_kcal_no_worko
 import gymroutine.composeapp.generated.resources.home_screen_stats_kcal_unit
 import gymroutine.composeapp.generated.resources.home_screen_stats_records_week_empty
 import gymroutine.composeapp.generated.resources.home_screen_stats_records_week_label
+import kotlin.time.Clock
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.Clock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -138,7 +139,10 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
+                // El hueco de arriba lo marca la barra de estado, no una medida fija: en un
+                // iPhone con Dynamic Island son ~59 pt y con 32.dp el título quedaba debajo.
+                .statusBarsPadding()
+                .padding(top = 8.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -161,7 +165,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
                     Text(
                         text = state.userName.first().uppercase(),
                         color = colorScheme.primary,
-                        fontSize = 32.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                     )
                 } else {
@@ -169,7 +173,7 @@ fun HomeScreen(vmKey: String = "", viewModel: HomeViewModel = koinViewModel(key 
                         Icons.Default.Person,
                         contentDescription = null,
                         tint = colorScheme.primary,
-                        modifier = Modifier.size(40.dp),
+                        modifier = Modifier.size(22.dp),
                     )
                 }
             }

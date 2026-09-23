@@ -3,6 +3,7 @@ package dev.bonygod.gymroutine.auth.data.datasource
 import dev.bonygod.gymroutine.auth.data.mapper.FIELD_AGE
 import dev.bonygod.gymroutine.auth.data.mapper.FIELD_HEIGHT
 import dev.bonygod.gymroutine.auth.data.mapper.FIELD_NAME
+import dev.bonygod.gymroutine.auth.data.mapper.FIELD_TUTORIAL_SEEN
 import dev.bonygod.gymroutine.auth.data.mapper.FIELD_WEIGHT
 import dev.bonygod.gymroutine.auth.data.mapper.toMap
 import dev.bonygod.gymroutine.auth.data.mapper.toUserDto
@@ -42,7 +43,15 @@ class AuthRemoteDataSourceImpl(
     ): User {
         val result = auth.createUserWithEmailAndPassword(email, password)
         val uid = result.user?.uid ?: throw AuthError.Unauthorized()
-        val user = User(uid = uid, name = name, age = age, weight = weight, height = height, email = email)
+        val user = User(
+            uid = uid,
+            name = name,
+            age = age,
+            weight = weight,
+            height = height,
+            email = email,
+            tutorialSeen = false,
+        )
         saveUser(user)
         return user
     }
@@ -58,6 +67,7 @@ class AuthRemoteDataSourceImpl(
             weight = "",
             height = "",
             email = credential.email,
+            tutorialSeen = false,
         )
         saveUser(newUser)
         return newUser
@@ -83,6 +93,10 @@ class AuthRemoteDataSourceImpl(
     override suspend fun updateUserName(uid: String, name: String): User {
         usersCollection.document(uid).set(mapOf(FIELD_NAME to name), merge = true)
         return fetchUser(uid)
+    }
+
+    override suspend fun markTutorialSeen(uid: String) {
+        usersCollection.document(uid).set(mapOf(FIELD_TUTORIAL_SEEN to true), merge = true)
     }
 
     override suspend fun sendPasswordReset(email: String) {

@@ -30,7 +30,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.AlertDialog
@@ -399,7 +399,7 @@ private fun ExerciseCard(
                             .padding(4.dp),
                     ) {
                         Icon(
-                            Icons.Default.Cancel,
+                            Icons.AutoMirrored.Filled.Undo,
                             contentDescription = unskipExerciseText,
                             tint = GreySkipped,
                             modifier = Modifier.size(26.dp),

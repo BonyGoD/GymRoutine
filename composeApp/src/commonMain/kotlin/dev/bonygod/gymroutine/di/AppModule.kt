@@ -10,6 +10,7 @@ import dev.bonygod.gymroutine.auth.domain.usecase.GetCurrentUserUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LoginUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LoginWithSocialProviderUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LogoutUseCase
+import dev.bonygod.gymroutine.auth.domain.usecase.MarkTutorialSeenUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.RegisterUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.ResolveSessionUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.SendPasswordResetUseCase
@@ -35,6 +36,7 @@ import dev.bonygod.gymroutine.routines.domain.usecase.GetRoutinesUseCase
 import dev.bonygod.gymroutine.routines.domain.usecase.ObserveRoutinesUseCase
 import dev.bonygod.gymroutine.routines.domain.usecase.UpdateRoutineUseCase
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
+import dev.bonygod.gymroutine.tutorial.ui.TutorialViewModel
 import dev.bonygod.gymroutine.workout.data.datasource.WorkoutLogRemoteDataSource
 import dev.bonygod.gymroutine.workout.data.datasource.WorkoutLogRemoteDataSourceImpl
 import dev.bonygod.gymroutine.workout.data.datasource.WorkoutSessionRemoteDataSource
@@ -84,6 +86,7 @@ val appModule = module {
     factory { UpdateUserProfileUseCase(get()) }
     factory { UpdateUserNameUseCase(get()) }
     factory { ResolveSessionUseCase(get()) }
+    factory { MarkTutorialSeenUseCase(get()) }
     factory { DeleteAccountUseCase(get()) }
 
     // Routines data layer
@@ -128,6 +131,7 @@ val appModule = module {
     viewModel { ProfileViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { RoutinesViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { WorkoutViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { TutorialViewModel(get(), get(), get()) }
 }
 
 fun initKoin(config: KoinApplication.() -> Unit = {}) {

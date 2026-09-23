@@ -32,6 +32,8 @@ interface AuthRepository {
 
     suspend fun updateUserName(uid: String, name: String): Result<User>
 
+    suspend fun markTutorialSeen(uid: String): Result<Unit>
+
     suspend fun sendPasswordReset(email: String): Result<Unit>
 
     suspend fun logout(): Result<Unit>

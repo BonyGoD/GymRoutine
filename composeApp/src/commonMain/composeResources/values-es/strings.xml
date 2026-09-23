@@ -99,6 +99,8 @@
 
     <!-- Routines screen -->
     <string name="routines_screen_title">Tus Rutinas</string>
+    <string name="routines_screen_empty_title">Aún no tienes rutinas</string>
+    <string name="routines_screen_empty_description">Crea tu primera rutina con el botón de abajo: elige los ejercicios, las series y los días que entrenas.</string>
     <string name="routines_screen_create_custom">Crear Rutina Personalizada</string>
     <string name="routines_screen_exercise_count_other">%1$d ejercicios</string>
     <string name="routines_screen_start">Empezar</string>
@@ -197,6 +199,24 @@
     <string name="profile_screen_delete_account_confirm">Eliminar</string>
     <string name="profile_screen_relogin_title">Vuelve a iniciar sesión</string>
     <string name="profile_screen_relogin_message">Por seguridad, para eliminar tu cuenta tienes que haber iniciado sesión hace poco. Cierra sesión, vuelve a entrar y repite el borrado.</string>
+
+    <string name="tutorial_skip">Saltar</string>
+    <string name="tutorial_next">Siguiente</string>
+    <string name="tutorial_create_routine">Crear mi primera rutina</string>
+    <string name="tutorial_welcome_title">¡Bienvenido a GymRoutine!</string>
+    <string name="tutorial_welcome_description">Te enseñamos en un minuto todo lo que puedes hacer. Puedes saltarlo cuando quieras.</string>
+    <string name="tutorial_home_title">Tu día de un vistazo</string>
+    <string name="tutorial_home_description">En Inicio ves la rutina de hoy, el calendario de la semana, las kcal estimadas, tu constancia y tus récords. Si te saltaste un entreno, te propone recuperarlo.</string>
+    <string name="tutorial_routines_title">Crea tus rutinas</string>
+    <string name="tutorial_routines_description">Crea rutinas con sus ejercicios, series, repeticiones, peso y descanso, y elige qué días de la semana tocan.</string>
+    <string name="tutorial_workout_title">Entrena paso a paso</string>
+    <string name="tutorial_workout_description">Durante el entreno marca cada serie, usa el cronómetro de descanso y actualiza el peso. Si un día no puedes con un ejercicio, omítelo.</string>
+    <string name="tutorial_history_title">Tu historial</string>
+    <string name="tutorial_history_description">Consulta todos los entrenos que has completado, día a día.</string>
+    <string name="tutorial_evolution_title">Mide tu progreso</string>
+    <string name="tutorial_evolution_description">Sigue en gráficas cómo evolucionan el peso y las repeticiones de cada ejercicio.</string>
+    <string name="tutorial_profile_title">Tu perfil</string>
+    <string name="tutorial_profile_description">Revisa tus entrenos totales, récords y racha, y edita tu nombre, edad, altura y peso.</string>
 
     <!-- Day items -->
     <string name="day_item_monday">LUN</string>

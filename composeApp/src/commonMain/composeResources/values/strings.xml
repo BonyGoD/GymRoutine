@@ -99,6 +99,8 @@
 
     <!-- Routines screen -->
     <string name="routines_screen_title">Your Routines</string>
+    <string name="routines_screen_empty_title">No routines yet</string>
+    <string name="routines_screen_empty_description">Create your first routine with the button below: pick the exercises, the sets and the days you train.</string>
     <string name="routines_screen_create_custom">Create Custom Routine</string>
     <string name="routines_screen_exercise_count_other">%1$d exercises</string>
     <string name="routines_screen_start">Start</string>
@@ -197,6 +199,24 @@
     <string name="profile_screen_delete_account_confirm">Delete</string>
     <string name="profile_screen_relogin_title">Sign in again</string>
     <string name="profile_screen_relogin_message">For security, you need to have signed in recently to delete your account. Sign out, sign back in and try again.</string>
+
+    <string name="tutorial_skip">Skip</string>
+    <string name="tutorial_next">Next</string>
+    <string name="tutorial_create_routine">Create my first routine</string>
+    <string name="tutorial_welcome_title">Welcome to GymRoutine!</string>
+    <string name="tutorial_welcome_description">Take a one-minute tour of everything you can do. You can skip it anytime.</string>
+    <string name="tutorial_home_title">Your day at a glance</string>
+    <string name="tutorial_home_description">Home shows today\'s routine, your weekly calendar, estimated calories, consistency and records. If you missed a workout, it offers to catch up.</string>
+    <string name="tutorial_routines_title">Build your routines</string>
+    <string name="tutorial_routines_description">Create routines with exercises, sets, reps, weight and rest, and choose which weekdays they\'re on.</string>
+    <string name="tutorial_workout_title">Train step by step</string>
+    <string name="tutorial_workout_description">During a workout, tick off each set, use the rest timer and update the weight. If you can\'t do an exercise one day, skip it.</string>
+    <string name="tutorial_history_title">Your history</string>
+    <string name="tutorial_history_description">See every workout you\'ve completed, day by day.</string>
+    <string name="tutorial_evolution_title">Track your progress</string>
+    <string name="tutorial_evolution_description">Follow in charts how the weight and reps of each exercise evolve.</string>
+    <string name="tutorial_profile_title">Your profile</string>
+    <string name="tutorial_profile_description">Check your total workouts, records and streak, and edit your name, age, height and weight.</string>
 
     <!-- Day items -->
     <string name="day_item_monday">MON</string>

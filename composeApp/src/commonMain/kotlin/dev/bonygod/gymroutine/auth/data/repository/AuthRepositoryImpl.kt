@@ -52,6 +52,11 @@ class AuthRepositoryImpl(
             .reportFailure("AuthRepository.updateUserName")
             .mapError()
 
+    override suspend fun markTutorialSeen(uid: String): Result<Unit> =
+        runCatching { dataSource.markTutorialSeen(uid) }
+            .reportFailure("AuthRepository.markTutorialSeen")
+            .mapError()
+
     override suspend fun sendPasswordReset(email: String): Result<Unit> =
         runCatching { dataSource.sendPasswordReset(email) }
             .reportFailure("AuthRepository.sendPasswordReset")

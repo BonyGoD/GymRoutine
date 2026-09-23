@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,6 +61,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.bonygod.gymroutine.core.config.DEVELOPER_EMAIL
 import dev.bonygod.gymroutine.core.theme.GoldIcon
 import dev.bonygod.gymroutine.core.theme.OrangeIcon
 import dev.bonygod.gymroutine.core.ui.components.ProfileWheelColumn
@@ -104,12 +106,6 @@ private const val MIN_HEIGHT = 80
 private const val MAX_HEIGHT = 300
 private const val MIN_WEIGHT = 30
 private const val MAX_WEIGHT = 300
-
-/**
- * El bloque de diagnóstico solo se dibuja para esta cuenta, así que puede quedarse en el código y
- * viajar en las builds de release sin que ningún tester llegue a verlo.
- */
-private const val DEVELOPER_EMAIL = "bonygod.dev@gmail.com"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -172,10 +168,13 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState, enabled = scrollState.maxValue > 0)
+                    // El hueco de arriba lo marca la barra de estado, no una medida fija:
+                    // en un iPhone con Dynamic Island son ~59 pt.
+                    .statusBarsPadding()
                     .padding(horizontal = 24.dp, vertical = 0.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(Modifier.height(96.dp))
+                Spacer(Modifier.height(8.dp))
 
                 // ── Avatar ────────────────────────────────────────────────────
                 Box(

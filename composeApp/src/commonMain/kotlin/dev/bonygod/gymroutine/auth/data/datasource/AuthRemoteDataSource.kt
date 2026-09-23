@@ -27,6 +27,8 @@ interface AuthRemoteDataSource {
 
     suspend fun updateUserName(uid: String, name: String): User
 
+    suspend fun markTutorialSeen(uid: String)
+
     suspend fun sendPasswordReset(email: String)
 
     suspend fun logout()

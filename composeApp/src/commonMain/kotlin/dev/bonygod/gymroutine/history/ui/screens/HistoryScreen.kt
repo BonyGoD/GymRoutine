@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -43,6 +44,7 @@ import gymroutine.composeapp.generated.resources.history_screen_date_yesterday
 import gymroutine.composeapp.generated.resources.history_screen_empty
 import gymroutine.composeapp.generated.resources.history_screen_title
 import gymroutine.composeapp.generated.resources.history_screen_workout_fallback
+import kotlin.time.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -50,7 +52,6 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.Clock
 
 @Composable
 fun HistoryScreen(vmKey: String = "", viewModel: HistoryViewModel = koinViewModel(key = vmKey.ifBlank { null })) {
@@ -70,7 +71,10 @@ fun HistoryScreen(vmKey: String = "", viewModel: HistoryViewModel = koinViewMode
             letterSpacing = (-0.56).sp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 96.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
+                // El hueco de arriba lo marca la barra de estado, no una medida fija:
+                // en un iPhone con Dynamic Island son ~59 pt.
+                .statusBarsPadding()
+                .padding(top = 8.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
         )
 
         when {

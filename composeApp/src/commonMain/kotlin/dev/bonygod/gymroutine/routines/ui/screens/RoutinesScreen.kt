@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bonygod.gymroutine.core.navigation.Navigator
@@ -52,6 +56,8 @@ import gymroutine.composeapp.generated.resources.Res
 import gymroutine.composeapp.generated.resources.common_delete_description
 import gymroutine.composeapp.generated.resources.common_edit_description
 import gymroutine.composeapp.generated.resources.routines_screen_create_custom
+import gymroutine.composeapp.generated.resources.routines_screen_empty_description
+import gymroutine.composeapp.generated.resources.routines_screen_empty_title
 import gymroutine.composeapp.generated.resources.routines_screen_exercise_count_other
 import gymroutine.composeapp.generated.resources.routines_screen_start
 import gymroutine.composeapp.generated.resources.routines_screen_title
@@ -92,7 +98,10 @@ fun RoutinesScreen(
                 letterSpacing = (-0.56).sp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 96.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
+                    // El hueco de arriba lo marca la barra de estado, no una medida fija:
+                    // en un iPhone con Dynamic Island son ~59 pt.
+                    .statusBarsPadding()
+                    .padding(top = 8.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
             )
 
             // ── Contenido ─────────────────────────────────────────────────────
@@ -103,6 +112,30 @@ fun RoutinesScreen(
                         contentAlignment = Alignment.Center,
                     ) {
                         CircularProgressIndicator()
+                    }
+                }
+
+                state.routines.isEmpty() -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 32.dp, vertical = 48.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.routines_screen_empty_title),
+                            color = colorScheme.onSurface,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        Text(
+                            text = stringResource(Res.string.routines_screen_empty_description),
+                            color = colorScheme.onSurfaceVariant,
+                            fontSize = 15.sp,
+                            textAlign = TextAlign.Center,
+                        )
                     }
                 }
 
