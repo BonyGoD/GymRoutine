@@ -1,8 +1,11 @@
 package dev.bonygod.gymroutine.auth.data.mapper
 
 import dev.bonygod.gymroutine.auth.domain.error.AuthError
+import dev.gitlive.firebase.auth.FirebaseAuthRecentLoginRequiredException
 
 internal fun Exception.toAuthError(): AuthError = when {
+    this is FirebaseAuthRecentLoginRequiredException ->
+        AuthError.RecentLoginRequired()
     containsAny(
         "INVALID_LOGIN_CREDENTIALS",
         "INVALID_PASSWORD",

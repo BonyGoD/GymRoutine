@@ -79,6 +79,17 @@ class AuthRepositoryImpl(
             .reportFailure("AuthRepository.hasActiveSession")
             .mapError()
 
+    override suspend fun hasRecentLogin(): Result<Boolean> =
+        runCatching { dataSource.hasRecentLogin() }
+            .reportFailure("AuthRepository.hasRecentLogin")
+            .mapError()
+
+    override suspend fun deleteAccount(): Result<Unit> =
+        runCatching { dataSource.deleteAccount() }
+            .reportFailure("AuthRepository.deleteAccount")
+            .mapError()
+            .onSuccess { CrashlyticsKMP.reporter.setUserId(null) }
+
     private fun <T> Result<T>.mapError(): Result<T> = recoverCatching { throwable ->
         throw when (throwable) {
             is Exception -> throwable.toAuthError()

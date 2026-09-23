@@ -13,9 +13,11 @@ import dev.bonygod.gymroutine.auth.domain.mapper.toDto
 import dev.bonygod.gymroutine.auth.domain.model.ExternalAuthCredential
 import dev.bonygod.gymroutine.auth.domain.model.User
 import dev.gitlive.firebase.auth.FirebaseAuth
+import dev.gitlive.firebase.firestore.CollectionReference
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
 class AuthRemoteDataSourceImpl(
@@ -117,6 +119,27 @@ class AuthRemoteDataSourceImpl(
         return (restoredUser ?: auth.currentUser) != null
     }
 
+    override suspend fun hasRecentLogin(): Boolean {
+        val lastSignInEpochMillis = auth.currentUser?.metaData?.lastSignInEpochMillis() ?: return false
+        val elapsedMillis = Clock.System.now().toEpochMilliseconds() - lastSignInEpochMillis
+        return elapsedMillis < RECENT_LOGIN_WINDOW_MILLIS
+    }
+
+    override suspend fun deleteAccount() {
+        val user = auth.currentUser ?: throw AuthError.UserNotFound()
+        val uid = user.uid
+        val userDocument = usersCollection.document(uid)
+        deleteAllDocuments(userDocument.collection(ROUTINES_COLLECTION))
+        deleteAllDocuments(userDocument.collection(WORKOUT_LOGS_COLLECTION))
+        deleteAllDocuments(userDocument.collection(WORKOUT_SESSIONS_COLLECTION))
+        userDocument.delete()
+        user.delete()
+    }
+
+    private suspend fun deleteAllDocuments(collection: CollectionReference) {
+        collection.get().documents.forEach { it.reference.delete() }
+    }
+
     private suspend fun fetchUser(uid: String): User = fetchUserOrNull(uid) ?: throw AuthError.UserNotFound()
 
     private suspend fun fetchUserOrNull(uid: String): User? {
@@ -131,5 +154,9 @@ class AuthRemoteDataSourceImpl(
 
     private companion object {
         const val USERS_COLLECTION = "users"
+        const val ROUTINES_COLLECTION = "routines"
+        const val WORKOUT_LOGS_COLLECTION = "workoutLogs"
+        const val WORKOUT_SESSIONS_COLLECTION = "workoutSessions"
+        const val RECENT_LOGIN_WINDOW_MILLIS = 4 * 60 * 1000L
     }
 }

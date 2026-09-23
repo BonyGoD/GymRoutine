@@ -26,6 +26,9 @@ data class ProfileState(
     val isEditingName: Boolean = false,
     val isSavingName: Boolean = false,
     val editingName: String = "",
+    val showDeleteAccountConfirm: Boolean = false,
+    val showReloginRequired: Boolean = false,
+    val isDeletingAccount: Boolean = false,
 ) {
     fun setUser(name: String, email: String) = copy(userName = name, userEmail = email, isLoading = false)
     fun setStats(total: Int, records: Int, streak: Int) = copy(
@@ -64,4 +67,14 @@ data class ProfileState(
     fun setEditingName(value: String) = copy(editingName = value)
 
     fun setSavingName(saving: Boolean) = copy(isSavingName = saving)
+
+    fun showDeleteAccountConfirm() = copy(showDeleteAccountConfirm = true)
+
+    fun dismissDeleteAccountConfirm() = copy(showDeleteAccountConfirm = false, isDeletingAccount = false)
+
+    fun setDeletingAccount(deleting: Boolean) = copy(isDeletingAccount = deleting)
+
+    fun showReloginRequired() = copy(showReloginRequired = true, showDeleteAccountConfirm = false, isDeletingAccount = false)
+
+    fun dismissReloginRequired() = copy(showReloginRequired = false)
 }

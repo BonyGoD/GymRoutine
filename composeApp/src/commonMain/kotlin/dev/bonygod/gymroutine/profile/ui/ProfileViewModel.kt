@@ -2,6 +2,8 @@ package dev.bonygod.gymroutine.profile.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.bonygod.gymroutine.auth.domain.error.AuthError
+import dev.bonygod.gymroutine.auth.domain.usecase.DeleteAccountUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.GetCurrentUserUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.LogoutUseCase
 import dev.bonygod.gymroutine.auth.domain.usecase.UpdateUserNameUseCase
@@ -36,6 +38,7 @@ class ProfileViewModel(
     private val observeRoutines: ObserveRoutinesUseCase,
     private val updateUserProfile: UpdateUserProfileUseCase,
     private val updateUserName: UpdateUserNameUseCase,
+    private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -63,6 +66,14 @@ class ProfileViewModel(
             is ProfileEvent.OnDismissEditName -> setState { dismissEditingName() }
             is ProfileEvent.OnNameChange -> setState { setEditingName(event.value) }
             is ProfileEvent.OnSaveName -> saveName()
+            is ProfileEvent.OnDeleteAccountClick -> setState { showDeleteAccountConfirm() }
+            is ProfileEvent.OnDismissDeleteAccount -> setState { dismissDeleteAccountConfirm() }
+            is ProfileEvent.OnConfirmDeleteAccount -> deleteAccount()
+            is ProfileEvent.OnDismissRelogin -> setState { dismissReloginRequired() }
+            is ProfileEvent.OnReloginClick -> {
+                setState { dismissReloginRequired() }
+                performLogout()
+            }
         }
     }
 
@@ -102,6 +113,23 @@ class ProfileViewModel(
             logout()
                 .onSuccess { navigator.clearAndNavigateTo(Routes.Login) }
                 .onFailure { e -> _effect.emit(ProfileEffect.ShowError(e.message.orEmpty())) }
+        }
+    }
+
+    private fun deleteAccount() {
+        if (state.value.isDeletingAccount) return
+        viewModelScope.launch {
+            setState { setDeletingAccount(true) }
+            deleteAccountUseCase()
+                .onSuccess { navigator.clearAndNavigateTo(Routes.Login) }
+                .onFailure { e ->
+                    if (e is AuthError.RecentLoginRequired) {
+                        setState { showReloginRequired() }
+                    } else {
+                        setState { dismissDeleteAccountConfirm() }
+                        _effect.emit(ProfileEffect.ShowError(e.message.orEmpty()))
+                    }
+                }
         }
     }
 
