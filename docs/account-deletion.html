@@ -15,12 +15,12 @@
             color: #1d1d1f;
         }
         h1 {
-            color: #d32f2f;
-            border-bottom: 3px solid #d32f2f;
+            color: #e53935;
+            border-bottom: 3px solid #e53935;
             padding-bottom: 10px;
         }
         h2 {
-            color: #d32f2f;
+            color: #e53935;
             margin-top: 30px;
         }
         .warning-box {
@@ -41,7 +41,7 @@
             margin: 20px 0;
         }
         .contact-box {
-            background: #d32f2f;
+            background: #e53935;
             color: white;
             padding: 30px;
             border-radius: 10px;
@@ -73,13 +73,13 @@
         .step {
             padding: 15px;
             margin: 10px 0;
-            border-left: 4px solid #0071e3;
+            border-left: 4px solid #e53935;
             background: #f8f9fa;
             border-radius: 5px;
         }
         .step-number {
             font-weight: bold;
-            color: #0071e3;
+            color: #e53935;
             font-size: 1.2em;
         }
         .emoji {
@@ -104,11 +104,14 @@
         .back-link {
             display: inline-block;
             margin-bottom: 20px;
-            color: #0071e3;
+            color: #e53935;
             text-decoration: none;
         }
         .back-link:hover {
             text-decoration: underline;
+        }
+        a {
+            color: #e53935;
         }
     </style>
 </head>
@@ -118,87 +121,95 @@
     <h1><span class="emoji">🗑️</span>Eliminación de Cuenta</h1>
 
     <div class="warning-box">
-        <strong><span class="emoji">⚠️</span>Importante:</strong> La eliminación de tu cuenta es <strong>permanente e irreversible</strong>. Todos tus datos serán eliminados de manera definitiva.
+        <strong><span class="emoji">⚠️</span>Importante:</strong> eliminar tu cuenta es <strong>permanente e irreversible</strong>. No hay papelera ni periodo de gracia: tus rutinas y tu historial de entrenamientos se borran y no se pueden recuperar.
     </div>
 
     <div class="info-box">
-        <h2><span class="emoji">📋</span>¿Qué se eliminará?</h2>
-        <p>Al eliminar tu cuenta, se borrarán permanentemente:</p>
+        <h2><span class="emoji">📋</span>¿Qué se elimina?</h2>
+        <p>Al eliminar tu cuenta se borra de forma permanente:</p>
         <ul>
-            <li>Tu perfil de usuario y credenciales de acceso</li>
-            <li>Todas tus listas de compra</li>
-            <li>Todos los productos guardados</li>
-            <li>Listas compartidas donde seas el propietario</li>
-            <li>Notificaciones asociadas a tu cuenta</li>
-            <li>Cualquier dato personal almacenado en nuestros servidores</li>
+            <li>Tu cuenta de acceso y tus credenciales</li>
+            <li>Tu perfil: nombre, correo, edad, altura y peso</li>
+            <li>Todas tus rutinas y sus ejercicios, con series, repeticiones, pesos y tiempos de descanso</li>
+            <li>Todo el historial de progreso de cada ejercicio</li>
+            <li>Todos tus entrenamientos registrados</li>
+            <li>Cualquier entrenamiento que tuvieras a medias</li>
         </ul>
-    </div>
-
-    <div class="info-box">
-        <h2><span class="emoji">⏱️</span>Plazo de Eliminación</h2>
-        <p>Una vez recibida tu solicitud:</p>
-        <ul>
-            <li>Procesaremos tu petición en un plazo máximo de <strong>48 horas</strong></li>
-            <li>Recibirás una confirmación por email cuando se complete el proceso</li>
-            <li>Tus datos serán eliminados de forma permanente de todos nuestros sistemas</li>
-        </ul>
+        <p>No conservamos copias fuera de la infraestructura de Firebase, donde se guardan los datos de la app.</p>
     </div>
 
     <div class="steps">
-        <h2><span class="emoji">📝</span>Cómo Solicitar la Eliminación</h2>
+        <h2><span class="emoji">📱</span>Desde la app (inmediato)</h2>
+        <p>Es la vía recomendada: la hace la propia app en el momento, sin esperas ni intermediarios.</p>
 
         <div class="step">
-            <span class="step-number">1.</span> Envía un correo electrónico a <strong>bonygod.dev@gmail.com</strong>
+            <span class="step-number">1.</span> Abre GymRoutine e inicia sesión con la cuenta que quieres eliminar
         </div>
 
         <div class="step">
-            <span class="step-number">2.</span> En el asunto del email, escribe: <strong>"Solicitud de Eliminación de Cuenta"</strong>
+            <span class="step-number">2.</span> Ve a la pestaña <strong>Perfil</strong>, en la barra inferior
         </div>
 
         <div class="step">
-            <span class="step-number">3.</span> En el cuerpo del mensaje, incluye:
+            <span class="step-number">3.</span> Baja del todo y pulsa <strong>Eliminar cuenta</strong>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4.</span> Confirma en el aviso que aparece. Tus datos y tu cuenta se borran al momento
+        </div>
+
+        <p>Si llevas mucho rato con la sesión abierta, por seguridad la app puede pedirte que vuelvas a iniciar sesión antes de completar el borrado. Cierra sesión, entra de nuevo y repite los pasos.</p>
+    </div>
+
+    <div class="steps">
+        <h2><span class="emoji">📝</span>Por correo (si no puedes acceder a la app)</h2>
+        <p>Si ya has desinstalado la app, has perdido el acceso a tu cuenta o prefieres que lo hagamos nosotros:</p>
+
+        <div class="step">
+            <span class="step-number">1.</span> Escribe a <strong>bonygod.dev@gmail.com</strong>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2.</span> Pon en el asunto: <strong>"Solicitud de eliminación de cuenta"</strong>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3.</span> Indica en el mensaje:
             <ul>
-                <li>El email registrado en tu cuenta de GymRoutine</li>
-                <li>Confirmación de que deseas eliminar permanentemente tu cuenta</li>
-                <li>(Opcional) Motivo de la eliminación (nos ayuda a mejorar)</li>
+                <li>El correo con el que te registraste en GymRoutine</li>
+                <li>Que confirmas que quieres eliminar la cuenta de forma permanente</li>
+                <li>(Opcional) El motivo, que nos ayuda a mejorar</li>
             </ul>
         </div>
 
         <div class="step">
-            <span class="step-number">4.</span> Nuestro equipo te responderá confirmando la recepción de tu solicitud
+            <span class="step-number">4.</span> Te confirmamos la recepción y eliminamos la cuenta en un plazo máximo de <strong>48 horas</strong>
         </div>
 
         <div class="step">
-            <span class="step-number">5.</span> En un máximo de 48 horas, recibirás un email confirmando la eliminación completa
+            <span class="step-number">5.</span> Recibes un último correo confirmando que se ha completado
         </div>
+
+        <p>Enviar la solicitud desde el mismo correo de la cuenta es lo que nos permite verificar que eres tú. Si escribes desde otra dirección, te pediremos alguna comprobación adicional antes de borrar nada.</p>
     </div>
 
     <div class="contact-box">
-        <h2><span class="emoji">📧</span>Contacto para Eliminación</h2>
-        <p>Si deseas eliminar tu cuenta, por favor ponte en contacto con nuestro equipo:</p>
-        <a href="mailto:bonygod.dev@gmail.com?subject=Solicitud%20de%20Eliminación%20de%20Cuenta">
-            Enviar Solicitud de Eliminación
+        <h2><span class="emoji">📧</span>Solicitar la eliminación</h2>
+        <p>Si no puedes hacerlo desde la app, escríbenos y nos encargamos:</p>
+        <a href="mailto:bonygod.dev@gmail.com?subject=Solicitud%20de%20eliminaci%C3%B3n%20de%20cuenta">
+            Enviar solicitud de eliminación
         </a>
-        <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.9;">
-            Nuestro equipo atenderá tu solicitud y te guiará a través del proceso de eliminación de manera segura y rápida.
-        </p>
     </div>
 
     <div class="info-box">
-        <h2><span class="emoji">🔒</span>Privacidad y Seguridad</h2>
-        <p>Nos tomamos muy en serio la privacidad y seguridad de tus datos:</p>
+        <h2><span class="emoji">💡</span>Antes de borrar</h2>
+        <p>Ten en cuenta que:</p>
         <ul>
-            <li>Todo el proceso se realiza de forma segura y confidencial</li>
-            <li>No compartimos tu información con terceros durante el proceso</li>
-            <li>La eliminación es completa y cumple con todas las normativas de protección de datos</li>
-            <li>Puedes solicitar una confirmación por escrito de la eliminación</li>
+            <li>Volver a registrarte con el mismo correo crea una cuenta nueva y vacía: no recupera lo anterior</li>
+            <li>Si solo quieres dejar de entrenar una temporada, puedes cerrar sesión y volver cuando quieras, sin perder nada</li>
+            <li>Desinstalar la app <strong>no</strong> elimina tu cuenta ni tus datos</li>
         </ul>
-    </div>
-
-    <div class="info-box">
-        <h2><span class="emoji">💡</span>¿Tienes Dudas?</h2>
-        <p>Si tienes alguna pregunta sobre el proceso de eliminación de cuenta o prefieres discutir alternativas (como desactivar temporalmente tu cuenta), no dudes en contactarnos en <a href="mailto:bonygod.dev@gmail.com">bonygod.dev@gmail.com</a></p>
-        <p>Estamos aquí para ayudarte y responderemos todas tus consultas.</p>
+        <p>¿Dudas antes de decidir? Escríbenos a <a href="mailto:bonygod.dev@gmail.com">bonygod.dev@gmail.com</a> y lo vemos.</p>
     </div>
 
     <footer>

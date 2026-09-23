@@ -15,12 +15,12 @@
             color: #1d1d1f;
         }
         h1 {
-            color: #0071e3;
-            border-bottom: 3px solid #0071e3;
+            color: #e53935;
+            border-bottom: 3px solid #e53935;
             padding-bottom: 10px;
         }
         h2 {
-            color: #0071e3;
+            color: #e53935;
             margin-top: 30px;
         }
         h3 {
@@ -35,14 +35,31 @@
             margin: 15px 0;
         }
         .meta {
-            background: #e8f4fd;
+            background: #fdecea;
             padding: 15px 20px;
             border-radius: 10px;
             margin-bottom: 30px;
-            border-left: 4px solid #0071e3;
+            border-left: 4px solid #e53935;
         }
         .meta strong {
-            color: #0071e3;
+            color: #e53935;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #e5e5e7;
+            vertical-align: top;
+        }
+        th {
+            color: #e53935;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
         ul {
             margin: 10px 0;
@@ -52,7 +69,7 @@
             margin: 8px 0;
         }
         .contact {
-            background: #0071e3;
+            background: #e53935;
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -80,7 +97,7 @@
             font-size: 14px;
         }
         a {
-            color: #0071e3;
+            color: #e53935;
             text-decoration: none;
         }
         a:hover {
@@ -93,91 +110,155 @@
 
     <div class="meta">
         <strong>Nombre de la aplicación:</strong> GymRoutine<br>
-        <strong>Última actualización:</strong> 07/07/2026
+        <strong>Responsable:</strong> Iván Boniquet (BonyGoD)<br>
+        <strong>Contacto:</strong> bonygod.dev@gmail.com<br>
+        <strong>Última actualización:</strong> 24/09/2026
     </div>
 
-    <p>La presente Política de Privacidad describe cómo <strong>GymRoutine</strong> recopila, utiliza y protege la información de los usuarios.</p>
+    <p>Esta Política de Privacidad describe qué datos recoge <strong>GymRoutine</strong>, para qué los usa y qué puedes hacer con ellos. GymRoutine es una aplicación para crear rutinas de gimnasio y registrar entrenamientos, disponible en Android e iOS.</p>
 
-    <h2><span class="emoji">📌</span>Información que recopilamos</h2>
-    <p>La aplicación puede recopilar los siguientes tipos de información:</p>
+    <h2><span class="emoji">📌</span>Qué datos recogemos</h2>
 
     <div class="info-box">
-        <h3><span class="emoji">🔐</span>Autenticación de usuarios (Login)</h3>
-        <p>La aplicación permite el inicio de sesión mediante:</p>
+        <h3><span class="emoji">🔐</span>Cuenta y autenticación</h3>
+        <p>Para usar la app hace falta una cuenta. Puedes crearla con:</p>
         <ul>
-            <li>Correo electrónico y contraseña, usando Firebase Authentication</li>
-            <li>Inicio de sesión con Google, utilizando los servicios nativos de Google en Android e iOS</li>
+            <li>Correo electrónico y contraseña, mediante Firebase Authentication</li>
+            <li>Inicio de sesión con Google</li>
+            <li>Inicio de sesión con Apple (en iOS)</li>
         </ul>
-        <p>Durante el proceso de autenticación, podemos recopilar:</p>
-        <ul>
-            <li>Dirección de correo electrónico</li>
-            <li>Identificador único de usuario (UID)</li>
-            <li>Nombre de perfil y foto (solo en caso de inicio de sesión con Google)</li>
-        </ul>
-        <p>Esta información se utiliza exclusivamente para la autenticación, gestión de cuentas y correcto funcionamiento de la aplicación.</p>
+        <p>En ese proceso recogemos tu <strong>dirección de correo</strong>, un <strong>identificador único de usuario (UID)</strong> y el <strong>nombre</strong> que decidas mostrar. Nunca vemos ni almacenamos tu contraseña: la gestiona Firebase Authentication. Si usas Apple con la opción de ocultar el correo, solo recibimos la dirección de reenvío privado que Apple genera.</p>
     </div>
 
     <div class="info-box">
-        <h3><span class="emoji">📊</span>Analítica y uso de la aplicación</h3>
-        <p>Utilizamos Firebase Analytics para recopilar información anónima sobre el uso de la aplicación, como:</p>
+        <h3><span class="emoji">🏋️</span>Datos de entrenamiento y perfil físico</h3>
+        <p>Son los datos que tú introduces en la app y sin los cuales no podría funcionar:</p>
         <ul>
-            <li>Pantallas visitadas</li>
-            <li>Interacciones dentro de la app</li>
+            <li>Tus rutinas: nombre, días de la semana asignados y ejercicios</li>
+            <li>De cada ejercicio: series, repeticiones, peso y tiempo de descanso, más el historial de pesos y repeticiones a lo largo del tiempo</li>
+            <li>Tus entrenamientos completados, con su fecha</li>
+            <li>Tu perfil físico: edad, altura y peso</li>
+        </ul>
+        <p>La edad, la altura y el peso se usan <strong>únicamente</strong> para estimar las calorías de cada entrenamiento y para mostrarlas en tu perfil. No se comparten con nadie ni se usan con fines publicitarios.</p>
+    </div>
+
+    <div class="info-box">
+        <h3><span class="emoji">📊</span>Analítica de uso</h3>
+        <p>Usamos Firebase Analytics para entender de forma agregada cómo se usa la app:</p>
+        <ul>
+            <li>Pantallas visitadas e interacciones dentro de la app</li>
             <li>Duración de las sesiones</li>
-            <li>Tipo de dispositivo y sistema operativo</li>
+            <li>Tipo de dispositivo y versión del sistema operativo</li>
         </ul>
-        <p>Estos datos se utilizan únicamente con fines estadísticos y para mejorar la experiencia del usuario.</p>
+        <p>Estos datos se tratan con fines estadísticos, para decidir qué mejorar.</p>
+    </div>
+
+    <div class="info-box">
+        <h3><span class="emoji">🐞</span>Informes de fallos</h3>
+        <p>Usamos Firebase Crashlytics para detectar errores. Cuando la app falla se envía un informe técnico con el modelo de dispositivo, la versión del sistema, la versión de la app, el estado del momento del fallo y tu identificador de usuario, que nos permite saber si un fallo afecta a una cuenta concreta y responderte si nos escribes.</p>
     </div>
 
     <div class="info-box">
         <h3><span class="emoji">💰</span>Publicidad</h3>
-        <p>La aplicación muestra anuncios mediante Google AdMob.</p>
-        <p>AdMob puede recopilar:</p>
+        <p>La versión de Android muestra anuncios mediante Google AdMob: un banner durante el entrenamiento y un anuncio a pantalla completa al terminarlo. AdMob puede recoger:</p>
         <ul>
-            <li>Identificadores del dispositivo</li>
-            <li>Datos relacionados con la interacción con anuncios</li>
-            <li>Información técnica del dispositivo</li>
+            <li>Identificadores de publicidad del dispositivo</li>
+            <li>Ubicación aproximada, deducida de la dirección IP</li>
+            <li>Información técnica del dispositivo e interacción con los anuncios</li>
         </ul>
-        <p>Google puede usar esta información para mostrar anuncios personalizados o no personalizados, de acuerdo con sus políticas.</p>
-        <p><strong>Más información sobre cómo Google gestiona los datos:</strong> <a href="https://policies.google.com/privacy" target="_blank">https://policies.google.com/privacy</a></p>
+        <p>Google puede usar esa información para mostrar anuncios personalizados o no personalizados según sus propias políticas: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">https://policies.google.com/privacy</a></p>
+        <p>GymRoutine no tiene suscripciones ni compras dentro de la app: la publicidad es lo que la mantiene.</p>
     </div>
 
+    <h2><span class="emoji">🎯</span>Para qué usamos cada dato</h2>
+
     <div class="info-box">
-        <h3><span class="emoji">🌐</span>Uso de Internet</h3>
-        <p>La aplicación requiere conexión a Internet para:</p>
+        <table>
+            <tr>
+                <th>Dato</th>
+                <th>Finalidad</th>
+                <th>Base legal</th>
+            </tr>
+            <tr>
+                <td>Correo, UID y nombre</td>
+                <td>Crear tu cuenta, identificarte y darte acceso a tus datos desde cualquier dispositivo</td>
+                <td>Ejecución del servicio</td>
+            </tr>
+            <tr>
+                <td>Rutinas, entrenamientos e historial</td>
+                <td>Que la app funcione: mostrarte qué toca hoy, guardar tu progreso y dibujar tus gráficas</td>
+                <td>Ejecución del servicio</td>
+            </tr>
+            <tr>
+                <td>Edad, altura y peso</td>
+                <td>Estimar las calorías de cada entrenamiento</td>
+                <td>Ejecución del servicio</td>
+            </tr>
+            <tr>
+                <td>Analítica y fallos</td>
+                <td>Detectar errores y decidir qué mejorar</td>
+                <td>Interés legítimo</td>
+            </tr>
+            <tr>
+                <td>Identificadores publicitarios</td>
+                <td>Mostrar anuncios que sostienen la app</td>
+                <td>Consentimiento</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2><span class="emoji">🤝</span>Con quién se comparten</h2>
+    <div class="info-box">
+        <p><strong>No vendemos tus datos ni los cedemos a terceros con fines comerciales.</strong> Tus rutinas y entrenamientos son tuyos y no se muestran a otros usuarios: GymRoutine no tiene perfiles públicos, ni comunidad, ni contenido compartido.</p>
+        <p>Los únicos terceros que intervienen son los proveedores que hacen funcionar la app:</p>
         <ul>
-            <li>Autenticación de usuarios</li>
-            <li>Sincronización de datos</li>
-            <li>Mostrar anuncios</li>
-            <li>Recopilar analíticas de uso</li>
+            <li><strong>Google Firebase</strong> (Authentication, Firestore, Analytics, Crashlytics): almacena y procesa los datos por nuestra cuenta</li>
+            <li><strong>Google AdMob</strong>: muestra los anuncios y trata los identificadores publicitarios con sus propias finalidades</li>
         </ul>
+        <p>Estos servicios pueden procesar datos fuera del Espacio Económico Europeo, amparados por las cláusulas contractuales tipo de la Comisión Europea.</p>
     </div>
 
-    <h2><span class="emoji">👶</span>Menores de 13 años</h2>
+    <h2><span class="emoji">⏳</span>Cuánto tiempo los guardamos</h2>
     <div class="info-box">
-        <p>La aplicación puede ser utilizada por menores de 13 años.</p>
-        <p>No recopilamos intencionadamente información personal de menores. Si un padre, madre o tutor legal considera que su hijo ha proporcionado información personal, puede contactarnos para solicitar la eliminación de dichos datos.</p>
+        <p>Mientras tu cuenta exista. Cuando la eliminas, tus datos se borran de nuestros sistemas y no conservamos copias fuera de la infraestructura de Firebase.</p>
     </div>
 
-    <h2><span class="emoji">🔐</span>Seguridad de la información</h2>
+    <h2><span class="emoji">🗑️</span>Tus derechos</h2>
     <div class="info-box">
-        <p>Adoptamos medidas razonables para proteger la información de los usuarios y evitar accesos no autorizados, pérdida o divulgación indebida de datos.</p>
+        <p>Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión, limitación, oposición y portabilidad escribiendo a <a href="mailto:bonygod.dev@gmail.com">bonygod.dev@gmail.com</a>.</p>
+        <p>Dos de ellos no necesitan que nos escribas:</p>
+        <ul>
+            <li><strong>Rectificación:</strong> puedes editar tu nombre, edad, altura y peso desde la pantalla de Perfil.</li>
+            <li><strong>Supresión:</strong> puedes borrar tu cuenta y todos tus datos desde Perfil → Eliminar cuenta. Los detalles están en la <a href="account-deletion.html">página de eliminación de cuenta</a>.</li>
+        </ul>
+        <p>Si crees que no hemos atendido tus derechos como debíamos, puedes reclamar ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
+    </div>
+
+    <h2><span class="emoji">👶</span>Menores</h2>
+    <div class="info-box">
+        <p>GymRoutine no está dirigida a menores de 13 años y no recogemos intencionadamente sus datos. Si un padre, madre o tutor legal cree que un menor ha creado una cuenta, puede escribirnos y la eliminaremos.</p>
+    </div>
+
+    <h2><span class="emoji">🔐</span>Seguridad</h2>
+    <div class="info-box">
+        <p>Todas las comunicaciones entre la app y nuestros servidores viajan cifradas mediante HTTPS. El acceso a tus datos en Firestore está restringido por reglas de seguridad a tu propia cuenta: ningún otro usuario puede leerlos ni modificarlos.</p>
     </div>
 
     <h2><span class="emoji">🔄</span>Cambios en esta política</h2>
     <div class="info-box">
-        <p>Esta Política de Privacidad puede actualizarse ocasionalmente. Cualquier cambio será publicado en esta misma página.</p>
+        <p>Esta política puede actualizarse. Cualquier cambio se publicará en esta misma página, con su fecha de actualización.</p>
     </div>
 
     <div class="contact">
         <h2><span class="emoji">📬</span>Contacto</h2>
-        <p>Si tienes preguntas o inquietudes sobre esta Política de Privacidad, puedes contactarnos en:</p>
+        <p>¿Dudas sobre esta política o sobre tus datos?</p>
         <p><span class="emoji">📧</span><strong>Correo electrónico:</strong> <a href="mailto:bonygod.dev@gmail.com">bonygod.dev@gmail.com</a></p>
     </div>
 
     <footer>
         <p><strong>Al usar GymRoutine, aceptas esta Política de Privacidad.</strong></p>
         <p>© 2026 GymRoutine. Todos los derechos reservados.</p>
+        <p><a href="support.html">Soporte</a> | <a href="account-deletion.html">Eliminación de Cuenta</a></p>
     </footer>
 </body>
 </html>
