@@ -1,9 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 val localProps = Properties()
@@ -13,7 +15,7 @@ if (localPropsFile.exists()) {
 }
 
 android {
-    namespace = "dev.bonygod.gymroutine.android"
+    namespace = "dev.bonygod.gymroutine.wear"
     compileSdk =
         libs.versions.android.compileSdk
             .get()
@@ -21,25 +23,13 @@ android {
 
     defaultConfig {
         applicationId = "dev.bonygod.gymroutine"
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
+        minSdk = 30
         targetSdk =
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 18
-        versionName = "0.0.16"
-
-        val admobAppId = localProps.getProperty("ADMOB_ANDROID_APP_ID").orEmpty().ifBlank { "ca-app-pub-3940256099942544~3347511713" }
-        manifestPlaceholders["admobAppId"] = admobAppId
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        versionCode = 10018
+        versionName = "0.0.1"
     }
 
     signingConfigs {
@@ -56,7 +46,6 @@ android {
                 this.keyPassword = keyPassword
             }
         } else {
-            // Sin aviso, un release sin firmar falla más tarde y con un mensaje que no señala aquí.
             logger.warn(
                 "AVISO: falta STORE_FILE en local.properties; el release se compilará sin firmar. " +
                     "Claves necesarias: STORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD.",
@@ -66,8 +55,6 @@ android {
 
     buildTypes {
         getByName("release") {
-            // R8 elimina el código no usado y ofusca los nombres. Las reglas propias —lo que R8 no
-            // puede deducir solo— viven en proguard-rules.pro, cada una con su motivo.
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -81,12 +68,29 @@ android {
         }
     }
 
+    buildFeatures {
+        compose = true
+    }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
 dependencies {
-    implementation(project(":composeApp"))
+    implementation(libs.wear.compose.material3)
+    implementation(libs.wear.compose.foundation)
+    implementation(libs.wear.compose.navigation)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.play.services.wearable)
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.kotlinx.serialization.json)
 }

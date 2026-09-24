@@ -4,11 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.lifecycleScope
 import dev.bonygod.crashlytics.kmp.core.CrashlyticsConfig
 import dev.bonygod.crashlytics.kmp.core.CrashlyticsKMP
 import dev.bonygod.crashlytics.kmp.core.CrashlyticsKeys
+import dev.bonygod.gymroutine.watch.WearSync
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.initialize
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,5 +33,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             App()
         }
+        lifecycleScope.launch { WearSync(applicationContext).drainResults() }
     }
 }
