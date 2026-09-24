@@ -14,16 +14,18 @@ class LogWorkoutUseCase(private val repository: WorkoutLogRepository) {
         routineName: String,
         completado: Boolean = false,
         recoveredFrom: String? = null,
+        date: String? = null,
+        logId: String? = null,
     ) {
-        val today = Clock.System.now()
+        val resolvedDate = date ?: Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .date
             .toString() // "YYYY-MM-DD"
         val log = WorkoutLog(
-            id = "",
+            id = logId.orEmpty(),
             routineId = routineId,
             routineName = routineName,
-            date = today,
+            date = resolvedDate,
             completado = completado,
             recoveredFrom = recoveredFrom,
         )
