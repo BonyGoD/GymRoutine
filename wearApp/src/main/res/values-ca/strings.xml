@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GymRoutine</string>
+    <string name="watch_today">Avui</string>
+    <string name="watch_other_routines">Altres rutines</string>
+    <string name="watch_in_progress">Entrenament en curs</string>
+    <string name="watch_exercise_count">%1$d exercicis</string>
+    <string name="watch_routines_empty">Obre GymRoutine al mòbil</string>
+    <string name="watch_retry">Torna-ho a provar</string>
+    <string name="watch_phone_unreachable">Mòbil no connectat · última còpia</string>
+    <string name="watch_phone_not_connected">Mòbil no connectat</string>
+    <string name="watch_done_today">Fet avui</string>
+    <string name="watch_progress">%1$d/%2$d fets</string>
+    <string name="watch_sets_progress">%1$d/%2$d sèries</string>
+    <string name="watch_exercise_done">Fet</string>
+    <string name="watch_exercise_skipped">Omès</string>
+    <string name="watch_finish">Finalitza</string>
+    <string name="watch_finish_title">Vols finalitzar l\'entrenament?</string>
+    <string name="watch_finish_message">%1$d de %2$d exercicis fets</string>
+    <string name="watch_discard">Descarta l\'entrenament</string>
+    <string name="watch_discard_title">Vols descartar aquest entrenament?</string>
+    <string name="watch_saved">Desat · s\'enviarà al mòbil</string>
+    <string name="watch_save_failed">No s\'ha pogut desar. Torna-ho a provar.</string>
+    <string name="watch_set_of">Sèrie %1$d de %2$d</string>
+    <string name="watch_weight_reps">%1$s kg × %2$d</string>
+    <string name="watch_set_done">Sèrie feta</string>
+    <string name="watch_skip">Omet</string>
+    <string name="watch_undo_skip">Desfés</string>
+    <string name="watch_skip_rest">Salta el descans</string>
+</resources>

@@ -72,6 +72,7 @@ kotlin {
 
             // Date & Time
             implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         androidMain.dependencies {
@@ -94,6 +95,9 @@ kotlin {
 
             // AdMob
             implementation(libs.play.services.ads)
+
+            implementation(libs.play.services.wearable)
+            implementation(libs.kotlinx.coroutines.play.services)
         }
     }
 }

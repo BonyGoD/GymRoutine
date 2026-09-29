@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.gradleBuildConfig) apply false
+    alias(libs.plugins.kotlinAndroid) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlinSerialization) apply false
     id("com.diffplug.spotless") version "7.0.2" apply false
