@@ -47,18 +47,21 @@ fun TutorialOverlay(state: TutorialState, onEvent: (TutorialEvent) -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.25f))
-            .pointerInput(Unit) {
-                awaitPointerEventScope {
-                    while (true) {
-                        awaitPointerEvent().changes.forEach { it.consume() }
-                    }
-                }
-            },
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter,
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.25f))
+                .pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            awaitPointerEvent().changes.forEach { it.consume() }
+                        }
+                    }
+                },
+        )
         Column(
             modifier = Modifier
                 .statusBarsPadding()
