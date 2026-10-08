@@ -254,24 +254,26 @@ fun WorkoutScreen(
 @Composable
 private fun WorkoutBanner() {
     if (!getPlatform().adsEnabled) return
+    var loaded by remember { mutableStateOf(false) }
     var failed by remember { mutableStateOf(false) }
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
 
     if (!failed) {
         Box(
-            modifier = if (imeVisible) {
+            modifier = if (loaded && !imeVisible) {
+                Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+            } else {
                 Modifier
                     .fillMaxWidth()
                     .height(0.dp)
                     .clipToBounds()
-            } else {
-                Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
             },
         ) {
             BannerAd(
                 modifier = Modifier.fillMaxWidth(),
+                onAdLoaded = { loaded = true },
                 onAdFailedToLoad = { failed = true },
             )
         }
