@@ -21,7 +21,11 @@ class WorkoutLogRemoteDataSourceImpl(
         .collection(WORKOUT_LOGS_COLLECTION)
 
     override suspend fun logWorkout(userId: String, log: WorkoutLog) {
-        logsRef(userId).document.set(log.toMap())
+        if (log.id.isNotEmpty()) {
+            logsRef(userId).document(log.id).set(log.toMap())
+        } else {
+            logsRef(userId).document.set(log.toMap())
+        }
     }
 
     override fun getLogsFlow(userId: String): Flow<List<WorkoutLog>> = logsRef(userId).snapshots.map { snapshot ->

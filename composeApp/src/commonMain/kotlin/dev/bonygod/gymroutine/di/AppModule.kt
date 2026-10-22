@@ -37,6 +37,7 @@ import dev.bonygod.gymroutine.routines.domain.usecase.ObserveRoutinesUseCase
 import dev.bonygod.gymroutine.routines.domain.usecase.UpdateRoutineUseCase
 import dev.bonygod.gymroutine.routines.ui.RoutinesViewModel
 import dev.bonygod.gymroutine.tutorial.ui.TutorialViewModel
+import dev.bonygod.gymroutine.watch.domain.usecase.ApplyWatchWorkoutUseCase
 import dev.bonygod.gymroutine.workout.data.datasource.WorkoutLogRemoteDataSource
 import dev.bonygod.gymroutine.workout.data.datasource.WorkoutLogRemoteDataSourceImpl
 import dev.bonygod.gymroutine.workout.data.datasource.WorkoutSessionRemoteDataSource
@@ -120,6 +121,7 @@ val appModule = module {
     factory { GetWorkoutSessionUseCase(get()) }
     factory { SaveWorkoutSessionUseCase(get()) }
     factory { ClearWorkoutSessionUseCase(get()) }
+    factory { ApplyWatchWorkoutUseCase(get(), get(), get(), get()) }
 
     // ViewModels
     viewModel { AuthViewModel(get(), get(), get(), get(), get()) }

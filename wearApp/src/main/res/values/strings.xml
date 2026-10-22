@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GymRoutine</string>
+    <string name="watch_today">Today</string>
+    <string name="watch_other_routines">Other routines</string>
+    <string name="watch_in_progress">Workout in progress</string>
+    <string name="watch_exercise_count">%1$d exercises</string>
+    <string name="watch_routines_empty">Open GymRoutine on your phone</string>
+    <string name="watch_retry">Retry</string>
+    <string name="watch_phone_unreachable">Phone not connected · last copy</string>
+    <string name="watch_phone_not_connected">Phone not connected</string>
+    <string name="watch_done_today">Done today</string>
+    <string name="watch_progress">%1$d/%2$d done</string>
+    <string name="watch_sets_progress">%1$d/%2$d sets</string>
+    <string name="watch_exercise_done">Done</string>
+    <string name="watch_exercise_skipped">Skipped</string>
+    <string name="watch_finish">Finish</string>
+    <string name="watch_finish_title">Finish workout?</string>
+    <string name="watch_finish_message">%1$d of %2$d exercises done</string>
+    <string name="watch_discard">Discard workout</string>
+    <string name="watch_discard_title">Discard this workout?</string>
+    <string name="watch_saved">Saved · it will sync to your phone</string>
+    <string name="watch_save_failed">Couldn\'t save. Try again.</string>
+    <string name="watch_set_of">Set %1$d of %2$d</string>
+    <string name="watch_weight_reps">%1$s kg × %2$d</string>
+    <string name="watch_set_done">Set done</string>
+    <string name="watch_skip">Skip</string>
+    <string name="watch_undo_skip">Undo skip</string>
+    <string name="watch_skip_rest">Skip rest</string>
+</resources>
